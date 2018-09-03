@@ -108,7 +108,6 @@
                                 <a class="waves-effect waves-light btn blue lighten-2" id="addEventButton">借</a>
                                 <a class="waves-effect waves-light btn grey lighten-2" id="cancelAdd">取消</a>
                             </div>
-
                         </div>
                     </div>
 

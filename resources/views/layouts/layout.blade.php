@@ -11,6 +11,7 @@
             <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap-grid.css'>
             <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>
             <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css'>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
         @show
     </head>
     <body>
@@ -26,6 +27,10 @@
             <script>
                 $(function() {
                     $('select').formSelect();
+                    $('.timepicker').timepicker({
+                        disableWeekends: true
+                    });
+                    
                 });
             </script>
         @show
