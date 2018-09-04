@@ -27,10 +27,7 @@
             <script>
                 $(function() {
                     $('select').formSelect();
-                    $('.timepicker').timepicker({
-                        disableWeekends: true
-                    });
-                    
+                    $('.modal').modal();
                 });
             </script>
         @show

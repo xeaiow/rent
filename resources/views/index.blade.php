@@ -25,7 +25,7 @@
             <div class="sidebar-events" id="sidebarEvents">
                 <div class="empty-message">請在右方選擇欲租借日期</div>
             </div>
-
+            <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
         </div>
 
         <div class="content-wrapper grey lighten-3">
@@ -78,7 +78,6 @@
                             <a class="addEvent" id="changeFormButton">我要租借</a>
                         </div>
                         <div class="addForm" id="addForm">
-                            <h4>請填寫租借原因</h4>
                             <div class="row">
                                 <div class="col s6">
                                     <select>
@@ -89,9 +88,6 @@
                                         <option value="203">203</option>
                                         <option value="205">205</option>
                                     </select>
-                                </div>
-                                <div class="col s6">
-                                <input type="text" class="timepicker">
                                 </div>
                             </div>
                             <div class="row">
@@ -105,7 +101,7 @@
                                 </div>
                             </div>
                             <div class="addEventButtons">
-                                <a class="waves-effect waves-light btn blue lighten-2" id="addEventButton">借</a>
+                                <a class="waves-effect waves-light btn light-blue lighten-1" id="addEventButton">繼續</a>
                                 <a class="waves-effect waves-light btn grey lighten-2" id="cancelAdd">取消</a>
                             </div>
                         </div>
@@ -113,6 +109,278 @@
 
                 </div>
 
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div id="modal1" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <h4>選擇開始及結束的時段</h4>
+                <table>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <label>
+                                <input type="checkbox" class="selectTime" />
+                                <span>8:00</span>
+                            </label>
+                        </td>
+                        <td width="80%"></td> 
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <input type="checkbox" class="selectTime" />
+                                <span>8:30</span>
+                            </label>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>9:00</span>
+                        </label>
+                    </td>
+                        <td></td> 
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>9:30</span>
+                        </label>
+                    </td>
+                        <td></td>  
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>10:00</span>
+                        </label>
+                    </td>
+                        <td></td> 
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>10:30</span>
+                        </label>
+                    </td>
+                        <td></td>  
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>11:00</span>
+                        </label>
+                    </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>11:30</span>
+                        </label>
+                    </td>
+                        <td></td>  
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>12:00</span>
+                        </label>
+                    </td> 
+                        <td></td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>12:30</span>
+                        </label>
+                    </td> 
+                        <td></td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>13:00</span>
+                        </label>
+                    </td> 
+                        <td></td> 
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>13:30</span>
+                        </label>
+                    </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>14:00</span>
+                        </label>
+                    </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>14:30</span>
+                        </label>
+                    </td>
+                        <td></td> 
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>15:00</span>
+                        </label>
+                    </td>
+                        <td></td>  
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>15:30</span>
+                        </label>
+                    </td>  
+                        <td></td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>16:00</span>
+                        </label>
+                    </td> 
+                        <td></td> 
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>16:30</span>
+                        </label>
+                    </td>
+                        <td></td> 
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>17:00</span>
+                        </label>
+                    </td>
+                        <td></td> 
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>17:30</span>
+                        </label>
+                    </td>
+                        <td></td>   
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>18:00</span>
+                        </label>
+                    </td>
+                        <td></td>  
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>18:30</span>
+                        </label>
+                    </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>19:00</span>
+                        </label>
+                    </td>   
+                        <td></td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>19:30</span>
+                        </label>
+                    </td>
+                        <td></td> 
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>20:00</span>
+                        </label>
+                    </td>
+                        <td></td> 
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>20:30</span>
+                        </label>
+                    </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>21:00</span>
+                        </label>
+                    </td>  
+                        <td></td> 
+                    </tr>
+                    <tr>
+                    <td>
+                        <label>
+                            <input type="checkbox" class="selectTime" />
+                            <span>21:30</span>
+                        </label>
+                    </td>
+                        <td></td> 
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <span id="previewTime"></span>
+                <button class="btn waves-effect waves-light grey" id="clearTime" type="submit">重填
+                    <i class="material-icons right">clear</i>
+                </button>
+                <button class="btn waves-effect waves-light blue darken-3 disabled" id="confirmTime" type="submit">確定
+                    <i class="material-icons right">check</i>
+                </button>
             </div>
         </div>
 

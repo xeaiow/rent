@@ -265,3 +265,70 @@ addEventButton.onclick = function(e) {
     }
 
 }
+
+// 選擇時段
+var selectCount = 0;
+var selectedTime = new Array();
+var seconds = new Array();
+
+$(".selectTime").click(function () {
+
+    if ($(this).prop('checked')) {
+        console.log('checked');
+        selectCount++;
+
+        selectedTime[selectCount-1] = $(this).siblings('span')[0].textContent;
+
+        let timeFormatStart = $(this).siblings('span')[0].textContent.split(':');
+        seconds.push(( + timeFormatStart[0]) * 60 * 60 + ( + timeFormatStart[1]) * 60);
+
+        if (selectCount == 2) {
+            $(".selectTime").not(':checked').prop( "disabled", true );
+            $("#confirmTime").removeClass("disabled");
+            if (seconds[0] > seconds[1]) {
+                $("#previewTime").html(timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ));
+            }
+            else {
+                $("#previewTime").html(timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ));
+            }
+        }
+    }
+    else {
+        console.log('Unchecked');
+        selectCount--;
+        selectedTime.splice(selectedTime.indexOf($(this).siblings('span')[0].textContent), 1);
+        
+        let timeFormatStart = $(this).siblings('span')[0].textContent.split(':');
+        
+        seconds.splice(seconds.indexOf( ( + timeFormatStart[0]) * 60 * 60 + ( + timeFormatStart[1]) * 60 ), 1);
+
+        $(".selectTime").prop("disabled", false);
+        $("#confirmTime").addClass("disabled");
+    }
+    console.log(selectedTime);
+    console.log(seconds);
+});
+
+// 清除選擇時段
+$("#clearTime").click(function(){
+    $(".selectTime").prop( "disabled", false ).prop( "checked", false );
+    $("#confirmTime").addClass("disabled");
+    selectCount = 0;
+    $("#previewTime").html("");
+    selectedTime.length = 0;
+    seconds.length = 0;
+});
+
+function timeConvert(secs) {
+    var hours = Math.floor(secs / (60 * 60));
+
+    var divisor_for_minutes = secs % (60 * 60);
+    var minutes = Math.floor(divisor_for_minutes / 60);
+
+    var obj = {
+        "h": hours,
+        "m": minutes,
+    };
+    console.log(obj);
+    return obj;
+}
