@@ -59,7 +59,7 @@ function createCalendar(date, side) {
 
             selectedDayBlock = currentDay;
             setTimeout(() => {
-                currentDay.classList.add("blue");
+                currentDay.classList.add("pink");
                 currentDay.classList.add("lighten-3");
             }, 900);
         }
@@ -160,7 +160,7 @@ function showEvents() {
     } else {
         let emptyMessage = document.createElement("div");
         emptyMessage.className = "empty-message";
-        emptyMessage.innerHTML = "請在右方選擇欲租借日期";
+        emptyMessage.innerHTML = "本日尚無租借紀錄";
         sidebarEvents.appendChild(emptyMessage);
         let emptyFormMessage = document.getElementById("emptyFormTitle");
 
@@ -174,13 +174,13 @@ gridTable.onclick = function(e) {
     }
 
     if (selectedDayBlock) {
-        if (selectedDayBlock.classList.contains("blue") && selectedDayBlock.classList.contains("lighten-3")) {
-            selectedDayBlock.classList.remove("blue");
+        if (selectedDayBlock.classList.contains("pink") && selectedDayBlock.classList.contains("lighten-3")) {
+            selectedDayBlock.classList.remove("pink");
             selectedDayBlock.classList.remove("lighten-3");
         }
     }
     selectedDayBlock = e.target;
-    selectedDayBlock.classList.add("blue");
+    selectedDayBlock.classList.add("pink");
     selectedDayBlock.classList.add("lighten-3");
 
     selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), parseInt(e.target.innerHTML));
@@ -193,6 +193,7 @@ gridTable.onclick = function(e) {
         year: "numeric"
     });
     $("#modal1").modal('open');
+    console.log(selectedDate.toISOString().slice(0, 19).replace('T', ' '));
 }
 
 
@@ -326,31 +327,23 @@ $("#confirmRent").click(function() {
         selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
     }
 
-    // let inputs = addForm.getElementsByTagName("input");
-    // for (let i = 0; i < inputs.length; i++) {
-    //     inputs[i].value = "";
-    // }
-    // let labels = addForm.getElementsByTagName("label");
-    // for (let i = 0; i < labels.length; i++) {
-    //     labels[i].className = "";
-    // }
     $("select").formSelect();
     let instance = M.FormSelect.getInstance($("#room"));
 
     axios.post('/rent/public/set/rental', {
-            title: title,
-            description: desc,
-            room: instance.getSelectedValues()[0],
-            rentDate: selectedDate.getTime() / 1000,
-            period: JSON.stringify(seconds)
-                // period: selectedDate.toLocaleString("zh-Hans-TW", {month: "long", day: "numeric",year: "numeric"})
-        })
-        .then(function(response) {
-            console.log(response);
-        })
-        .catch(function(error) {
-            console.log(error);
-        });
+        title: title,
+        description: desc,
+        room: instance.getSelectedValues()[0],
+        rentDate: selectedDate.getTime() / 1000,
+        period: JSON.stringify(seconds)
+        // period: selectedDate.toLocaleString("zh-Hans-TW", {month: "long", day: "numeric",year: "numeric"})
+    })
+    .then(function(response) {
+        $("#modal3").modal('close');
+    })
+    .catch(function(error) {
+        console.log(error);
+    });
 });
 
 // 關閉視窗清除資料

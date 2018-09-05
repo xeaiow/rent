@@ -6,7 +6,7 @@
 <div class="mobile-header z-depth-1">
         <div class="row">
             <div class="col-2">
-                <a href="#" data-activates="sidebar" class="button-collapse" style="">
+                <a href="#" data-activates="sidebar" class="button-collapse">
                     <i class="material-icons">menu</i>
                 </a>
             </div>
@@ -23,7 +23,7 @@
                 <h5 id="eventDayName">SIDEBAR SUB-TITLE</h5>
             </div>
             <div class="sidebar-events" id="sidebarEvents">
-                <div class="empty-message">請在右方選擇欲租借日期</div>
+                <div class="empty-message"></div>
             </div>
         </div>
 
@@ -81,9 +81,9 @@
         </div>
 
         <!-- Modal -->
-        <div id="modal1" class="modal modal-fixed-footer">
+        <div id="modal2" class="modal modal-fixed-footer">
             <div class="modal-content">
-                <h4>選擇開始及結束的時段</h4>
+                <h4>勾選開始及結束的時間</h4>
                 <span style="color:#ad1457;" class="previewTime"></span>
                 <table>
                     <tbody>
@@ -356,14 +356,25 @@
         </div>
 
         <!-- confirm modal -->
-        <div id="modal2" class="modal">
+        <div id="modal1" class="modal modal-fixed-footer">
             <div class="modal-content">
-                <h4>確定租借</h4>
-                <p><span style="color:#ad1457;" class="previewTime"></span></p>
+                <h4>選擇欲租借教室</h4>
+                <div>
+                    <div class="col s12">
+                        <select id="room">
+                            <option value="" disabled selected>請選擇</option>
+                            <option value="102">102</option>
+                            <option value="104">104</option>
+                            <option value="201">201</option>
+                            <option value="203">203</option>
+                            <option value="205">205</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <a class="modal-close waves-effect waves-green btn-flat">考慮</a>
-                <a class="btn waves-effect waves-light blue darken-3" id="rent">是的</a>
+                <a class="modal-close waves-effect waves-green btn-flat">取消</a>
+                <a class="btn waves-effect waves-light blue darken-3" id="rent">繼續</a>
             </div>
         </div>
 
@@ -372,16 +383,7 @@
             <div class="modal-content">
                 <h4>填寫租借資料</h4>
                 <div>
-                    <div class="col s6">
-                        <select id="room">
-                            <option value="" disabled selected>欲租借教室</option>
-                            <option value="102">102</option>
-                            <option value="104">104</option>
-                            <option value="201">201</option>
-                            <option value="203">203</option>
-                            <option value="205">205</option>
-                        </select>
-                    </div>
+                    
                     <div class="input-field col s3">
                         <input id="eventTitleInput" type="text" class="validate">
                         <label for="eventTitleInput">原因</label>
