@@ -156,14 +156,14 @@ function showEvents() {
             eventsCount++;
         }
         let emptyFormMessage = document.getElementById("emptyFormTitle");
-        emptyFormMessage.innerHTML = `已經有 ${eventsCount} 人租借`;
+
     } else {
         let emptyMessage = document.createElement("div");
         emptyMessage.className = "empty-message";
         emptyMessage.innerHTML = "請在右方選擇欲租借日期";
         sidebarEvents.appendChild(emptyMessage);
         let emptyFormMessage = document.getElementById("emptyFormTitle");
-        emptyFormMessage.innerHTML = "目前無人租借";
+
     }
 }
 
@@ -192,31 +192,14 @@ gridTable.onclick = function(e) {
         day: "numeric",
         year: "numeric"
     });
-
+    $("#modal1").modal('open');
 }
 
-var changeFormButton = document.getElementById("changeFormButton");
-var addForm = document.getElementById("addForm");
-changeFormButton.onclick = function(e) {
-    addForm.style.top = 0;
-}
 
-var cancelAdd = document.getElementById("cancelAdd");
-cancelAdd.onclick = function(e) {
-    addForm.style.top = "100%";
-    let inputs = addForm.getElementsByTagName("input");
-    for (let i = 0; i < inputs.length; i++) {
-        inputs[i].value = "";
-    }
-    let labels = addForm.getElementsByTagName("label");
-    for (let i = 0; i < labels.length; i++) {
-        console.log(labels[i]);
-        labels[i].className = "";
-    }
-}
 
-var addEventButton = document.getElementById("addEventButton");
-addEventButton.onclick = function(e) {
+
+
+$("#addEventButton").click(function () {
     let title = document.getElementById("eventTitleInput").value.trim();
     let desc = document.getElementById("eventDescInput").value.trim();
 
@@ -263,9 +246,8 @@ addEventButton.onclick = function(e) {
     for (let i = 0; i < labels.length; i++) {
         labels[i].className = "";
     }
-
-}
-
+});
+    
 // 選擇時段
 var selectCount = 0;
 var selectedTime = new Array();
@@ -286,10 +268,10 @@ $(".selectTime").click(function () {
             $(".selectTime").not(':checked').prop( "disabled", true );
             $("#confirmTime").removeClass("disabled");
             if (seconds[0] > seconds[1]) {
-                $(".previewTime").html("租借時段 " + timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ));
+                $(".previewTime").html(timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ));
             }
             else {
-                $(".previewTime").html("租借時段 " + timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ));
+                $(".previewTime").html(timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ));
             }
         }
     }
@@ -318,11 +300,18 @@ $("#clearTime").click(function(){
 $("#confirmTime").click(function (){
     $('#modal2').modal('open');
     $('#modal1').modal('close');
+
+    $(".previewTime").prepend(selectedDate.toLocaleString("zh-Hans-TW", {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    }) + " ");
 });
 
 // 租借
 $("#rent").click(function () {
-    
+    $("#modal2").modal('close');
+    $("#modal3").modal('open');
 });
 
 // 關閉視窗清除資料

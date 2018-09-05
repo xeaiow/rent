@@ -73,38 +73,7 @@
                     </div>
 
                     <div class="calendar-footer">
-                        <div class="emptyForm" id="emptyForm">
-                            <h4 id="emptyFormTitle">目前無人租借</h4>
-                            <a class="addEvent" id="changeFormButton">我要租借</a>
-                        </div>
-                        <div class="addForm" id="addForm">
-                            <div class="row">
-                                <div class="col s6">
-                                    <select>
-                                        <option value="" disabled selected>欲租借教室</option>
-                                        <option value="102">102</option>
-                                        <option value="104">104</option>
-                                        <option value="201">201</option>
-                                        <option value="203">203</option>
-                                        <option value="205">205</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s3">
-                                    <input id="eventTitleInput" type="text" class="validate">
-                                    <label for="eventTitleInput">原因</label>
-                                </div>
-                                <div class="input-field col s3">
-                                    <input id="eventDescInput" type="text" class="validate">
-                                    <label for="eventDescInput">備註(可空)</label>
-                                </div>
-                            </div>
-                            <div class="addEventButtons">
-                                <a class="waves-effect waves-light btn light-blue lighten-1" id="addEventButton">繼續</a>
-                                <a class="waves-effect waves-light btn grey lighten-2" id="cancelAdd">取消</a>
-                            </div>
-                        </div>
+                        
                     </div>
 
                 </div>
@@ -375,8 +344,11 @@
                 </table>
             </div>
             <div class="modal-footer">
+                <button class="btn waves-effect waves-light grey modal-close" type="button">取消
+                    
+                </button>
                 <button class="btn waves-effect waves-light grey" id="clearTime" type="button">重填
-                    <i class="material-icons right">clear</i>
+                   
                 </button>
                 <button class="btn waves-effect waves-light blue darken-3 disabled" id="confirmTime" href="#modal2" type="button">確定
                     <i class="material-icons right">check</i>
@@ -387,13 +359,46 @@
         <!-- confirm modal -->
         <div id="modal2" class="modal">
             <div class="modal-content">
-                <h4>確定租借？</h4>
+                <h4>確定租借</h4>
                 <p><span style="color:#ad1457;" class="previewTime"></span></p>
             </div>
             <div class="modal-footer">
-                <a class="modal-close waves-effect waves-green btn-flat">再考慮一下</a>
+                <a class="modal-close waves-effect waves-green btn-flat">考慮</a>
                 <a class="btn waves-effect waves-light blue darken-3" id="rent">是的</a>
             </div>
+        </div>
+
+        <!-- choose info -->
+        <div id="modal3" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <h4>填寫租借資料</h4>
+                <div>
+                    <div class="col s6">
+                        <select>
+                                <option value="" disabled selected>欲租借教室</option>
+                                <option value="102">102</option>
+                                <option value="104">104</option>
+                                <option value="201">201</option>
+                                <option value="203">203</option>
+                                <option value="205">205</option>
+                            </select>
+                        </div>
+                        <div class="input-field col s3">
+                            <input id="eventTitleInput" type="text" class="validate">
+                            <label for="eventTitleInput">原因</label>
+                        </div>
+                        <div class="input-field col s3">
+                            <input id="eventDescInput" type="text" class="validate">
+                            <label for="eventDescInput">備註(可空)</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="modal-close waves-effect waves-green btn-flat">取消</a>
+                    <a class="btn waves-effect waves-light blue darken-3">確定</a>
+                </div>
+            </div>
+            
         </div>
 
     </div>

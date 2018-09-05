@@ -27,7 +27,10 @@
             <script>
                 $(function() {
                     $('select').formSelect();
-                    $('.modal').modal();
+                    $('.modal').modal({
+                        dismissible: false,
+                        opacity: .7
+                    });
                 });
             </script>
         @show
