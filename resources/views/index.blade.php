@@ -116,6 +116,7 @@
         <div id="modal1" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4>選擇開始及結束的時段</h4>
+                <span style="color:#ad1457;" class="previewTime"></span>
                 <table>
                     <tbody>
                     <tr>
@@ -374,13 +375,24 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <span id="previewTime"></span>
-                <button class="btn waves-effect waves-light grey" id="clearTime" type="submit">重填
+                <button class="btn waves-effect waves-light grey" id="clearTime" type="button">重填
                     <i class="material-icons right">clear</i>
                 </button>
-                <button class="btn waves-effect waves-light blue darken-3 disabled" id="confirmTime" type="submit">確定
+                <button class="btn waves-effect waves-light blue darken-3 disabled" id="confirmTime" href="#modal2" type="button">確定
                     <i class="material-icons right">check</i>
                 </button>
+            </div>
+        </div>
+
+        <!-- confirm modal -->
+        <div id="modal2" class="modal">
+            <div class="modal-content">
+                <h4>確定租借？</h4>
+                <p><span style="color:#ad1457;" class="previewTime"></span></p>
+            </div>
+            <div class="modal-footer">
+                <a class="modal-close waves-effect waves-green btn-flat">再考慮一下</a>
+                <a class="btn waves-effect waves-light blue darken-3" id="rent">是的</a>
             </div>
         </div>
 

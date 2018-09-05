@@ -286,10 +286,10 @@ $(".selectTime").click(function () {
             $(".selectTime").not(':checked').prop( "disabled", true );
             $("#confirmTime").removeClass("disabled");
             if (seconds[0] > seconds[1]) {
-                $("#previewTime").html(timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ));
+                $(".previewTime").html("租借時段 " + timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ));
             }
             else {
-                $("#previewTime").html(timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ));
+                $(".previewTime").html("租借時段 " + timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ));
             }
         }
     }
@@ -311,12 +311,23 @@ $(".selectTime").click(function () {
 
 // 清除選擇時段
 $("#clearTime").click(function(){
-    $(".selectTime").prop( "disabled", false ).prop( "checked", false );
-    $("#confirmTime").addClass("disabled");
-    selectCount = 0;
-    $("#previewTime").html("");
-    selectedTime.length = 0;
-    seconds.length = 0;
+    clearSelect();
+});
+
+// 跳出確定租借視窗
+$("#confirmTime").click(function (){
+    $('#modal2').modal('open');
+    $('#modal1').modal('close');
+});
+
+// 租借
+$("#rent").click(function () {
+    
+});
+
+// 關閉視窗清除資料
+$(".modal-close").click(function () {
+    clearSelect();
 });
 
 function timeConvert(secs) {
@@ -331,4 +342,13 @@ function timeConvert(secs) {
     };
     console.log(obj);
     return obj;
+}
+
+function clearSelect () {
+    $(".selectTime").prop( "disabled", false ).prop( "checked", false );
+    $("#confirmTime").addClass("disabled");
+    selectCount = 0;
+    $(".previewTime").html("");
+    selectedTime.length = 0;
+    seconds.length = 0;
 }
