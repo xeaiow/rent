@@ -199,7 +199,7 @@ gridTable.onclick = function(e) {
 
 
 
-$("#addEventButton").click(function () {
+$("#addEventButton").click(function() {
     let title = document.getElementById("eventTitleInput").value.trim();
     let desc = document.getElementById("eventDescInput").value.trim();
 
@@ -214,20 +214,8 @@ $("#addEventButton").click(function () {
         }
         return;
     }
-    
-    axios.post('/rent/public/set/rental', {
-        title: title,
-        description: desc,
-        room: '資管203',
-        period: selectedDate.getTime() / 1000
-        // period: selectedDate.toLocaleString("zh-Hans-TW", {month: "long", day: "numeric",year: "numeric"})
-    })
-    .then(function (response) {
-        console.log(response);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+
+
 
     // 增加紀錄
     addEvent(title, desc);
@@ -238,51 +226,49 @@ $("#addEventButton").click(function () {
         selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
     }
 
-    let inputs = addForm.getElementsByTagName("input");
-    for (let i = 0; i < inputs.length; i++) {
-        inputs[i].value = "";
-    }
-    let labels = addForm.getElementsByTagName("label");
-    for (let i = 0; i < labels.length; i++) {
-        labels[i].className = "";
-    }
+    // let inputs = addForm.getElementsByTagName("input");
+    // for (let i = 0; i < inputs.length; i++) {
+    //     inputs[i].value = "";
+    // }
+    // let labels = addForm.getElementsByTagName("label");
+    // for (let i = 0; i < labels.length; i++) {
+    //     labels[i].className = "";
+    // }
 });
-    
+
 // 選擇時段
 var selectCount = 0;
 var selectedTime = new Array();
 var seconds = new Array();
 
-$(".selectTime").click(function () {
+$(".selectTime").click(function() {
 
     if ($(this).prop('checked')) {
         console.log('checked');
         selectCount++;
 
-        selectedTime[selectCount-1] = $(this).siblings('span')[0].textContent;
+        selectedTime[selectCount - 1] = $(this).siblings('span')[0].textContent;
 
         let timeFormatStart = $(this).siblings('span')[0].textContent.split(':');
-        seconds.push(( + timeFormatStart[0]) * 60 * 60 + ( + timeFormatStart[1]) * 60);
+        seconds.push((+timeFormatStart[0]) * 60 * 60 + (+timeFormatStart[1]) * 60);
 
         if (selectCount == 2) {
-            $(".selectTime").not(':checked').prop( "disabled", true );
+            $(".selectTime").not(':checked').prop("disabled", true);
             $("#confirmTime").removeClass("disabled");
             if (seconds[0] > seconds[1]) {
-                $(".previewTime").html(timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ));
-            }
-            else {
-                $(".previewTime").html(timeConvert(seconds[0]).h + ":" + ( timeConvert(seconds[0]).m == 0 ? "00" : "30" ) + " 到 " + timeConvert(seconds[1]).h + ":" + ( timeConvert(seconds[1]).m == 0 ? "00" : "30" ));
+                $(".previewTime").html(timeConvert(seconds[1]).h + ":" + (timeConvert(seconds[1]).m == 0 ? "00" : "30") + " 到 " + timeConvert(seconds[0]).h + ":" + (timeConvert(seconds[0]).m == 0 ? "00" : "30"));
+            } else {
+                $(".previewTime").html(timeConvert(seconds[0]).h + ":" + (timeConvert(seconds[0]).m == 0 ? "00" : "30") + " 到 " + timeConvert(seconds[1]).h + ":" + (timeConvert(seconds[1]).m == 0 ? "00" : "30"));
             }
         }
-    }
-    else {
+    } else {
         console.log('Unchecked');
         selectCount--;
         selectedTime.splice(selectedTime.indexOf($(this).siblings('span')[0].textContent), 1);
-        
+
         let timeFormatStart = $(this).siblings('span')[0].textContent.split(':');
-        
-        seconds.splice(seconds.indexOf( ( + timeFormatStart[0]) * 60 * 60 + ( + timeFormatStart[1]) * 60 ), 1);
+
+        seconds.splice(seconds.indexOf((+timeFormatStart[0]) * 60 * 60 + (+timeFormatStart[1]) * 60), 1);
 
         $(".selectTime").prop("disabled", false);
         $("#confirmTime").addClass("disabled");
@@ -292,12 +278,12 @@ $(".selectTime").click(function () {
 });
 
 // 清除選擇時段
-$("#clearTime").click(function(){
+$("#clearTime").click(function() {
     clearSelect();
 });
 
 // 跳出確定租借視窗
-$("#confirmTime").click(function (){
+$("#confirmTime").click(function() {
     $('#modal2').modal('open');
     $('#modal1').modal('close');
 
@@ -309,13 +295,66 @@ $("#confirmTime").click(function (){
 });
 
 // 租借
-$("#rent").click(function () {
+$("#rent").click(function() {
     $("#modal2").modal('close');
     $("#modal3").modal('open');
 });
 
+// 送出租借請求
+$("#confirmRent").click(function() {
+    let title = document.getElementById("eventTitleInput").value.trim();
+    let desc = document.getElementById("eventDescInput").value.trim();
+
+    // 如果原因欄位是空的
+    if (!title) {
+        document.getElementById("eventTitleInput").value = "";
+        document.getElementById("eventDescInput").value = "";
+        let labels = addForm.getElementsByTagName("label");
+        for (let i = 0; i < labels.length; i++) {
+            console.log(labels[i]);
+            labels[i].className = "";
+        }
+        return;
+    }
+
+    // 增加紀錄
+    addEvent(title, desc);
+    showEvents();
+
+    if (!selectedDayBlock.querySelector(".day-mark")) {
+        console.log("work");
+        selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
+    }
+
+    // let inputs = addForm.getElementsByTagName("input");
+    // for (let i = 0; i < inputs.length; i++) {
+    //     inputs[i].value = "";
+    // }
+    // let labels = addForm.getElementsByTagName("label");
+    // for (let i = 0; i < labels.length; i++) {
+    //     labels[i].className = "";
+    // }
+    $("select").formSelect();
+    let instance = M.FormSelect.getInstance($("#room"));
+
+    axios.post('/rent/public/set/rental', {
+            title: title,
+            description: desc,
+            room: instance.getSelectedValues()[0],
+            rentDate: selectedDate.getTime() / 1000,
+            period: JSON.stringify(seconds)
+                // period: selectedDate.toLocaleString("zh-Hans-TW", {month: "long", day: "numeric",year: "numeric"})
+        })
+        .then(function(response) {
+            console.log(response);
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+});
+
 // 關閉視窗清除資料
-$(".modal-close").click(function () {
+$(".modal-close").click(function() {
     clearSelect();
 });
 
@@ -329,12 +368,11 @@ function timeConvert(secs) {
         "h": hours,
         "m": minutes,
     };
-    console.log(obj);
     return obj;
 }
 
-function clearSelect () {
-    $(".selectTime").prop( "disabled", false ).prop( "checked", false );
+function clearSelect() {
+    $(".selectTime").prop("disabled", false).prop("checked", false);
     $("#confirmTime").addClass("disabled");
     selectCount = 0;
     $(".previewTime").html("");

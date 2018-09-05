@@ -25,7 +25,6 @@
             <div class="sidebar-events" id="sidebarEvents">
                 <div class="empty-message">請在右方選擇欲租借日期</div>
             </div>
-            <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
         </div>
 
         <div class="content-wrapper grey lighten-3">
@@ -374,32 +373,30 @@
                 <h4>填寫租借資料</h4>
                 <div>
                     <div class="col s6">
-                        <select>
-                                <option value="" disabled selected>欲租借教室</option>
-                                <option value="102">102</option>
-                                <option value="104">104</option>
-                                <option value="201">201</option>
-                                <option value="203">203</option>
-                                <option value="205">205</option>
-                            </select>
-                        </div>
-                        <div class="input-field col s3">
-                            <input id="eventTitleInput" type="text" class="validate">
-                            <label for="eventTitleInput">原因</label>
-                        </div>
-                        <div class="input-field col s3">
-                            <input id="eventDescInput" type="text" class="validate">
-                            <label for="eventDescInput">備註(可空)</label>
-                        </div>
+                        <select id="room">
+                            <option value="" disabled selected>欲租借教室</option>
+                            <option value="102">102</option>
+                            <option value="104">104</option>
+                            <option value="201">201</option>
+                            <option value="203">203</option>
+                            <option value="205">205</option>
+                        </select>
+                    </div>
+                    <div class="input-field col s3">
+                        <input id="eventTitleInput" type="text" class="validate">
+                        <label for="eventTitleInput">原因</label>
+                    </div>
+                    <div class="input-field col s3">
+                        <input id="eventDescInput" type="text" class="validate">
+                        <label for="eventDescInput">備註(可空)</label>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <a class="modal-close waves-effect waves-green btn-flat">取消</a>
-                    <a class="btn waves-effect waves-light blue darken-3">確定</a>
-                </div>
             </div>
-            
-        </div>
-
+            <div class="modal-footer">
+                <a class="modal-close waves-effect waves-green btn-flat">取消</a>
+                <a class="btn waves-effect waves-light blue darken-3" id="confirmRent">確定</a>
+            </div>
+        </div>  
     </div>
+</div>
 @endsection
