@@ -273,9 +273,13 @@ $(".selectTime").click(function() {
 
         $(".selectTime").prop("disabled", false);
         $("#confirmTime").addClass("disabled");
+
+        for (var i = 0; i < rentalRes.length; i++) {
+            if ($("#t"+rentalRes[i])[0].id + "t" == "t" + rentalRes[i] + "t") {
+                $("#t"+rentalRes[i] + "t").prop("disabled", true);
+            }
+        }
     }
-    console.log(selectedTime);
-    console.log(seconds);
 });
 
 // 清除選擇時段
@@ -351,6 +355,7 @@ $(".modal-close").click(function() {
     clearSelect();
 });
 
+var rentalRes = null;
 $("#room").on('change',function(){
     
     clearSelect();
@@ -361,13 +366,13 @@ $("#room").on('change',function(){
     axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000 + '/' + instance.getSelectedValues())
     .then(function (response) {
         console.log(response);
-        let res = response.data;
+        rentalRes = response.data;
 
         $("#selectTimeTable").show();
         
-        for (var i = 0; i < res.length; i++) {
-            if ($("#t"+res[i])[0].id + "t" == "t" + res[i] + "t") {
-                $("#t"+res[i] + "t").prop("disabled", true);
+        for (var i = 0; i < rentalRes.length; i++) {
+            if ($("#t"+rentalRes[i])[0].id + "t" == "t" + rentalRes[i] + "t") {
+                $("#t"+rentalRes[i] + "t").prop("disabled", true);
             }
         }
     });

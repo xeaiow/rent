@@ -30,8 +30,12 @@ class RentController extends Controller
 
             $period = explode(",", $ss[$i]['period']);
 
-            for ($j = 0;$j < count($period); $j++) {
-                array_push($result, $period[$j]);
+            // for ($j = 0;$j < count($period); $j++) {
+            //     array_push($result, $period[$j]);
+            // }
+
+            for ($k = array_search($period[0], $timestamp); $k <= array_search($period[1], $timestamp); $k++) {
+                array_push($result, $timestamp[$k]);
             }
         }
         
