@@ -26,19 +26,26 @@ class RentController extends Controller
         $result = [];
 
         // 取得該日期該教室已被借用之時間
-        for ($i = 0; $i < count($ss); $i++) {
+        for ($i = 0; $i < count($ss); $i++)
+        {
 
+            // 拆散 period 的兩個 timestamp
             $period = explode(",", $ss[$i]['period']);
 
-            // for ($j = 0;$j < count($period); $j++) {
-            //     array_push($result, $period[$j]);
-            // }
-
-            for ($k = array_search($period[0], $timestamp); $k <= array_search($period[1], $timestamp); $k++) {
-                array_push($result, $timestamp[$k]);
-            }
+            // 判斷 timestamp 數值給予順序
+            if ($period[1] > $period[0])
+            {
+                for ($k = array_search($period[0], $timestamp); $k <= array_search($period[1], $timestamp); $k++) {
+                    array_push($result, $timestamp[$k]);
+                }
+            } 
+            else
+            {
+                for ($k = array_search($period[1], $timestamp); $k <= array_search($period[0], $timestamp); $k++) {
+                    array_push($result, $timestamp[$k]);
+                }
+            } 
         }
-        
         return $result;
     }
 }
