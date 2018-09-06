@@ -35,13 +35,13 @@ class RentController extends Controller
             // 判斷 timestamp 數值給予順序
             if ($period[1] > $period[0])
             {
-                for ($k = array_search($period[0], $timestamp); $k <= array_search($period[1], $timestamp); $k++) {
+                for ($k = array_search($period[0], $timestamp); $k <= array_search($period[1], $timestamp)-1; $k++) {
                     array_push($result, $timestamp[$k]);
                 }
             } 
             else
             {
-                for ($k = array_search($period[1], $timestamp); $k <= array_search($period[0], $timestamp); $k++) {
+                for ($k = array_search($period[1], $timestamp); $k <= array_search($period[0], $timestamp)-1; $k++) {
                     array_push($result, $timestamp[$k]);
                 }
             } 

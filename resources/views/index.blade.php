@@ -346,9 +346,7 @@
                 <button class="btn waves-effect waves-light grey modal-close" type="button">取消
                     
                 </button>
-                <button class="btn waves-effect waves-light grey" id="clearTime" type="button">重填
-                   
-                </button>
+              
                 <button class="btn waves-effect waves-light blue darken-3 disabled" id="confirmTime" href="#modal2" type="button">確定
                     <i class="material-icons right">check</i>
                 </button>
@@ -358,16 +356,16 @@
         <!-- confirm modal -->
         <div id="modal1" class="modal modal-fixed-footer">
             <div class="modal-content">
-                <h4>選擇欲租借教室</h4>
+                <h4>選擇教室及時間</h4>
                 <div>
                     <div class="col s12">
                         <select id="room">
-                            <option value="" disabled selected>請選擇</option>
-                            <option value="102">102</option>
-                            <option value="104">104</option>
-                            <option value="201">201</option>
-                            <option value="203">203</option>
-                            <option value="205">205</option>
+                            <option value="" id="roomDefault" disabled selected>請選擇</option>
+                            <option value="102">資管 102</option>
+                            <option value="104">資管 104</option>
+                            <option value="201">資管 201</option>
+                            <option value="203">資管 203</option>
+                            <option value="205">資管 205</option>
                         </select>
                     </div>
                     <div class="col s12">
@@ -632,6 +630,7 @@
             </div>
             <div class="modal-footer">
                 <a class="modal-close waves-effect waves-green btn-flat">取消</a>
+                <a class="btn waves-effect waves-light grey" id="clearTime">重填</a>
                 <a class="btn waves-effect waves-light blue darken-3" id="rent">繼續</a>
             </div>
         </div>

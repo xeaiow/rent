@@ -197,9 +197,6 @@ gridTable.onclick = function(e) {
 }
 
 
-
-
-
 $("#addEventButton").click(function() {
     let title = document.getElementById("eventTitleInput").value.trim();
     let desc = document.getElementById("eventDescInput").value.trim();
@@ -216,8 +213,6 @@ $("#addEventButton").click(function() {
         return;
     }
 
-
-
     // 增加紀錄
     addEvent(title, desc);
     showEvents();
@@ -226,26 +221,41 @@ $("#addEventButton").click(function() {
         console.log("work");
         selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
     }
-
-    // let inputs = addForm.getElementsByTagName("input");
-    // for (let i = 0; i < inputs.length; i++) {
-    //     inputs[i].value = "";
-    // }
-    // let labels = addForm.getElementsByTagName("label");
-    // for (let i = 0; i < labels.length; i++) {
-    //     labels[i].className = "";
-    // }
 });
 
 // 選擇時段
 var selectCount = 0;
 var selectedTime = new Array();
 var seconds = new Array();
-
+var rentalRes = null;
+var round = 0;
 $(".selectTime").click(function() {
 
     if ($(this).prop('checked')) {
         console.log('checked');
+        
+        let timestamp = $(this).attr("id");
+
+        $.each(rentalRes, function (key, val) {
+            $(".selectTime").prop("disabled", true);
+            if (timestamp.substr(1).slice(0, -1) < val) {
+                round = ((val-1800) - (timestamp.substr(1).slice(0, -1))) / 1800;
+                return false;
+            }
+            else {
+                round = (77400 - parseInt(timestamp.substr(1).slice(0, -1))) / 1800;
+            }
+        });
+
+        let timestampSecode = parseInt(timestamp.substr(1).slice(0, -1));
+        console.log(timestampSecode);
+        for (var i = 0; i <= round; i++) {
+            
+            $("#t" + timestampSecode + "t").prop("disabled", false);
+
+            timestampSecode += 1800;
+        }
+
         selectCount++;
 
         selectedTime[selectCount - 1] = $(this).siblings('span')[0].textContent;
@@ -261,9 +271,11 @@ $(".selectTime").click(function() {
             } else {
                 $(".previewTime").html(timeConvert(seconds[0]).h + ":" + (timeConvert(seconds[0]).m == 0 ? "00" : "30") + " 到 " + timeConvert(seconds[1]).h + ":" + (timeConvert(seconds[1]).m == 0 ? "00" : "30"));
             }
+            $(".selectTime").prop("disabled", true);
         }
     } else {
         console.log('Unchecked');
+        
         selectCount--;
         selectedTime.splice(selectedTime.indexOf($(this).siblings('span')[0].textContent), 1);
 
@@ -273,18 +285,41 @@ $(".selectTime").click(function() {
 
         $(".selectTime").prop("disabled", false);
         $("#confirmTime").addClass("disabled");
+        let timestamp = $(this).attr("id");
+
+        $.each(rentalRes, function (key, val) {
+
+            if (timestamp.substr(1).slice(0, -1) < val) {
+                round = ((val-1800) - (timestamp.substr(1).slice(0, -1))) / 1800;
+                return false;
+            }
+            else {
+                round = (77400 - parseInt(timestamp.substr(1).slice(0, -1))) / 1800;
+            }
+        });
+
+        let timestampSecode = parseInt(timestamp.substr(1).slice(0, -1));
+        
+        for (var i = 0; i <= round; i++) {
+            
+            $("#t" + timestampSecode + "t").prop("disabled", false);
+
+            timestampSecode += 1800;
+            console.log(timestampSecode);
+        }
 
         for (var i = 0; i < rentalRes.length; i++) {
-            if ($("#t"+rentalRes[i])[0].id + "t" == "t" + rentalRes[i] + "t") {
-                $("#t"+rentalRes[i] + "t").prop("disabled", true);
+            if ($("#t" + rentalRes[i])[0].id + "t" == "t" + rentalRes[i] + "t") {
+                $("#t" + rentalRes[i] + "t").prop("disabled", true);
             }
         }
     }
 });
 
 // 清除選擇時段
-$("#clearTime").click(function() {
-    clearSelect();
+$("#clearTime").on('click', function() {
+    console.log
+    reset();
 });
 
 // 跳出確定租借視窗
@@ -353,9 +388,12 @@ $("#confirmRent").click(function() {
 // 關閉視窗清除資料
 $(".modal-close").click(function() {
     clearSelect();
+    reset();
+    $("#selectTimeTable").hide();
+
 });
 
-var rentalRes = null;
+
 $("#room").on('change',function(){
     
     clearSelect();
@@ -398,4 +436,20 @@ function clearSelect() {
     $(".previewTime").html("");
     selectedTime.length = 0;
     seconds.length = 0;
+}
+
+function reset () {
+    
+    $(".selectTime").prop("disabled", false).prop("checked", false);
+    $("#confirmTime").addClass("disabled");
+    $(".previewTime").html("");
+    selectCount = 0;
+    selectedTime.length = 0;
+    seconds.length = 0;
+
+    for (var i = 0; i < rentalRes.length; i++) {
+        if ($("#t"+rentalRes[i])[0].id + "t" == "t" + rentalRes[i] + "t") {
+            $("#t"+rentalRes[i] + "t").prop("disabled", true);
+        }
+    }
 }
