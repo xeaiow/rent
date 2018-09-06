@@ -351,6 +351,28 @@ $(".modal-close").click(function() {
     clearSelect();
 });
 
+$("#room").on('change',function(){
+    
+    clearSelect();
+
+    $("select").formSelect();
+    let instance = M.FormSelect.getInstance($(this));
+
+    axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000 + '/' + instance.getSelectedValues())
+    .then(function (response) {
+        console.log(response);
+        let res = response.data;
+
+        $("#selectTimeTable").show();
+        
+        for (var i = 0; i < res.length; i++) {
+            if ($("#t"+res[i])[0].id + "t" == "t" + res[i] + "t") {
+                $("#t"+res[i] + "t").prop("disabled", true);
+            }
+        }
+    });
+});
+
 function timeConvert(secs) {
     var hours = Math.floor(secs / (60 * 60));
 

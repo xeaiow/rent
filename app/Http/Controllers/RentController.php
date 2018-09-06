@@ -19,12 +19,13 @@ class RentController extends Controller
         ]);
     }
 
-    public function getRental ()
+    public function getRental (Request $req)
     {
         $timestamp = ['28800', '30600', '32400', '34200', '36000', '37800', '39600', '41400', '43200', '45000', '46800', '48600', '50400', '52200', '54000', '55800', '57600', '59400', '61200', '63000', '64800', '66600', '68400', '70200', '72000', '73800', '75600', '77400'];
-        $ss = Rental::where('rentDate', '1536076800')->where('room', '102')->get();
+        $ss = Rental::where('rentDate', $req->date)->where('room', $req->room)->get();
         $result = [];
 
+        // 取得該日期該教室已被借用之時間
         for ($i = 0; $i < count($ss); $i++) {
 
             $period = explode(",", $ss[$i]['period']);
