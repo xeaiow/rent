@@ -59,8 +59,7 @@ function createCalendar(date, side) {
 
             selectedDayBlock = currentDay;
             setTimeout(() => {
-                currentDay.classList.add("pink");
-                currentDay.classList.add("lighten-3");
+                currentDay.classList.add("focus");
             }, 900);
         }
         currentDay.innerHTML = i;
@@ -86,6 +85,38 @@ function createCalendar(date, side) {
         node.className = "row";
         return node;
     }
+
+    axios.get('/rent/public/get/rental/吳冠興')
+    .then(function (res) {
+
+        let rentalRes = res.data;
+
+        if (rentalRes.length > 0) {
+
+            if (!selectedDayBlock.querySelector(".day-mark")) {
+                selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
+            }
+            for (var i = 0; i < rentalRes.length; i++) {
+
+                let itemDate = moment.unix(rentalRes[i].rentDate).format("YYYY-MM-DD");
+                let current = moment(currentDate).format('YYYY-MM-DD');
+                let timeText = null;
+
+                if (itemDate > current) {
+                    moment.duration(moment(itemDate).diff(current)).distance();
+                    timeText = moment.duration(moment(itemDate).diff(current)).distance();
+                    
+                }
+                else {
+                    moment.duration(moment(current).diff(itemDate)).distance();
+                    timeText = moment.duration(moment(current).diff(itemDate)).distance();
+                }
+
+                addEvent(rentalRes[i].title + " - " + timeText + "在資管" + rentalRes[i].room, rentalRes[i].description);
+            }
+            showEvents();
+        }
+    });
 }
 
 createCalendar(currentDate);
@@ -160,7 +191,7 @@ function showEvents() {
     } else {
         let emptyMessage = document.createElement("div");
         emptyMessage.className = "empty-message";
-        emptyMessage.innerHTML = "本日尚無租借紀錄";
+        emptyMessage.innerHTML = "尚無租借紀錄";
         sidebarEvents.appendChild(emptyMessage);
         let emptyFormMessage = document.getElementById("emptyFormTitle");
 
@@ -174,14 +205,14 @@ gridTable.onclick = function(e) {
     }
 
     if (selectedDayBlock) {
-        if (selectedDayBlock.classList.contains("pink") && selectedDayBlock.classList.contains("lighten-3")) {
-            selectedDayBlock.classList.remove("pink");
-            selectedDayBlock.classList.remove("lighten-3");
+        if (selectedDayBlock.classList.contains("focus")) {
+           
+            selectedDayBlock.classList.remove("focus");
         }
     }
     selectedDayBlock = e.target;
-    selectedDayBlock.classList.add("pink");
-    selectedDayBlock.classList.add("lighten-3");
+
+    selectedDayBlock.classList.add("focus");
 
     selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), parseInt(e.target.innerHTML));
 
@@ -193,7 +224,6 @@ gridTable.onclick = function(e) {
         year: "numeric"
     });
     $("#modal1").modal('open');
-
 }
 
 
@@ -227,6 +257,8 @@ var selectedTime = new Array();
 var seconds = new Array();
 var rentalRes = null;
 var round = 0;
+var selectRoom = null;
+
 $(".selectTime").click(function() {
 
     if ($(this).prop('checked')) {
@@ -341,12 +373,6 @@ $("#rent").click(function() {
     }) + " ");
 });
 
-// 租借
-$("#rent").click(function() {
-    $("#modal1").modal('close');
-    $("#modal3").modal('open');
-});
-
 // 送出租借請求
 $("#confirmRent").click(function() {
     let title = document.getElementById("eventTitleInput").value.trim();
@@ -363,26 +389,40 @@ $("#confirmRent").click(function() {
         return;
     }
 
+    let itemDate = moment.unix(selectedDate.getTime() / 1000).format("YYYY-MM-DD");
+    let current = moment(currentDate).format('YYYY-MM-DD');
+    let timeText = null;
+
+    if (itemDate > current) {
+        moment.duration(moment(itemDate).diff(current)).distance();
+        timeText = moment.duration(moment(itemDate).diff(current)).distance();
+        
+    }
+    else {
+        moment.duration(moment(current).diff(itemDate)).distance();
+        timeText = moment.duration(moment(current).diff(itemDate)).distance();
+    }
+
+    addEvent(title + " - " + timeText + "在資管" + selectRoom, desc);
+
     // 增加紀錄
-    addEvent(title, desc);
     showEvents();
 
     if (!selectedDayBlock.querySelector(".day-mark")) {
         selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
     }
 
-    $("select").formSelect();
-    let instance = M.FormSelect.getInstance($("#room"));
-
     axios.post('/rent/public/set/rental', {
         title: title,
         description: desc,
-        room: instance.getSelectedValues()[0],
+        room: selectRoom,
         rentDate: selectedDate.getTime() / 1000,
         period: JSON.stringify(seconds)
     })
     .then(function(response) {
-        $("#modal3").modal('close');
+        $(".modal").modal('close');
+        $("#eventTitleInput").val('');
+        $("#eventDescInput").val('');
     })
     .catch(function(error) {
         console.log(error);
@@ -391,19 +431,20 @@ $("#confirmRent").click(function() {
 
 // 關閉視窗清除資料
 $(".modal-close").click(function() {
+    $("#selectTimeTable").hide();
     clearSelect();
     reset();
-    $("#selectTimeTable").hide();
 });
 
 
 $("#room").on('change',function(){
-    
+
     $(".badge").remove();
     clearSelect();
 
     $("select").formSelect();
     let instance = M.FormSelect.getInstance($(this));
+    selectRoom = instance.getSelectedValues()[0];
 
     axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000 + '/' + instance.getSelectedValues())
     .then(function (response) {

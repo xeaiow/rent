@@ -82,7 +82,7 @@
                 <div>
                     <div class="col s12">
                         <select id="room">
-                            <option value="" id="roomDefault" disabled selected>請選擇</option>
+                            <option value="" disabled selected>請選擇</option>
                             <option value="102">資管 102</option>
                             <option value="104">資管 104</option>
                             <option value="201">資管 201</option>
@@ -94,7 +94,7 @@
                         <table id="selectTimeTable">
                             <tbody>
                             <tr>
-                                <td width="50%">
+                                <td width="50%" >
                                     <label>
                                         <input type="checkbox" class="selectTime" id="t28800t" />
                                         <span>8:00</span>
@@ -358,7 +358,7 @@
         </div>
 
         <!-- choose info -->
-        <div id="modal3" class="modal modal-fixed-footer">
+        <div id="modal2" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4>填寫租借資料</h4>
                 <div>

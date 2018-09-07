@@ -15,6 +15,7 @@
         @show
     </head>
     <body>
+
         <section>
             @yield('content')
         </section>
@@ -24,6 +25,8 @@
             <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
             <script src="{{ asset('js/index.js') }}"></script>
+            <script src="{{ asset('js/moment.js') }}"></script>
+            <script src="{{ asset('js/moment.distance.js') }}"></script>
             <script>
                 $(function() {
                     $('select').formSelect();

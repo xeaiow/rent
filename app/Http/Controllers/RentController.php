@@ -13,6 +13,7 @@ class RentController extends Controller
         Rental::create([
             'title' => $req->title,
             'description' => $req->description,
+            'user' => '吳冠興',
             'room' => $req->room,
             'rentDate' => $req->rentDate,
             'period' => $period
@@ -76,5 +77,11 @@ class RentController extends Controller
         $data['original'] = $temp;
         
         return $data;
+    }
+
+    // 取得使用者近期的租借
+    public function getUserRental (Request $req)
+    {
+        return Rental::where('user', $req->user)->where('rentDate', '>=', now()->timestamp)->get(['title', 'description', 'rentDate', 'room']);
     }
 }
