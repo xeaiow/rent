@@ -399,6 +399,7 @@ $(".modal-close").click(function() {
 
 $("#room").on('change',function(){
     
+    $(".badge").remove();
     clearSelect();
 
     $("select").formSelect();
@@ -407,7 +408,7 @@ $("#room").on('change',function(){
     axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000 + '/' + instance.getSelectedValues())
     .then(function (response) {
 
-        rentalRes = response.data;
+        rentalRes = response.data.period;
 
         $("#selectTimeTable").show();
         
@@ -415,6 +416,9 @@ $("#room").on('change',function(){
             if ($("#t"+rentalRes[i] + "t")[0].id == "t" + rentalRes[i] + "t") {
                 $("#t"+rentalRes[i] + "t").prop("disabled", true);
             }
+        }
+        for (var j = 0; j < response.data.user.length; j++) {
+            $("#t"+ response.data.original[j] + "t").siblings("span")[0].innerHTML +=  ' <span class="new badge teal" data-badge-caption="' + response.data.user[j] + '"></span> ';   
         }
     });
 });

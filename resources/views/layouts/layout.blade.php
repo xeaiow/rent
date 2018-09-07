@@ -32,7 +32,8 @@
                         opacity: .7,
                         onCloseEnd: function () {
                             $("#selectTimeTable").hide();
-                            console.log($("#room")[0].selectedIndex = 0);
+                            $("#room")[0].selectedIndex = 0;
+                            $(".badge").remove();
                         }
                     });
                 });

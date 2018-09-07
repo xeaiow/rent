@@ -24,7 +24,9 @@ class RentController extends Controller
         $timestamp = ['28800', '30600', '32400', '34200', '36000', '37800', '39600', '41400', '43200', '45000', '46800', '48600', '50400', '52200', '54000', '55800', '57600', '59400', '61200', '63000', '64800', '66600', '68400', '70200', '72000', '73800', '75600', '77400'];
         $ss = Rental::where('rentDate', $req->date)->where('room', $req->room)->get();
         $result = [];
+        $user = [];
         $temp = [];
+        $data = [];
 
         // 取得該日期該教室已被借用之時間
         for ($i = 0; $i < count($ss); $i++)
@@ -38,11 +40,11 @@ class RentController extends Controller
                 // 把已被租借中的時段找出來
                 for ($k = array_search($period[0], $timestamp); $k < array_search($period[1], $timestamp)-1; $k++) {
                     array_push($result, $timestamp[$k+1]);
-
                 }
                 // 有可能該時段還是能被租借，例如 14:00~15:00 被借，但 14:00 跟 15:00 還能再被選取一次
                 for ($k = array_search($period[0], $timestamp); $k <= array_search($period[1], $timestamp); $k++) {
                     array_push($temp, $timestamp[$k]);
+                    array_push($user, $ss[$i]['user']);
                 }
             } 
             else
@@ -50,11 +52,12 @@ class RentController extends Controller
                 // 把已被租借中的時段找出來
                 for ($k = array_search($period[1], $timestamp); $k < array_search($period[0], $timestamp)-1; $k++) {
                     array_push($result, $timestamp[$k+1]);
-                    array_push($temp, $timestamp[$k]);
+                    array_push($temp, $timestamp[$k]); 
                 }
                 // 有可能該時段還是能被租借，例如 14:00~15:00 被借，但 14:00 跟 15:00 還能再被選取一次
                 for ($k = array_search($period[1], $timestamp); $k <= array_search($period[0], $timestamp); $k++) {
                     array_push($temp, $timestamp[$k]);
+                    array_push($user, $ss[$i]['user']);
                 }
             } 
         }
@@ -67,7 +70,11 @@ class RentController extends Controller
         for ($l = 0; $l < count(array_values($repeat_arr)); $l++ ) {
             array_push($result, array_values($repeat_arr)[$l]);
         }
+
+        $data['period'] = $result;
+        $data['user'] = $user;
+        $data['original'] = $temp;
         
-        return $result;
+        return $data;
     }
 }

@@ -11,7 +11,8 @@
                 </a>
             </div>
             <div class="col">
-                <h4>Events</h4>
+                <h5>資管系教室預約系統</h5>
+                <h6>(不太會 RWD 請見諒)</h6>
             </div>
         </div>
     </div>
@@ -19,7 +20,7 @@
     <div class="main-wrapper">
         <div class="sidebar-wrapper z-depth-2 side-nav fixed" id="sidebar">
             <div class="sidebar-title">
-                <h4>CYIM Rent</h4>
+                <h5>資管系教室預約系統</h5>
                 <h5 id="eventDayName">SIDEBAR SUB-TITLE</h5>
             </div>
             <div class="sidebar-events" id="sidebarEvents">
@@ -27,7 +28,7 @@
             </div>
         </div>
 
-        <div class="content-wrapper grey lighten-3">
+        <div class="content-wrapper">
             <div class="container">
 
                 <div class="calendar-wrapper z-depth-2">
@@ -70,13 +71,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="calendar-footer">
-                        
-                    </div>
-
                 </div>
-
             </div>
         </div>
 
@@ -99,13 +94,13 @@
                         <table id="selectTimeTable">
                             <tbody>
                             <tr>
-                                <td>
+                                <td width="50%">
                                     <label>
                                         <input type="checkbox" class="selectTime" id="t28800t" />
                                         <span>8:00</span>
                                     </label>
                                 </td>
-                                <td width="80%"></td> 
+                                <td width="50%"></td> 
                             </tr>
                             <tr>
                                 <td>
