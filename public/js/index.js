@@ -235,10 +235,10 @@ $(".selectTime").click(function() {
         console.log('checked');
         
         let timestamp = $(this).attr("id");
-        $(".selectTime").prop("disabled", true);
+        
 
         $.each(rentalRes, function (key, val) {
-            
+            $(".selectTime").prop("disabled", true);
             if (timestamp.substr(1).slice(0, -1) < val) {
                 round = ((val-1800) - (timestamp.substr(1).slice(0, -1))) / 1800;
                 return false;
@@ -251,7 +251,7 @@ $(".selectTime").click(function() {
 
         let timestampSecode = parseInt(timestamp.substr(1).slice(0, -1));
 
-        if (selectCount == 0 && round == 0 && $("#t" + (timestampSecode += 1800) + "t").is(':disabled') ) {
+        if ( (selectCount == 0 && round == 0 && rentalRes.length != 0 ) || ( selectCount == 0 && round == 0 && timestampSecode >= 77400 ) ) {
             reset();
             alert("不能在這個時段作為開始");
             return false;
@@ -321,7 +321,7 @@ $(".selectTime").click(function() {
         }
 
         for (var i = 0; i < rentalRes.length; i++) {
-            if ($("#t" + rentalRes[i])[0].id + "t" == "t" + rentalRes[i] + "t") {
+            if ($("#t" + rentalRes[i]) + "t"[0].id == "t" + rentalRes[i] + "t") {
                 $("#t" + rentalRes[i] + "t").prop("disabled", true);
             }
         }
@@ -334,7 +334,7 @@ $("#clearTime").on('click', function() {
 });
 
 // 跳出確定租借視窗
-$("#confirmTime").click(function() {
+$("#rent").click(function() {
     $('#modal2').modal('open');
     $('#modal1').modal('close');
 
@@ -347,7 +347,7 @@ $("#confirmTime").click(function() {
 
 // 租借
 $("#rent").click(function() {
-    $("#modal2").modal('close');
+    $("#modal1").modal('close');
     $("#modal3").modal('open');
 });
 
@@ -420,7 +420,7 @@ $("#room").on('change',function(){
         $("#selectTimeTable").show();
         
         for (var i = 0; i < rentalRes.length; i++) {
-            if ($("#t"+rentalRes[i])[0].id + "t" == "t" + rentalRes[i] + "t") {
+            if ($("#t"+rentalRes[i] + "t")[0].id == "t" + rentalRes[i] + "t") {
                 $("#t"+rentalRes[i] + "t").prop("disabled", true);
             }
         }
@@ -460,7 +460,7 @@ function reset () {
     seconds.length = 0;
 
     for (var i = 0; i < rentalRes.length; i++) {
-        if ($("#t"+rentalRes[i])[0].id + "t" == "t" + rentalRes[i] + "t") {
+        if ($("#t"+rentalRes[i] + "t")[0].id == "t" + rentalRes[i] + "t") {
             $("#t"+rentalRes[i] + "t").prop("disabled", true);
         }
     }
