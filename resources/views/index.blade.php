@@ -347,7 +347,7 @@
                     
                 </button>
               
-                <button class="btn waves-effect waves-light blue darken-3 disabled" id="confirmTime" href="#modal2" type="button">確定
+                <button class="btn waves-effect waves-light blue darken-3 disabled" href="#modal2" type="button">確定
                     <i class="material-icons right">check</i>
                 </button>
             </div>
@@ -356,7 +356,7 @@
         <!-- confirm modal -->
         <div id="modal1" class="modal modal-fixed-footer">
             <div class="modal-content">
-                <h4>選擇教室及時間</h4>
+                <h4>選擇教室及時間 <span style="color:#ad1457;" class="previewTime"></span></h4>
                 <div>
                     <div class="col s12">
                         <select id="room">
@@ -630,8 +630,8 @@
             </div>
             <div class="modal-footer">
                 <a class="modal-close waves-effect waves-green btn-flat">取消</a>
-                <a class="btn waves-effect waves-light grey" id="clearTime">重填</a>
-                <a class="btn waves-effect waves-light blue darken-3" id="rent">繼續</a>
+                <a class="btn waves-effect waves-light grey disabled" id="clearTime">重填</a>
+                <a class="btn waves-effect waves-light blue darken-3 disabled" id="rent">繼續</a>
             </div>
         </div>
 

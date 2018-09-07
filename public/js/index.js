@@ -235,9 +235,10 @@ $(".selectTime").click(function() {
         console.log('checked');
         
         let timestamp = $(this).attr("id");
+        $(".selectTime").prop("disabled", true);
 
         $.each(rentalRes, function (key, val) {
-            $(".selectTime").prop("disabled", true);
+            
             if (timestamp.substr(1).slice(0, -1) < val) {
                 round = ((val-1800) - (timestamp.substr(1).slice(0, -1))) / 1800;
                 return false;
@@ -245,27 +246,38 @@ $(".selectTime").click(function() {
             else {
                 round = (77400 - parseInt(timestamp.substr(1).slice(0, -1))) / 1800;
             }
+            
         });
 
         let timestampSecode = parseInt(timestamp.substr(1).slice(0, -1));
-        console.log(timestampSecode);
-        for (var i = 0; i <= round; i++) {
-            
-            $("#t" + timestampSecode + "t").prop("disabled", false);
 
-            timestampSecode += 1800;
+        if (selectCount == 0 && round == 0 && $("#t" + (timestampSecode += 1800) + "t").is(':disabled') ) {
+            reset();
+            alert("不能在這個時段作為開始");
+            return false;
         }
 
+        if (round != 0) {
+            for (var i = 0; i <= round; i++) {
+                    
+                $("#t" + timestampSecode + "t").prop("disabled", false);
+
+                timestampSecode += 1800;
+            }
+        }
         selectCount++;
+        
 
         selectedTime[selectCount - 1] = $(this).siblings('span')[0].textContent;
 
         let timeFormatStart = $(this).siblings('span')[0].textContent.split(':');
         seconds.push((+timeFormatStart[0]) * 60 * 60 + (+timeFormatStart[1]) * 60);
 
+        $("#clearTime").removeClass("disabled");
+
         if (selectCount == 2) {
             $(".selectTime").not(':checked').prop("disabled", true);
-            $("#confirmTime").removeClass("disabled");
+            $("#rent").removeClass("disabled");
             if (seconds[0] > seconds[1]) {
                 $(".previewTime").html(timeConvert(seconds[1]).h + ":" + (timeConvert(seconds[1]).m == 0 ? "00" : "30") + " 到 " + timeConvert(seconds[0]).h + ":" + (timeConvert(seconds[0]).m == 0 ? "00" : "30"));
             } else {
@@ -318,7 +330,6 @@ $(".selectTime").click(function() {
 
 // 清除選擇時段
 $("#clearTime").on('click', function() {
-    console.log
     reset();
 });
 
@@ -431,7 +442,7 @@ function timeConvert(secs) {
 
 function clearSelect() {
     $(".selectTime").prop("disabled", false).prop("checked", false);
-    $("#confirmTime").addClass("disabled");
+    $("#rent").addClass("disabled");
     selectCount = 0;
     $(".previewTime").html("");
     selectedTime.length = 0;
@@ -441,7 +452,8 @@ function clearSelect() {
 function reset () {
     
     $(".selectTime").prop("disabled", false).prop("checked", false);
-    $("#confirmTime").addClass("disabled");
+    $("#rent").addClass("disabled");
+    $("#clearTime").addClass("disabled");
     $(".previewTime").html("");
     selectCount = 0;
     selectedTime.length = 0;
