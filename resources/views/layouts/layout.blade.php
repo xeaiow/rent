@@ -29,7 +29,11 @@
                     $('select').formSelect();
                     $('.modal').modal({
                         dismissible: false,
-                        opacity: .7
+                        opacity: .7,
+                        onCloseEnd: function () {
+                            $("#selectTimeTable").hide();
+                            console.log($("#room")[0].selectedIndex = 0);
+                        }
                     });
                 });
             </script>

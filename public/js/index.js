@@ -193,7 +193,7 @@ gridTable.onclick = function(e) {
         year: "numeric"
     });
     $("#modal1").modal('open');
-    console.log(selectedDate.toISOString().slice(0, 19).replace('T', ' '));
+
 }
 
 
@@ -207,7 +207,6 @@ $("#addEventButton").click(function() {
         document.getElementById("eventDescInput").value = "";
         let labels = addForm.getElementsByTagName("label");
         for (let i = 0; i < labels.length; i++) {
-            console.log(labels[i]);
             labels[i].className = "";
         }
         return;
@@ -218,7 +217,6 @@ $("#addEventButton").click(function() {
     showEvents();
 
     if (!selectedDayBlock.querySelector(".day-mark")) {
-        console.log("work");
         selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
     }
 });
@@ -232,7 +230,6 @@ var round = 0;
 $(".selectTime").click(function() {
 
     if ($(this).prop('checked')) {
-        console.log('checked');
         
         let timestamp = $(this).attr("id");
         
@@ -286,8 +283,7 @@ $(".selectTime").click(function() {
             $(".selectTime").prop("disabled", true);
         }
     } else {
-        console.log('Unchecked');
-        
+  
         selectCount--;
         selectedTime.splice(selectedTime.indexOf($(this).siblings('span')[0].textContent), 1);
 
@@ -317,7 +313,6 @@ $(".selectTime").click(function() {
             $("#t" + timestampSecode + "t").prop("disabled", false);
 
             timestampSecode += 1800;
-            console.log(timestampSecode);
         }
 
         for (var i = 0; i < rentalRes.length; i++) {
@@ -327,6 +322,7 @@ $(".selectTime").click(function() {
         }
     }
 });
+
 
 // 清除選擇時段
 $("#clearTime").on('click', function() {
@@ -362,7 +358,6 @@ $("#confirmRent").click(function() {
         document.getElementById("eventDescInput").value = "";
         let labels = addForm.getElementsByTagName("label");
         for (let i = 0; i < labels.length; i++) {
-            console.log(labels[i]);
             labels[i].className = "";
         }
         return;
@@ -373,7 +368,6 @@ $("#confirmRent").click(function() {
     showEvents();
 
     if (!selectedDayBlock.querySelector(".day-mark")) {
-        console.log("work");
         selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
     }
 
@@ -386,7 +380,6 @@ $("#confirmRent").click(function() {
         room: instance.getSelectedValues()[0],
         rentDate: selectedDate.getTime() / 1000,
         period: JSON.stringify(seconds)
-        // period: selectedDate.toLocaleString("zh-Hans-TW", {month: "long", day: "numeric",year: "numeric"})
     })
     .then(function(response) {
         $("#modal3").modal('close');
@@ -401,7 +394,6 @@ $(".modal-close").click(function() {
     clearSelect();
     reset();
     $("#selectTimeTable").hide();
-
 });
 
 
@@ -414,7 +406,7 @@ $("#room").on('change',function(){
 
     axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000 + '/' + instance.getSelectedValues())
     .then(function (response) {
-        console.log(response);
+
         rentalRes = response.data;
 
         $("#selectTimeTable").show();
@@ -459,9 +451,11 @@ function reset () {
     selectedTime.length = 0;
     seconds.length = 0;
 
-    for (var i = 0; i < rentalRes.length; i++) {
-        if ($("#t"+rentalRes[i] + "t")[0].id == "t" + rentalRes[i] + "t") {
-            $("#t"+rentalRes[i] + "t").prop("disabled", true);
+    if (rentalRes != null) {
+        for (var i = 0; i < rentalRes.length; i++) {
+            if ($("#t"+rentalRes[i] + "t")[0].id == "t" + rentalRes[i] + "t") {
+                $("#t"+rentalRes[i] + "t").prop("disabled", true);
+            }
         }
     }
 }
