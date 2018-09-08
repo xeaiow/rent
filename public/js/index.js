@@ -269,10 +269,23 @@ $(".selectTime").click(function() {
     if ($(this).prop('checked')) {
         
         let timestamp = $(this).attr("id");
-        
+        let breakSelect = true;
 
         $.each(rentalRes, function (key, val) {
+
             $(".selectTime").prop("disabled", true);
+
+            let self = parseInt(timestamp.substr(1).slice(0, -1)) + 1800;
+
+            if ( $("#t" + self + "t").prop("disabled") == true && timestamp.substr(1).slice(0, -1) == "28800" ) {
+                swal("糟糕惹", "不能在這個時間點作為開始", "error", {
+                    buttons: "知道了",
+                });
+                reset();
+                breakSelect = false;
+                return false;
+            }
+            
             if (timestamp.substr(1).slice(0, -1) < val) {
                 round = ((val-1800) - (timestamp.substr(1).slice(0, -1))) / 1800;
                 return false;
@@ -283,43 +296,44 @@ $(".selectTime").click(function() {
             
         });
 
-        let timestampSecode = parseInt(timestamp.substr(1).slice(0, -1));
+        if (breakSelect) {
 
-        if ( (selectCount == 0 && round == 0 && rentalRes.length != 0 ) || ( selectCount == 0 && round == 0 && timestampSecode >= 77400 ) ) {
-            reset();
-            swal("糟糕惹", "不能在這個時間點作為開始", "error", {
-                buttons: "知道了",
-            });
-            return false;
-        }
+            let timestampSecode = parseInt(timestamp.substr(1).slice(0, -1));
 
-        if (round != 0) {
-            for (var i = 0; i <= round; i++) {
-                    
-                $("#t" + timestampSecode + "t").prop("disabled", false);
+            if ( (selectCount == 0 && round == 0 && rentalRes.length != 0 ) || ( selectCount == 0 && round == 0 && timestampSecode >= 77400 ) ) {
 
-                timestampSecode += 1800;
+                timePointError();
+                return false;
             }
-        }
-        selectCount++;
-        
 
-        selectedTime[selectCount - 1] = $(this).siblings('span')[0].textContent;
+            if (round != 0) {
+                for (var i = 0; i <= round; i++) {
+                        
+                    $("#t" + timestampSecode + "t").prop("disabled", false);
 
-        let timeFormatStart = $(this).siblings('span')[0].textContent.split(':');
-        seconds.push((+timeFormatStart[0]) * 60 * 60 + (+timeFormatStart[1]) * 60);
-
-        $("#clearTime").removeClass("disabled");
-
-        if (selectCount == 2) {
-            $(".selectTime").not(':checked').prop("disabled", true);
-            $("#rent").removeClass("disabled");
-            if (seconds[0] > seconds[1]) {
-                $(".previewTime").html(timeConvert(seconds[1]).h + ":" + (timeConvert(seconds[1]).m == 0 ? "00" : "30") + " 到 " + timeConvert(seconds[0]).h + ":" + (timeConvert(seconds[0]).m == 0 ? "00" : "30"));
-            } else {
-                $(".previewTime").html(timeConvert(seconds[0]).h + ":" + (timeConvert(seconds[0]).m == 0 ? "00" : "30") + " 到 " + timeConvert(seconds[1]).h + ":" + (timeConvert(seconds[1]).m == 0 ? "00" : "30"));
+                    timestampSecode += 1800;
+                }
             }
-            $(".selectTime").prop("disabled", true);
+            selectCount++;
+            
+
+            selectedTime[selectCount - 1] = $(this).siblings('span')[0].textContent;
+
+            let timeFormatStart = $(this).siblings('span')[0].textContent.split(':');
+            seconds.push((+timeFormatStart[0]) * 60 * 60 + (+timeFormatStart[1]) * 60);
+
+            $("#clearTime").removeClass("disabled");
+
+            if (selectCount == 2) {
+                $(".selectTime").not(':checked').prop("disabled", true);
+                $("#rent").removeClass("disabled");
+                if (seconds[0] > seconds[1]) {
+                    $(".previewTime").html(timeConvert(seconds[1]).h + ":" + (timeConvert(seconds[1]).m == 0 ? "00" : "30") + " 到 " + timeConvert(seconds[0]).h + ":" + (timeConvert(seconds[0]).m == 0 ? "00" : "30"));
+                } else {
+                    $(".previewTime").html(timeConvert(seconds[0]).h + ":" + (timeConvert(seconds[0]).m == 0 ? "00" : "30") + " 到 " + timeConvert(seconds[1]).h + ":" + (timeConvert(seconds[1]).m == 0 ? "00" : "30"));
+                }
+                $(".selectTime").prop("disabled", true);
+            }
         }
     } else {
   
@@ -418,6 +432,8 @@ $("#confirmRent").click(function() {
         title: title,
         description: desc,
         room: selectRoom,
+        username: localStorage.getItem("cyimRentUsername"), 
+        name: localStorage.getItem("cyimRentName"),
         rentDate: selectedDate.getTime() / 1000,
         period: JSON.stringify(seconds),
         token: localStorage.getItem("cyimRentToken")
@@ -448,9 +464,9 @@ $("#confirmRent").click(function() {
 
 // 關閉視窗清除資料
 $(".modal-close").click(function() {
-    $("#selectTimeTable").hide();
     clearSelect();
     reset();
+    $("#selectTimeTable").hide();
 });
 
 
@@ -475,15 +491,14 @@ $("#room").on('change',function(){
                 $("#t"+rentalRes[i] + "t").prop("disabled", true);
             }
         }
-        // for (var j = 0; j < response.data.user.length; j++) {
-        //     $("#t"+ response.data.original[j] + "t").siblings("span")[0].innerHTML +=  ' <span class="new badge" style="background-color:' + randColor() + ';" data-badge-caption="' + response.data.user[j] + '"></span> ';   
-        // }
-        let res = response.data;
-        console.log(res);
-        for (let j = 0; j < res.tt.length; j++) {
+        
+        let res = response.data.renter;
+        let index = 0;
+        for (let j = 0; j < res.length; j++) {
             let color = randColor();
-            for (let k = 0; k < res.tt[j].length; k++) {
-                $("#t"+ res.tt[j][k] + "t").siblings("span")[0].innerHTML +=  ' <span class="new badge" style="background-color:' + color + ';" data-badge-caption="' + response.data.user[j] + '"></span> ';
+            for (let k = 0; k < res[j].length; k++) {
+                $("#t"+ res[j][k] + "t").siblings("span")[0].innerHTML +=  ' <span class="new badge" style="background-color:' + color + ';" data-badge-caption="' + response.data.user[index] + '"></span> ';
+                index++;
             }        
         }
     });
@@ -515,6 +530,8 @@ $("#login").click(function () {
         $("#itouchUsername").val('');
         $("#itouchPassword").val('');
         localStorage.setItem("cyimRentToken", res.data.token);
+        localStorage.setItem("cyimRentUsername", res.data.username);
+        localStorage.setItem("cyimRentName", res.data.name);
         $("#login").attr('disabled', false);
     });
 });
@@ -571,4 +588,12 @@ function reset () {
 
 function randColor() {
     return "#"+((1<<24)*Math.random()|0).toString(16);
+}
+
+function timePointError () {
+    
+    swal("糟糕惹", "不能在這個時間點作為開始", "error", {
+        buttons: "知道了",
+    });
+    reset();
 }

@@ -11,7 +11,7 @@ class RentController extends Controller
 {
     public function setRental (Request $req)
     {
-        $isToken = Member::where('token', $req->token)->count();
+        $isToken = Member::where('username', $req->username)->where('name', $req->name)->where('token', $req->token)->count();
 
         if ($isToken != 1) {
             $result['status'] = false;
@@ -22,7 +22,8 @@ class RentController extends Controller
         Rental::create([
             'title' => $req->title,
             'description' => $req->description,
-            'user' => '吳冠興',
+            'name' => $req->name,
+            'username' => $req->username,
             'room' => $req->room,
             'rentDate' => $req->rentDate,
             'period' => $period
@@ -41,7 +42,7 @@ class RentController extends Controller
         $user = [];
         $temp = [];
         $data = [];
-        $tt = [];
+        $renter = [];
         $original = [];
 
         // 取得該日期該教室已被借用之時間
@@ -63,7 +64,7 @@ class RentController extends Controller
                 for ($k = array_search($period[0], $timestamp); $k <= array_search($period[1], $timestamp); $k++) {
                     array_push($temp, $timestamp[$k]);
                     array_push($original, $timestamp[$k]);
-                    array_push($user, $ss[$i]['user']);
+                    array_push($user, $ss[$i]['name']);
                 }
             } 
             else
@@ -78,11 +79,11 @@ class RentController extends Controller
                 for ($k = array_search($period[1], $timestamp); $k <= array_search($period[0], $timestamp); $k++) {
                     array_push($temp, $timestamp[$k]);
                     array_push($original, $timestamp[$k]);
-                    array_push($user, $ss[$i]['user']);
+                    array_push($user, $ss[$i]['name']);
                 }
             }
             
-            $tt[$i] = $temp;
+            $renter[$i] = $temp;
         }
 
         // 判斷時段是否真正為租借中的時間
@@ -97,7 +98,7 @@ class RentController extends Controller
         $data['period'] = $result;
         $data['user'] = $user;
         $data['original'] = $original;
-        $data['tt'] = $tt;
+        $data['renter'] = $renter;
         
         return $data;
     }
@@ -109,7 +110,7 @@ class RentController extends Controller
         
         if ($userIsExists->count() > 0) {
             $result['login'] = $userIsExists->first(['username', 'name']);
-            $result['rent'] = Rental::where('user', $result['login']['name'])->where('rentDate', '>=', (now()->timestamp)-86399)->get(['title', 'description', 'rentDate', 'room']);
+            $result['rent'] = Rental::where('username', $result['login']['username'])->where('rentDate', '>=', (now()->timestamp)-86399)->get(['title', 'description', 'rentDate', 'room']);
             $result['status'] = true;
             return $result;
         }
@@ -186,7 +187,7 @@ class RentController extends Controller
             $name = mb_substr(preg_replace('/\s+/', '', strip_tags($arr[0][0])), 0, -8, 'utf-8');
 
             Member::create([
-                'username' => $req->username,
+                'username' => $userId,
                 'name' => $name, 
                 'token' => $token,
                 'status' => 1
@@ -195,6 +196,7 @@ class RentController extends Controller
 
         // 回傳個人資料
         $result['name'] = $name;
+        $result['username'] = $userId;
         $result['token'] = $token;
         $result['status'] = 1;
     
