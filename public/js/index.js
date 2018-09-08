@@ -8,6 +8,7 @@ var globalEventObj = {};
 var sidebar = document.getElementById("sidebar");
 
 $(function() {
+
     axios.get('/rent/public/get/rental/吳冠興')
     .then(function (res) {
 
@@ -125,7 +126,7 @@ function createCalendar(date, side) {
 createCalendar(currentDate);
 
 var todayDayName = document.getElementById("todayDayName");
-todayDayName.innerHTML = "今天是 " + currentDate.toLocaleString("zh-Hans-TW", {
+todayDayName.innerHTML = "今天是" + currentDate.toLocaleString("zh-Hans-TW", {
     weekday: "long",
     day: "numeric",
     month: "short"
@@ -200,7 +201,7 @@ function showEvents() {
     } else {
         let emptyMessage = document.createElement("div");
         emptyMessage.className = "empty-message";
-        emptyMessage.innerHTML = "尚無租借紀錄";
+        // emptyMessage.innerHTML = "尚無租借紀錄";
         sidebarEvents.appendChild(emptyMessage);
         let emptyFormMessage = document.getElementById("emptyFormTitle");
 
@@ -232,7 +233,13 @@ gridTable.onclick = function(e) {
         day: "numeric",
         year: "numeric"
     });
-    $("#modal1").modal('open');
+
+    if (localStorage.getItem("cyimRentToken") == null) {
+        $("#loginModal").modal('open');
+    }
+    else {
+        $("#modal1").modal('open');
+    }
 }
 
 
@@ -360,6 +367,7 @@ $("#rent").click(function() {
 
 // 送出租借請求
 $("#confirmRent").click(function() {
+
     let title = document.getElementById("eventTitleInput").value.trim();
     let desc = document.getElementById("eventDescInput").value.trim();
 
@@ -402,9 +410,18 @@ $("#confirmRent").click(function() {
         description: desc,
         room: selectRoom,
         rentDate: selectedDate.getTime() / 1000,
-        period: JSON.stringify(seconds)
+        period: JSON.stringify(seconds),
+        token: localStorage.getItem("cyimRentToken")
     })
-    .then(function(response) {
+    .then(function(res) {
+        
+        if (!res.data.status) {
+            swal("糟糕惹", "token 已失效，請重新登入", "error", {
+                buttons: "好",
+            });
+            return false; 
+        }
+
         swal("預約完成", "請在預約時間點確實使用教室", "success", {
             buttons: "好",
         });
@@ -450,6 +467,41 @@ $("#room").on('change',function(){
             $("#t"+ response.data.original[j] + "t").siblings("span")[0].innerHTML +=  ' <span class="new badge teal" data-badge-caption="' + response.data.user[j] + '"></span> ';   
         }
     });
+});
+
+$("#login").click(function () {
+    
+    axios.post('/rent/public/login', {
+        username: $("#itouchUsername").val(),
+        password: $("#itouchPassword").val()
+    })
+    .then(function(res) {
+        
+        if (res.data.status != 1) {
+            swal("糟糕惹", "可能帳號或密碼錯誤@@", "error", {
+                buttons: "知道了",
+            });
+            return false;
+        }
+        
+        $("#loginModal").modal('close');
+        $("#modal1").modal('open');
+        swal("登入成功", "可以開始預約教室了", "success", {
+            buttons: "好",
+        });
+        $("#itouchUsername").val('');
+        $("#itouchPassword").val('');
+        console.log(res.data.token);
+        localStorage.setItem("cyimRentToken", res.data.token);
+    });
+});
+
+$("#logout").click(function () {
+    if (localStorage.removeItem("cyimRentToken") == undefined) {
+        swal("登出成功", "謝謝使用", "info", {
+            buttons: "好哦",
+        });
+    }
 });
 
 function timeConvert(secs) {

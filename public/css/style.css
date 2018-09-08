@@ -356,3 +356,8 @@ h3, h4, h5 {
 #selectTimeTable {
   display: none;
 }
+
+#navbar, #navbar a {
+  background-color: #E9EAED;
+  color: #333 !important;
+}

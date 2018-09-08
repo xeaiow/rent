@@ -3,7 +3,7 @@
 @section('title', '選擇')
  
 @section('content')
-<div class="mobile-header z-depth-1">
+    <div class="mobile-header z-depth-1">
         <div class="row">
             <div class="col-2">
                 <a href="#" data-activates="sidebar" class="button-collapse">
@@ -16,6 +16,25 @@
             </div>
         </div>
     </div>
+
+    
+    <nav>
+        <div class="nav-wrapper" id="navbar">
+            <a href="#!" class="brand-logo">Logo</a>
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a><i class="material-icons">face</i></a></li>
+                <li><a><i id="logout" class="material-icons">directions_run</i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+  <ul class="sidenav" id="mobile-demo">
+    <li><a href="sass.html">Sass</a></li>
+    <li><a href="badges.html">Components</a></li>
+    <li><a href="collapsible.html">Javascript</a></li>
+    <li><a href="mobile.html">Mobile</a></li>
+  </ul>
 
     <div class="main-wrapper">
         <div class="sidebar-wrapper z-depth-2 side-nav fixed" id="sidebar">
@@ -379,7 +398,29 @@
                 <a class="modal-close waves-effect waves-green btn-flat">取消</a>
                 <a class="btn waves-effect waves-light blue darken-3" id="confirmRent">送出</a>
             </div>
-        </div>  
+        </div>
+
+        <!-- Modal Structure -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <h4>登入 iTouch 方可預約</h4>
+                <div>
+                <div class="input-field col s6">
+                        <input id="itouchUsername" type="text" class="validate">
+                        <label for="itouchUsername">帳號</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="itouchPassword" type="password" class="validate">
+                        <label for="itouchPassword">密碼</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">取消</a>
+                <a class="btn waves-effect waves-light blue darken-3" id="login">送出</a>
+            </div>
+        </div>
+
     </div>
 </div>
 @endsection
