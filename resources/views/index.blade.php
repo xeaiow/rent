@@ -403,7 +403,7 @@
         <!-- Modal Structure -->
         <div id="loginModal" class="modal">
             <div class="modal-content">
-                <h4>登入 iTouch 方可預約</h4>
+                <h4>登入 iTouch 方可預約 <i class="material-icons focusPoint tooltipped" data-tooltip="別懷疑，就是你的 itouch 帳號跟密碼">help_outline</i></h4>
                 <form class="col s12">
                     <div class="row">
                         <div class="input-field col s6">

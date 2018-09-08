@@ -178,6 +178,10 @@ function showEvents() {
     let sidebarEvents = document.getElementById("sidebarEvents");
     let objWithDate = globalEventObj[selectedDate.toDateString()];
 
+    if (localStorage.getItem("cyimRentToken") == undefined || localStorage.getItem("cyimRentToken") == null ) {
+        return false;
+    }
+    
     sidebarEvents.innerHTML = "";
 
     if (objWithDate) {
@@ -537,8 +541,10 @@ $("#login").click(function () {
 });
 
 $("#logout").click(function () {
-    if (localStorage.removeItem("cyimRentToken") == undefined) {
+    localStorage.removeItem("cyimRentToken");
+    if (localStorage.getItem("cyimRentToken") == undefined || localStorage.getItem("cyimRentToken") == null ) {
         $("#navbar").hide();
+        $("#sidebarEvents").html('');
         swal("登出成功", "謝謝使用", "info", {
             buttons: "好哦",
         });

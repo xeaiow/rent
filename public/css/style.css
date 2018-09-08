@@ -365,3 +365,7 @@ h3, h4, h5 {
   background-color: #E9EAED;
   color: #333 !important;
 }
+
+.focusPoint:hover {
+  cursor: pointer;
+}
