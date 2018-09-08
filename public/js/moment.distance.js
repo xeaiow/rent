@@ -7,7 +7,7 @@ const MINUTES_IN_THREE_QUARTERS_YEAR = 394200;
 const pluralSuffix = 's';
 
 const phrasing = {
-  less_than_x_seconds : 'less than %d second%s',
+  less_than_x_seconds : '今天',
   half_a_minute       : 'half a minute',
   less_than_a_minute  : 'less than a minute',
   less_than_x_minutes : 'less than %d minute%s',

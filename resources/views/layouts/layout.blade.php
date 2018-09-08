@@ -27,6 +27,7 @@
             <script src="{{ asset('js/index.js') }}"></script>
             <script src="{{ asset('js/moment.js') }}"></script>
             <script src="{{ asset('js/moment.distance.js') }}"></script>
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
             <script>
                 $(function() {
                     $('select').formSelect();

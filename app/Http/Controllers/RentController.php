@@ -82,6 +82,6 @@ class RentController extends Controller
     // 取得使用者近期的租借
     public function getUserRental (Request $req)
     {
-        return Rental::where('user', $req->user)->where('rentDate', '>=', now()->timestamp)->get(['title', 'description', 'rentDate', 'room']);
+        return Rental::where('user', $req->user)->where('rentDate', '>=', (now()->timestamp)-86399)->get(['title', 'description', 'rentDate', 'room']);
     }
 }

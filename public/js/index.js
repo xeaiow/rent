@@ -7,6 +7,41 @@ var globalEventObj = {};
 
 var sidebar = document.getElementById("sidebar");
 
+$(function() {
+    axios.get('/rent/public/get/rental/吳冠興')
+    .then(function (res) {
+
+        let rentalRes = res.data;
+
+        if (rentalRes.length > 0) {
+
+            if (!selectedDayBlock.querySelector(".day-mark")) {
+                selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
+            }
+            globalEventObj = {};
+            for (var i = 0; i < rentalRes.length; i++) {
+
+                let itemDate = moment.unix(rentalRes[i].rentDate).format("YYYY-MM-DD");
+                let current = moment(currentDate).format('YYYY-MM-DD');
+                let timeText = null;
+
+                if (itemDate > current) {
+                    moment.duration(moment(itemDate).diff(current)).distance();
+                    timeText = moment.duration(moment(itemDate).diff(current)).distance();
+                    
+                }
+                else {
+                    moment.duration(moment(current).diff(itemDate)).distance();
+                    timeText = moment.duration(moment(current).diff(itemDate)).distance();
+                }
+                
+                addEvent(rentalRes[i].title + " - " + timeText + "在資管" + rentalRes[i].room, rentalRes[i].description);
+            }
+            showEvents();
+        }
+    });
+});
+
 function createCalendar(date, side) {
     var currentDate = date;
 
@@ -85,38 +120,6 @@ function createCalendar(date, side) {
         node.className = "row";
         return node;
     }
-
-    axios.get('/rent/public/get/rental/吳冠興')
-    .then(function (res) {
-
-        let rentalRes = res.data;
-
-        if (rentalRes.length > 0) {
-
-            if (!selectedDayBlock.querySelector(".day-mark")) {
-                selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
-            }
-            for (var i = 0; i < rentalRes.length; i++) {
-
-                let itemDate = moment.unix(rentalRes[i].rentDate).format("YYYY-MM-DD");
-                let current = moment(currentDate).format('YYYY-MM-DD');
-                let timeText = null;
-
-                if (itemDate > current) {
-                    moment.duration(moment(itemDate).diff(current)).distance();
-                    timeText = moment.duration(moment(itemDate).diff(current)).distance();
-                    
-                }
-                else {
-                    moment.duration(moment(current).diff(itemDate)).distance();
-                    timeText = moment.duration(moment(current).diff(itemDate)).distance();
-                }
-
-                addEvent(rentalRes[i].title + " - " + timeText + "在資管" + rentalRes[i].room, rentalRes[i].description);
-            }
-            showEvents();
-        }
-    });
 }
 
 createCalendar(currentDate);
@@ -145,10 +148,16 @@ function changeMonthNext() {
 }
 
 function addEvent(title, desc) {
+    
     if (!globalEventObj[selectedDate.toDateString()]) {
         globalEventObj[selectedDate.toDateString()] = {};
     }
-    globalEventObj[selectedDate.toDateString()][title] = desc;
+    if (desc != null) {
+        globalEventObj[selectedDate.toDateString()][title] = desc;
+    }
+    else {
+        globalEventObj[selectedDate.toDateString()][title] = "";
+    }
 }
 
 function showEvents() {
@@ -282,7 +291,9 @@ $(".selectTime").click(function() {
 
         if ( (selectCount == 0 && round == 0 && rentalRes.length != 0 ) || ( selectCount == 0 && round == 0 && timestampSecode >= 77400 ) ) {
             reset();
-            alert("不能在這個時段作為開始");
+            swal("糟糕惹", "不能在這個時間點作為開始", "error", {
+                buttons: "知道了",
+            });
             return false;
         }
 
@@ -323,35 +334,9 @@ $(".selectTime").click(function() {
 
         seconds.splice(seconds.indexOf((+timeFormatStart[0]) * 60 * 60 + (+timeFormatStart[1]) * 60), 1);
 
-        $(".selectTime").prop("disabled", false);
         $("#confirmTime").addClass("disabled");
-        let timestamp = $(this).attr("id");
 
-        $.each(rentalRes, function (key, val) {
-
-            if (timestamp.substr(1).slice(0, -1) < val) {
-                round = ((val-1800) - (timestamp.substr(1).slice(0, -1))) / 1800;
-                return false;
-            }
-            else {
-                round = (77400 - parseInt(timestamp.substr(1).slice(0, -1))) / 1800;
-            }
-        });
-
-        let timestampSecode = parseInt(timestamp.substr(1).slice(0, -1));
-        
-        for (var i = 0; i <= round; i++) {
-            
-            $("#t" + timestampSecode + "t").prop("disabled", false);
-
-            timestampSecode += 1800;
-        }
-
-        for (var i = 0; i < rentalRes.length; i++) {
-            if ($("#t" + rentalRes[i]) + "t"[0].id == "t" + rentalRes[i] + "t") {
-                $("#t" + rentalRes[i] + "t").prop("disabled", true);
-            }
-        }
+        reset();
     }
 });
 
@@ -420,6 +405,9 @@ $("#confirmRent").click(function() {
         period: JSON.stringify(seconds)
     })
     .then(function(response) {
+        swal("預約完成", "請在預約時間點確實使用教室", "success", {
+            buttons: "好",
+        });
         $(".modal").modal('close');
         $("#eventTitleInput").val('');
         $("#eventDescInput").val('');
