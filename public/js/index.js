@@ -510,7 +510,12 @@ $("#room").on('change',function(){
 
 $("#login").click(function () {
     
+    if ($("#itouchUsername").val() == "" || $("#itouchUsername").val() == "") {
+        return false;
+    }
+    
     $("#login").attr('disabled', true);
+    
     axios.post('/rent/public/login', {
         username: $("#itouchUsername").val(),
         password: $("#itouchPassword").val()
@@ -531,6 +536,7 @@ $("#login").click(function () {
             buttons: "知道了",
         });
         $("#navbar").show();
+        $("#my").attr('data-tooltip', res.data.name)
         $("#itouchUsername").val('');
         $("#itouchPassword").val('');
         localStorage.setItem("cyimRentToken", res.data.token);

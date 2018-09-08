@@ -23,7 +23,7 @@
             <a href="#!" class="brand-logo">Logo</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
-                <li><a><i data-tooltip="我" class="material-icons tooltipped">face</i></a></li>
+                <li><a><i id="my" data-tooltip="我" class="material-icons tooltipped">face</i></a></li>
                 <li><a><i data-tooltip="登出" id="logout" class="material-icons tooltipped">directions_run</i></a></li>
             </ul>
         </div>
