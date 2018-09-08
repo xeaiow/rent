@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use ArrayObject;
 use App\Rental;
 use App\Member;
 
@@ -40,12 +41,16 @@ class RentController extends Controller
         $user = [];
         $temp = [];
         $data = [];
+        $tt = [];
+        $original = [];
 
         // 取得該日期該教室已被借用之時間
         for ($i = 0; $i < count($ss); $i++)
         {
             // 拆散 period 的兩個 timestamp
             $period = explode(",", $ss[$i]['period']);
+
+            $temp = [];
 
             // 判斷 timestamp 數值給予順序
             if ($period[1] > $period[0])
@@ -57,6 +62,7 @@ class RentController extends Controller
                 // 有可能該時段還是能被租借，例如 14:00~15:00 被借，但 14:00 跟 15:00 還能再被選取一次
                 for ($k = array_search($period[0], $timestamp); $k <= array_search($period[1], $timestamp); $k++) {
                     array_push($temp, $timestamp[$k]);
+                    array_push($original, $timestamp[$k]);
                     array_push($user, $ss[$i]['user']);
                 }
             } 
@@ -65,19 +71,23 @@ class RentController extends Controller
                 // 把已被租借中的時段找出來
                 for ($k = array_search($period[1], $timestamp); $k < array_search($period[0], $timestamp)-1; $k++) {
                     array_push($result, $timestamp[$k+1]);
-                    array_push($temp, $timestamp[$k]); 
+                    array_push($temp, $timestamp[$k]);
+                    array_push($original, $timestamp[$k]);
                 }
                 // 有可能該時段還是能被租借，例如 14:00~15:00 被借，但 14:00 跟 15:00 還能再被選取一次
                 for ($k = array_search($period[1], $timestamp); $k <= array_search($period[0], $timestamp); $k++) {
                     array_push($temp, $timestamp[$k]);
+                    array_push($original, $timestamp[$k]);
                     array_push($user, $ss[$i]['user']);
                 }
-            } 
+            }
+            
+            $tt[$i] = $temp;
         }
 
         // 判斷時段是否真正為租借中的時間
-        $unique_arr = array_unique($temp);
-        $repeat_arr = array_diff_assoc($temp, $unique_arr);
+        $unique_arr = array_unique($original);
+        $repeat_arr = array_diff_assoc($original, $unique_arr);
 
         // 將確定是被租借中的時段插入到 result
         for ($l = 0; $l < count(array_values($repeat_arr)); $l++ ) {
@@ -86,7 +96,8 @@ class RentController extends Controller
 
         $data['period'] = $result;
         $data['user'] = $user;
-        $data['original'] = $temp;
+        $data['original'] = $original;
+        $data['tt'] = $tt;
         
         return $data;
     }
@@ -94,7 +105,16 @@ class RentController extends Controller
     // 取得使用者近期的租借
     public function getUserRental (Request $req)
     {
-        return Rental::where('user', $req->user)->where('rentDate', '>=', (now()->timestamp)-86399)->get(['title', 'description', 'rentDate', 'room']);
+        $userIsExists = Member::where('token', $req->token);
+        
+        if ($userIsExists->count() > 0) {
+            $result['login'] = $userIsExists->first(['username', 'name']);
+            $result['rent'] = Rental::where('user', $result['login']['name'])->where('rentDate', '>=', (now()->timestamp)-86399)->get(['title', 'description', 'rentDate', 'room']);
+            $result['status'] = true;
+            return $result;
+        }
+        $result['status'] = false;
+        return $result;
     }
 
     // 登入

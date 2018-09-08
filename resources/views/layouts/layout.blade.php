@@ -30,6 +30,7 @@
             <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
             <script>
                 $(function() {
+                    $('.tooltipped').tooltip();
                     $('select').formSelect();
                     $('.modal').modal({
                         dismissible: false,

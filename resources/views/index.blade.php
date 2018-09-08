@@ -18,13 +18,13 @@
     </div>
 
     
-    <nav>
-        <div class="nav-wrapper" id="navbar">
+    <nav id="navbar">
+        <div class="nav-wrapper">
             <a href="#!" class="brand-logo">Logo</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
-                <li><a><i class="material-icons">face</i></a></li>
-                <li><a><i id="logout" class="material-icons">directions_run</i></a></li>
+                <li><a><i data-tooltip="我" class="material-icons tooltipped">face</i></a></li>
+                <li><a><i data-tooltip="登出" id="logout" class="material-icons tooltipped">directions_run</i></a></li>
             </ul>
         </div>
     </nav>
@@ -370,8 +370,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a class="modal-close waves-effect waves-green btn-flat">取消</a>
-                <a class="btn waves-effect waves-light grey disabled" id="clearTime">重填</a>
+                <a class="modal-close waves-effect waves-green btn-flat">考慮</a>
+                <a class="btn waves-effect waves-light grey disabled" id="clearTime">重來</a>
                 <a class="btn waves-effect waves-light blue darken-3 disabled" id="rent">繼續</a>
             </div>
         </div>
@@ -396,7 +396,7 @@
             </div>
             <div class="modal-footer">
                 <a class="modal-close waves-effect waves-green btn-flat">取消</a>
-                <a class="btn waves-effect waves-light blue darken-3" id="confirmRent">送出</a>
+                <a class="btn waves-effect waves-light blue darken-3" id="confirmRent">確定預約</a>
             </div>
         </div>
 
@@ -404,20 +404,22 @@
         <div id="loginModal" class="modal">
             <div class="modal-content">
                 <h4>登入 iTouch 方可預約</h4>
-                <div>
-                <div class="input-field col s6">
-                        <input id="itouchUsername" type="text" class="validate">
-                        <label for="itouchUsername">帳號</label>
+                <form class="col s12">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="itouchUsername" type="text" class="validate">
+                            <label for="itouchUsername">帳號</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="itouchPassword" type="password" class="validate">
+                            <label for="itouchPassword">密碼</label>
+                        </div>
                     </div>
-                    <div class="input-field col s6">
-                        <input id="itouchPassword" type="password" class="validate">
-                        <label for="itouchPassword">密碼</label>
-                    </div>
-                </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <a href="#!" class="modal-close waves-effect waves-green btn-flat">取消</a>
-                <a class="btn waves-effect waves-light blue darken-3" id="login">送出</a>
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">不要</a>
+                <a class="btn waves-effect waves-light grey darken-4" id="login">登入</a>
             </div>
         </div>
 

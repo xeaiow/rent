@@ -357,6 +357,10 @@ h3, h4, h5 {
   display: none;
 }
 
+#navbar {
+  display: none;
+}
+
 #navbar, #navbar a {
   background-color: #E9EAED;
   color: #333 !important;

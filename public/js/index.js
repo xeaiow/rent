@@ -9,36 +9,49 @@ var sidebar = document.getElementById("sidebar");
 
 $(function() {
 
-    axios.get('/rent/public/get/rental/吳冠興')
+    if (localStorage.getItem("cyimRentToken") == undefined) {
+        return false;
+    }
+
+    axios.get('/rent/public/get/user/rental/' + localStorage.getItem("cyimRentToken"))
     .then(function (res) {
 
-        let rentalRes = res.data;
+        if (res.data.status) {
+            let rentalRes = res.data.rent;
 
-        if (rentalRes.length > 0) {
-
-            if (!selectedDayBlock.querySelector(".day-mark")) {
-                selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
+            // set username and name of storage
+            if (res.data.login != undefined) {
+                $("#navbar").show();
+                localStorage.setItem("username", res.data.login.username);
+                localStorage.setItem("name", res.data.login.name);
             }
-            globalEventObj = {};
-            for (var i = 0; i < rentalRes.length; i++) {
-
-                let itemDate = moment.unix(rentalRes[i].rentDate).format("YYYY-MM-DD");
-                let current = moment(currentDate).format('YYYY-MM-DD');
-                let timeText = null;
-
-                if (itemDate > current) {
-                    moment.duration(moment(itemDate).diff(current)).distance();
-                    timeText = moment.duration(moment(itemDate).diff(current)).distance();
+    
+            if (rentalRes.length > 0) {
+    
+                if (!selectedDayBlock.querySelector(".day-mark")) {
+                    selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
+                }
+                globalEventObj = {};
+                for (var i = 0; i < rentalRes.length; i++) {
+    
+                    let itemDate = moment.unix(rentalRes[i].rentDate).format("YYYY-MM-DD");
+                    let current = moment(currentDate).format('YYYY-MM-DD');
+                    let timeText = null;
+    
+                    if (itemDate > current) {
+                        moment.duration(moment(itemDate).diff(current)).distance();
+                        timeText = moment.duration(moment(itemDate).diff(current)).distance();
+                        
+                    }
+                    else {
+                        moment.duration(moment(current).diff(itemDate)).distance();
+                        timeText = moment.duration(moment(current).diff(itemDate)).distance();
+                    }
                     
+                    addEvent(rentalRes[i].title + " - " + timeText + "在資管" + rentalRes[i].room, rentalRes[i].description);
                 }
-                else {
-                    moment.duration(moment(current).diff(itemDate)).distance();
-                    timeText = moment.duration(moment(current).diff(itemDate)).distance();
-                }
-                
-                addEvent(rentalRes[i].title + " - " + timeText + "在資管" + rentalRes[i].room, rentalRes[i].description);
+                showEvents();
             }
-            showEvents();
         }
     });
 });
@@ -236,36 +249,12 @@ gridTable.onclick = function(e) {
 
     if (localStorage.getItem("cyimRentToken") == null) {
         $("#loginModal").modal('open');
+        $("#itouchUsername").focus();
     }
     else {
         $("#modal1").modal('open');
     }
 }
-
-
-$("#addEventButton").click(function() {
-    let title = document.getElementById("eventTitleInput").value.trim();
-    let desc = document.getElementById("eventDescInput").value.trim();
-
-    // 如果原因欄位是空的
-    if (!title) {
-        document.getElementById("eventTitleInput").value = "";
-        document.getElementById("eventDescInput").value = "";
-        let labels = addForm.getElementsByTagName("label");
-        for (let i = 0; i < labels.length; i++) {
-            labels[i].className = "";
-        }
-        return;
-    }
-
-    // 增加紀錄
-    addEvent(title, desc);
-    showEvents();
-
-    if (!selectedDayBlock.querySelector(".day-mark")) {
-        selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
-    }
-});
 
 // 選擇時段
 var selectCount = 0;
@@ -356,6 +345,7 @@ $("#clearTime").on('click', function() {
 // 跳出確定租借視窗
 $("#rent").click(function() {
     $('#modal2').modal('open');
+    $("#eventTitleInput").focus();
     $('#modal1').modal('close');
 
     $(".previewTime").prepend(selectedDate.toLocaleString("zh-Hans-TW", {
@@ -371,32 +361,51 @@ $("#confirmRent").click(function() {
     let title = document.getElementById("eventTitleInput").value.trim();
     let desc = document.getElementById("eventDescInput").value.trim();
 
-    // 如果原因欄位是空的
-    if (!title) {
-        document.getElementById("eventTitleInput").value = "";
-        document.getElementById("eventDescInput").value = "";
-        let labels = addForm.getElementsByTagName("label");
-        for (let i = 0; i < labels.length; i++) {
-            labels[i].className = "";
-        }
-        return;
+    // // 如果原因欄位是空的
+    // if (!title) {
+    //     document.getElementById("eventTitleInput").value = "";
+    //     document.getElementById("eventDescInput").value = "";
+    //     let labels = addForm.getElementsByTagName("label");
+    //     for (let i = 0; i < labels.length; i++) {
+    //         labels[i].className = "";
+    //     }
+    //     return;
+    // }
+
+    if (!title || !selectRoom || seconds.length < 2 || localStorage.getItem("cyimRentToken") == undefined) {
+        swal("糟糕惹", "應該是有些欄位填錯了", "error", {
+            buttons: "好",
+        });
+        return false;
     }
 
-    let itemDate = moment.unix(selectedDate.getTime() / 1000).format("YYYY-MM-DD");
-    let current = moment(currentDate).format('YYYY-MM-DD');
-    let timeText = null;
+    if ( parseInt(selectedDate.getTime())+86399000 >= moment(currentDate) ) {
 
-    if (itemDate > current) {
-        moment.duration(moment(itemDate).diff(current)).distance();
-        timeText = moment.duration(moment(itemDate).diff(current)).distance();
-        
+        let itemDate = moment.unix(selectedDate.getTime() / 1000).format("YYYY-MM-DD");
+        let current = moment(currentDate).format('YYYY-MM-DD');
+        let timeText = null;
+
+        if (itemDate > current) {
+            moment.duration(moment(itemDate).diff(current)).distance();
+            timeText = moment.duration(moment(itemDate).diff(current)).distance();
+            
+        }
+        else {
+            moment.duration(moment(current).diff(itemDate)).distance();
+            timeText = moment.duration(moment(current).diff(itemDate)).distance();
+        }
+
+        addEvent(title + " - " + timeText + "在資管" + selectRoom, desc);
     }
     else {
-        moment.duration(moment(current).diff(itemDate)).distance();
-        timeText = moment.duration(moment(current).diff(itemDate)).distance();
+        swal("不給預約", "過去就讓它過吧，難道你是時空旅行者？", "error", {
+            buttons: "不是",
+        });
+        $("#eventTitleInput").val('');
+        $("#modal2").modal("close");
+        $(".previewTime").html('');
+        return false;
     }
-
-    addEvent(title + " - " + timeText + "在資管" + selectRoom, desc);
 
     // 增加紀錄
     showEvents();
@@ -419,6 +428,8 @@ $("#confirmRent").click(function() {
             swal("糟糕惹", "token 已失效，請重新登入", "error", {
                 buttons: "好",
             });
+            $("#loginModal").modal("open");
+            $("#navbar").hide();
             return false; 
         }
 
@@ -426,6 +437,7 @@ $("#confirmRent").click(function() {
             buttons: "好",
         });
         $(".modal").modal('close');
+        $(".previewTime").html('');
         $("#eventTitleInput").val('');
         $("#eventDescInput").val('');
     })
@@ -463,14 +475,23 @@ $("#room").on('change',function(){
                 $("#t"+rentalRes[i] + "t").prop("disabled", true);
             }
         }
-        for (var j = 0; j < response.data.user.length; j++) {
-            $("#t"+ response.data.original[j] + "t").siblings("span")[0].innerHTML +=  ' <span class="new badge teal" data-badge-caption="' + response.data.user[j] + '"></span> ';   
+        // for (var j = 0; j < response.data.user.length; j++) {
+        //     $("#t"+ response.data.original[j] + "t").siblings("span")[0].innerHTML +=  ' <span class="new badge" style="background-color:' + randColor() + ';" data-badge-caption="' + response.data.user[j] + '"></span> ';   
+        // }
+        let res = response.data;
+        console.log(res);
+        for (let j = 0; j < res.tt.length; j++) {
+            let color = randColor();
+            for (let k = 0; k < res.tt[j].length; k++) {
+                $("#t"+ res.tt[j][k] + "t").siblings("span")[0].innerHTML +=  ' <span class="new badge" style="background-color:' + color + ';" data-badge-caption="' + response.data.user[j] + '"></span> ';
+            }        
         }
     });
 });
 
 $("#login").click(function () {
     
+    $("#login").attr('disabled', true);
     axios.post('/rent/public/login', {
         username: $("#itouchUsername").val(),
         password: $("#itouchPassword").val()
@@ -478,26 +499,29 @@ $("#login").click(function () {
     .then(function(res) {
         
         if (res.data.status != 1) {
-            swal("糟糕惹", "可能帳號或密碼錯誤@@", "error", {
-                buttons: "知道了",
+            swal("糟糕惹", "怎麼連愛觸摸帳密都忘記 ヽ(#`Д´)ﾉ", "error", {
+                buttons: "對不起",
             });
+            $("#login").attr('disabled', false);
             return false;
         }
         
         $("#loginModal").modal('close');
         $("#modal1").modal('open');
         swal("登入成功", "可以開始預約教室了", "success", {
-            buttons: "好",
+            buttons: "知道了",
         });
+        $("#navbar").show();
         $("#itouchUsername").val('');
         $("#itouchPassword").val('');
-        console.log(res.data.token);
         localStorage.setItem("cyimRentToken", res.data.token);
+        $("#login").attr('disabled', false);
     });
 });
 
 $("#logout").click(function () {
     if (localStorage.removeItem("cyimRentToken") == undefined) {
+        $("#navbar").hide();
         swal("登出成功", "謝謝使用", "info", {
             buttons: "好哦",
         });
@@ -543,4 +567,8 @@ function reset () {
             }
         }
     }
+}
+
+function randColor() {
+    return "#"+((1<<24)*Math.random()|0).toString(16);
 }
