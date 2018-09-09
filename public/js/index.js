@@ -9,51 +9,11 @@ var sidebar = document.getElementById("sidebar");
 
 $(function() {
 
-    if (localStorage.getItem("cyimRentToken") == undefined) {
+    if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
         return false;
     }
 
-    axios.get('/rent/public/get/user/rental/' + localStorage.getItem("cyimRentToken"))
-    .then(function (res) {
-
-        if (res.data.status) {
-            let rentalRes = res.data.rent;
-
-            // set username and name of storage
-            if (res.data.login != undefined) {
-                $("#navbar").show();
-                localStorage.setItem("username", res.data.login.username);
-                localStorage.setItem("name", res.data.login.name);
-            }
-    
-            if (rentalRes.length > 0) {
-    
-                if (!selectedDayBlock.querySelector(".day-mark")) {
-                    selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
-                }
-                globalEventObj = {};
-                for (var i = 0; i < rentalRes.length; i++) {
-    
-                    let itemDate = moment.unix(rentalRes[i].rentDate).format("YYYY-MM-DD");
-                    let current = moment(currentDate).format('YYYY-MM-DD');
-                    let timeText = null;
-    
-                    if (itemDate > current) {
-                        moment.duration(moment(itemDate).diff(current)).distance();
-                        timeText = moment.duration(moment(itemDate).diff(current)).distance();
-                        
-                    }
-                    else {
-                        moment.duration(moment(current).diff(itemDate)).distance();
-                        timeText = moment.duration(moment(current).diff(itemDate)).distance();
-                    }
-                    
-                    addEvent(rentalRes[i].title + " - " + timeText + "在資管" + rentalRes[i].room, rentalRes[i].description);
-                }
-                showEvents();
-            }
-        }
-    });
+    loadEvents();
 });
 
 function createCalendar(date, side) {
@@ -178,7 +138,7 @@ function showEvents() {
     let sidebarEvents = document.getElementById("sidebarEvents");
     let objWithDate = globalEventObj[selectedDate.toDateString()];
 
-    if (localStorage.getItem("cyimRentToken") == undefined || localStorage.getItem("cyimRentToken") == null ) {
+    if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null ) {
         return false;
     }
     
@@ -251,7 +211,7 @@ gridTable.onclick = function(e) {
         year: "numeric"
     });
 
-    if (localStorage.getItem("cyimRentToken") == null) {
+    if (sessionStorage.getItem("cyimRentToken") == null) {
         $("#loginModal").modal('open');
         $("#itouchUsername").focus();
     }
@@ -277,8 +237,6 @@ $(".selectTime").click(function() {
 
         $.each(rentalRes, function (key, val) {
 
-            $(".selectTime").prop("disabled", true);
-
             let self = parseInt(timestamp.substr(1).slice(0, -1)) + 1800;
 
             if ( $("#t" + self + "t").prop("disabled") == true && timestamp.substr(1).slice(0, -1) == "28800" ) {
@@ -297,6 +255,8 @@ $(".selectTime").click(function() {
             else {
                 round = (77400 - parseInt(timestamp.substr(1).slice(0, -1))) / 1800;
             }
+
+            $(".selectTime").prop("disabled", true);
             
         });
 
@@ -379,25 +339,15 @@ $("#confirmRent").click(function() {
     let title = document.getElementById("eventTitleInput").value.trim();
     let desc = document.getElementById("eventDescInput").value.trim();
 
-    // // 如果原因欄位是空的
-    // if (!title) {
-    //     document.getElementById("eventTitleInput").value = "";
-    //     document.getElementById("eventDescInput").value = "";
-    //     let labels = addForm.getElementsByTagName("label");
-    //     for (let i = 0; i < labels.length; i++) {
-    //         labels[i].className = "";
-    //     }
-    //     return;
-    // }
-
-    if (!title || !selectRoom || seconds.length < 2 || localStorage.getItem("cyimRentToken") == undefined) {
+    if (!title || !selectRoom || seconds.length < 2 || sessionStorage.getItem("cyimRentToken") == undefined) {
         swal("糟糕惹", "應該是有些欄位填錯了", "error", {
             buttons: "好",
         });
         return false;
     }
+    let today = new Date();
 
-    if ( parseInt(selectedDate.getTime())+86399000 >= moment(currentDate) ) {
+    if ( parseInt(selectedDate.getTime()) >= parseInt(new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()) ) {
 
         let itemDate = moment.unix(selectedDate.getTime() / 1000).format("YYYY-MM-DD");
         let current = moment(currentDate).format('YYYY-MM-DD');
@@ -436,11 +386,11 @@ $("#confirmRent").click(function() {
         title: title,
         description: desc,
         room: selectRoom,
-        username: localStorage.getItem("cyimRentUsername"), 
-        name: localStorage.getItem("cyimRentName"),
+        username: sessionStorage.getItem("cyimRentUsername"), 
+        name: sessionStorage.getItem("cyimRentName"),
         rentDate: selectedDate.getTime() / 1000,
         period: JSON.stringify(seconds),
-        token: localStorage.getItem("cyimRentToken")
+        token: sessionStorage.getItem("cyimRentToken")
     })
     .then(function(res) {
         
@@ -460,9 +410,6 @@ $("#confirmRent").click(function() {
         $(".previewTime").html('');
         $("#eventTitleInput").val('');
         $("#eventDescInput").val('');
-    })
-    .catch(function(error) {
-        console.log(error);
     });
 });
 
@@ -501,7 +448,7 @@ $("#room").on('change',function(){
         for (let j = 0; j < res.length; j++) {
             let color = randColor();
             for (let k = 0; k < res[j].length; k++) {
-                $("#t"+ res[j][k] + "t").siblings("span")[0].innerHTML +=  ' <span class="new badge" style="background-color:' + color + ';" data-badge-caption="' + response.data.user[index] + '"></span> ';
+                $("#t"+ res[j][k] + "t").parents().eq(1).siblings("td")[0].innerHTML +=  ' <span class="new badge rentUserLabel" style="background-color:' + color + ';" data-badge-caption="' + response.data.user[index] + '"></span> ';
                 index++;
             }        
         }
@@ -536,24 +483,37 @@ $("#login").click(function () {
             buttons: "知道了",
         });
         $("#navbar").show();
-        $("#my").attr('data-tooltip', res.data.name)
+        $("#my").attr('data-tooltip', res.data.name);
         $("#itouchUsername").val('');
         $("#itouchPassword").val('');
-        localStorage.setItem("cyimRentToken", res.data.token);
-        localStorage.setItem("cyimRentUsername", res.data.username);
-        localStorage.setItem("cyimRentName", res.data.name);
+        sessionStorage.setItem("cyimRentToken", res.data.token);
+        sessionStorage.setItem("cyimRentUsername", res.data.username);
+        sessionStorage.setItem("cyimRentName", res.data.name);
         $("#login").attr('disabled', false);
+        loadEvents();
     });
 });
 
 $("#logout").click(function () {
-    localStorage.removeItem("cyimRentToken");
-    if (localStorage.getItem("cyimRentToken") == undefined || localStorage.getItem("cyimRentToken") == null ) {
+    sessionStorage.removeItem("cyimRentToken");
+    if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null ) {
         $("#navbar").hide();
         $("#sidebarEvents").html('');
         swal("登出成功", "謝謝使用", "info", {
             buttons: "好哦",
         });
+    }
+});
+
+$("#doNot").click(function () {
+    $(".modal").modal("close");
+});
+
+$("#itouchUsername, #itouchPassword").keypress(function(e){
+    code = (e.keyCode ? e.keyCode : e.which);
+
+    if (code == 13) {
+        $("#login").click();
     }
 });
 
@@ -608,4 +568,50 @@ function timePointError () {
         buttons: "知道了",
     });
     reset();
+}
+
+function loadEvents() {
+    axios.get('/rent/public/get/user/rental/' + sessionStorage.getItem("cyimRentToken"))
+    .then(function (res) {
+
+        if (res.data.status) {
+            
+            let rentalRes = res.data.rent;
+
+            // set username and name of storage
+            if (res.data.login.length != 0) {
+                $("#my").attr('data-tooltip', res.data.login.name);
+                $("#navbar").show();
+                sessionStorage.setItem("username", res.data.login.username);
+                sessionStorage.setItem("name", res.data.login.name);
+            }
+    
+            if (rentalRes.length > 0) {
+    
+                if (!selectedDayBlock.querySelector(".day-mark")) {
+                    selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
+                }
+                globalEventObj = {};
+                for (var i = 0; i < rentalRes.length; i++) {
+    
+                    let itemDate = moment.unix(rentalRes[i].rentDate).format("YYYY-MM-DD");
+                    let current = moment(currentDate).format('YYYY-MM-DD');
+                    let timeText = null;
+    
+                    if (itemDate > current) {
+                        moment.duration(moment(itemDate).diff(current)).distance();
+                        timeText = moment.duration(moment(itemDate).diff(current)).distance();
+                        
+                    }
+                    else {
+                        moment.duration(moment(current).diff(itemDate)).distance();
+                        timeText = moment.duration(moment(current).diff(itemDate)).distance();
+                    }
+                    
+                    addEvent(rentalRes[i].title + " - " + timeText + "在資管" + rentalRes[i].room, rentalRes[i].description);
+                }
+                showEvents();
+            }
+        }
+    });
 }

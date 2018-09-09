@@ -113,13 +113,13 @@
                         <table id="selectTimeTable">
                             <tbody>
                             <tr>
-                                <td width="50%" >
+                                <td width="10%" >
                                     <label>
                                         <input type="checkbox" class="selectTime" id="t28800t" />
                                         <span>8:00</span>
                                     </label>
                                 </td>
-                                <td width="50%"></td> 
+                                <td width="90%"></td> 
                             </tr>
                             <tr>
                                 <td>
@@ -418,7 +418,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <a href="#!" class="modal-close waves-effect waves-green btn-flat">不要</a>
+                <a class="modal-close waves-effect waves-green btn-flat" id="doNot">不要</a>
                 <a class="btn waves-effect waves-light grey darken-4" id="login">登入</a>
             </div>
         </div>
