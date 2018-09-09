@@ -223,6 +223,8 @@ var selectCount = 0;
 var selectedTime = new Array();
 var seconds = new Array();
 var rentalRes = null;
+var rentalRenter = null;
+var rentaOriginal = null;
 var round = 0;
 var selectRoom = null;
 
@@ -249,10 +251,10 @@ $(".selectTime").click(function() {
                 return false;
             }
 
-            if (($("#t" + pre + "t").prop("disabled") || $("#t" + self + "t").prop("disabled")) && $.inArray(self.toString(), rentaOriginal) >= 0) {
+            if ($.inArray(timestamp.substr(1).slice(0, -1), rentaOriginal) == -1 && $.inArray(self.toString(), rentaOriginal) >= 0) {
                 $(".selectTime").prop("disabled", true);
-                $("#t" + self + "t").prop("disabled", false);
                 $("#t" + timestamp.substr(1).slice(0, -1) + "t").prop("disabled", false);
+                $("#t" + self + "t").prop("disabled", false);
             }
 
         } else {
@@ -319,7 +321,23 @@ $(".selectTime").click(function() {
 
                     timestampSecode += 1800;
                 }
+
+                for (let j = 0; j < rentalRenter.length; j++) {
+                    $("#t" + rentalRenter[j][rentalRenter[j].length - 1] + "t").prop("disabled", true);
+                }
+
             }
+
+            let self = parseInt(timestamp.substr(1).slice(0, -1)) + 1800;
+            let pre = parseInt(timestamp.substr(1).slice(0, -1)) - 1800;
+
+            if (($("#t" + pre + "t").prop("disabled") || $("#t" + self + "t").prop("disabled")) && $.inArray(self.toString(), rentaOriginal) >= 0) {
+                $(".selectTime").prop("disabled", true);
+                $("#t" + self + "t").prop("disabled", false);
+                $("#t" + timestamp.substr(1).slice(0, -1) + "t").prop("disabled", false);
+
+            }
+
             selectCount++;
 
 
@@ -494,15 +512,14 @@ $("#room").on('change', function() {
                 $("#t77400t").prop("disabled", true);
             }
 
-            let res = response.data.renter;
             let index = 0;
-            for (let j = 0; j < res.length; j++) {
+            for (let j = 0; j < rentalRenter.length; j++) {
                 let color = randColor();
-                for (let k = 0; k < res[j].length; k++) {
-                    $("#t" + res[j][k] + "t").parents().eq(1).siblings("td")[0].innerHTML += ' <span class="new badge rentUserLabel" style="background-color:' + color + ';" data-badge-caption="' + response.data.user[index] + '"></span> ';
+                for (let k = 0; k < rentalRenter[j].length; k++) {
+                    $("#t" + rentalRenter[j][k] + "t").parents().eq(1).siblings("td")[0].innerHTML += ' <span class="new badge rentUserLabel" style="background-color:' + color + ';" data-badge-caption="' + response.data.user[index] + '"></span> ';
                     index++;
                 }
-                $("#t" + res[j][0] + "t").prop("disabled", true);
+                $("#t" + rentalRenter[j][0] + "t").prop("disabled", true);
             }
         });
 });
@@ -605,12 +622,14 @@ function reset() {
         $("#t28800t").prop("disabled", true);
     }
 
-    if ($.inArray("28800", rentaOriginal) >= 0) {
-        $("#t28800t").prop("disabled", true);
+    if ($.inArray("77400", rentaOriginal) >= 0) {
+        $("#t77400t").prop("disabled", true);
     }
 
-    for (let j = 0; j < rentalRenter.length; j++) {
-        $("#t" + rentalRenter[j][0] + "t").prop("disabled", true);
+    if (rentalRenter != null) {
+        for (let j = 0; j < rentalRenter.length; j++) {
+            $("#t" + rentalRenter[j][0] + "t").prop("disabled", true);
+        }
     }
 
     if (rentalRes != null) {
