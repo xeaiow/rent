@@ -125,12 +125,10 @@ class RentController extends Controller
         $ref_url    = "http://www.cross.cycu.edu.tw/newss.do";
         $userId     = $req->username;
         $password   = $req->password;
-        
-        $cookie_jar = tempnam('../../../','cookie.txt');
-        
+    
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_jar);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, '/tmp/cookie.txt');
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
         curl_setopt($ch, CURLOPT_TIMEOUT, 40);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -155,7 +153,7 @@ class RentController extends Controller
         curl_setopt($ch2, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" );
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 0);
 
-        curl_setopt($ch2, CURLOPT_COOKIEFILE, $cookie_jar);
+        curl_setopt($ch2, CURLOPT_COOKIEFILE, '/tmp/cookie.txt');
         
         $orders = curl_exec($ch2);
         curl_close($ch2);

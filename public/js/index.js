@@ -122,14 +122,13 @@ function changeMonthNext() {
 }
 
 function addEvent(title, desc) {
-    
+
     if (!globalEventObj[selectedDate.toDateString()]) {
         globalEventObj[selectedDate.toDateString()] = {};
     }
     if (desc != null) {
         globalEventObj[selectedDate.toDateString()][title] = desc;
-    }
-    else {
+    } else {
         globalEventObj[selectedDate.toDateString()][title] = "";
     }
 }
@@ -138,10 +137,10 @@ function showEvents() {
     let sidebarEvents = document.getElementById("sidebarEvents");
     let objWithDate = globalEventObj[selectedDate.toDateString()];
 
-    if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null ) {
+    if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
         return false;
     }
-    
+
     sidebarEvents.innerHTML = "";
 
     if (objWithDate) {
@@ -193,7 +192,7 @@ gridTable.onclick = function(e) {
 
     if (selectedDayBlock) {
         if (selectedDayBlock.classList.contains("focus")) {
-           
+
             selectedDayBlock.classList.remove("focus");
         }
     }
@@ -214,8 +213,7 @@ gridTable.onclick = function(e) {
     if (sessionStorage.getItem("cyimRentToken") == null) {
         $("#loginModal").modal('open');
         $("#itouchUsername").focus();
-    }
-    else {
+    } else {
         $("#modal1").modal('open');
     }
 }
@@ -231,28 +229,35 @@ var selectRoom = null;
 $(".selectTime").click(function() {
 
     if ($(this).prop('checked')) {
-        
+
         let timestamp = $(this).attr("id");
         let breakSelect = true;
 
         if (selectCount == 0) {
-            
+
             let self = parseInt(timestamp.substr(1).slice(0, -1)) + 1800;
-            
-            if ($.inArray(timestamp.substr(1).slice(0, -1), rentaOriginal) >= 0 && $.inArray(self.toString(), rentaOriginal) >= 0 ) {
+            let pre = parseInt(timestamp.substr(1).slice(0, -1)) - 1800;
+
+            if ($.inArray(timestamp.substr(1).slice(0, -1), rentaOriginal) >= 0 && $.inArray(self.toString(), rentaOriginal) >= 0 && !$("#t" + pre + "t").prop("disabled")) {
 
                 swal("糟糕惹", "不能在這個時間點作為開始", "error", {
                     buttons: "知道了",
                 });
-                
+
                 reset();
                 breakSelect = false;
                 return false;
             }
-        }
-        else {
-            for (let i = parseInt(seconds[0])+1800; i < parseInt(timestamp.substr(1).slice(0, -1)); i+=1800) {
-                
+
+            if (($("#t" + pre + "t").prop("disabled") || $("#t" + self + "t").prop("disabled")) && $.inArray(self.toString(), rentaOriginal) >= 0) {
+                $(".selectTime").prop("disabled", true);
+                $("#t" + self + "t").prop("disabled", false);
+                $("#t" + timestamp.substr(1).slice(0, -1) + "t").prop("disabled", false);
+            }
+
+        } else {
+            for (let i = parseInt(seconds[0]) + 1800; i < parseInt(timestamp.substr(1).slice(0, -1)); i += 1800) {
+
                 if ($.inArray(i.toString(), rentaOriginal) >= 0) {
                     swal("糟糕惹", "不能橫跨他人租借時間，下次請早", "error", {
                         buttons: "知道了",
@@ -264,26 +269,25 @@ $(".selectTime").click(function() {
             }
         }
 
-        
-        $.each(rentalRes, function (key, val) {
+        $.each(rentalRes, function(key, val) {
 
             let self = parseInt(timestamp.substr(1).slice(0, -1)) + 1800;
             let next = $("#t" + self + "t").prop("disabled");
 
-            if ( next == true && timestamp.substr(1).slice(0, -1) == "28800" ) {
-                swal("糟糕惹", "不能在這個時間點作為開始", "error", {
-                    buttons: "知道了",
-                });
-                reset();
-                breakSelect = false;
-                return false;
-            }
-            
+            // if (next == true && timestamp.substr(1).slice(0, -1) == "28800") {
+            //     swal("糟糕惹", "不能在這個時間點作為開始", "error", {
+            //         buttons: "知道了",
+            //     });
+            //     console.log(67);
+            //     reset();
+            //     breakSelect = false;
+            //     return false;
+            // }
+
             if (timestamp.substr(1).slice(0, -1) < val) {
-                round = ((val-1800) - (timestamp.substr(1).slice(0, -1))) / 1800;
+                round = ((val - 1800) - (timestamp.substr(1).slice(0, -1))) / 1800;
                 return false;
-            }
-            else {
+            } else {
                 round = (77400 - parseInt(timestamp.substr(1).slice(0, -1))) / 1800;
             }
 
@@ -291,33 +295,33 @@ $(".selectTime").click(function() {
         });
 
         if (breakSelect) {
-            
-            for (let i = 28800; i < parseInt(timestamp.substr(1).slice(0, -1)); i+=1800) {
+
+            for (let i = 28800; i < parseInt(timestamp.substr(1).slice(0, -1)); i += 1800) {
                 if (i != parseInt(timestamp.substr(1).slice(0, -1))) {
                     $("#t" + i + "t").prop("disabled", true);
                 }
-           
+
             }
 
             let timestampSecode = parseInt(timestamp.substr(1).slice(0, -1));
 
-            if ( (selectCount == 0 && round == 0 && rentalRes.length != 0 ) || ( selectCount == 0 && round == 0 && timestampSecode >= 77400 ) ) {
+            if ((selectCount == 0 && round == 0 && rentalRes.length != 0) || (selectCount == 0 && round == 0 && timestampSecode >= 77400)) {
 
                 timePointError();
-                
+
                 return false;
             }
 
             if (round != 0) {
                 for (var i = 0; i <= round; i++) {
-                        
+
                     $("#t" + timestampSecode + "t").prop("disabled", false);
 
                     timestampSecode += 1800;
                 }
             }
             selectCount++;
-            
+
 
             selectedTime[selectCount - 1] = $(this).siblings('span')[0].textContent;
 
@@ -338,7 +342,7 @@ $(".selectTime").click(function() {
             }
         }
     } else {
-  
+
         selectCount--;
         selectedTime.splice(selectedTime.indexOf($(this).siblings('span')[0].textContent), 1);
 
@@ -386,7 +390,7 @@ $("#confirmRent").click(function() {
     let today = new Date();
     let now = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-    if ( parseInt(selectedDate.getTime()) >= parseInt(now.getTime()) ) {
+    if (parseInt(selectedDate.getTime()) >= parseInt(now.getTime())) {
 
         let itemDate = moment.unix(selectedDate.getTime() / 1000).format("YYYY-MM-DD");
         let current = today.toISOString().substring(0, 10);
@@ -395,16 +399,14 @@ $("#confirmRent").click(function() {
         if (itemDate > current) {
             moment.duration(moment(itemDate).diff(current)).distance();
             timeText = moment.duration(moment(itemDate).diff(current)).distance();
-            
-        }
-        else {
+
+        } else {
             moment.duration(moment(current).diff(itemDate)).distance();
             timeText = moment.duration(moment(current).diff(itemDate)).distance();
         }
 
         addEvent(title + " - " + timeText + "在資管" + selectRoom, desc);
-    }
-    else {
+    } else {
         swal("不給預約", "過去就讓它過吧，難道你是時空旅行者？", "error", {
             buttons: "不是",
         });
@@ -422,34 +424,34 @@ $("#confirmRent").click(function() {
     }
 
     axios.post('/rent/public/set/rental', {
-        title: title,
-        description: desc,
-        room: selectRoom,
-        username: sessionStorage.getItem("cyimRentUsername"), 
-        name: sessionStorage.getItem("cyimRentName"),
-        rentDate: selectedDate.getTime() / 1000,
-        period: JSON.stringify(seconds),
-        token: sessionStorage.getItem("cyimRentToken")
-    })
-    .then(function(res) {
-        
-        if (!res.data.status) {
-            swal("糟糕惹", "token 已失效，請重新登入", "error", {
+            title: title,
+            description: desc,
+            room: selectRoom,
+            username: sessionStorage.getItem("cyimRentUsername"),
+            name: sessionStorage.getItem("cyimRentName"),
+            rentDate: selectedDate.getTime() / 1000,
+            period: JSON.stringify(seconds),
+            token: sessionStorage.getItem("cyimRentToken")
+        })
+        .then(function(res) {
+
+            if (!res.data.status) {
+                swal("糟糕惹", "token 已失效，請重新登入", "error", {
+                    buttons: "好",
+                });
+                $("#loginModal").modal("open");
+                $("#navbar").hide();
+                return false;
+            }
+
+            swal("預約完成", "請在預約時間點確實使用教室", "success", {
                 buttons: "好",
             });
-            $("#loginModal").modal("open");
-            $("#navbar").hide();
-            return false; 
-        }
-
-        swal("預約完成", "請在預約時間點確實使用教室", "success", {
-            buttons: "好",
+            $(".modal").modal('close');
+            $(".previewTime").html('');
+            $("#eventTitleInput").val('');
+            $("#eventDescInput").val('');
         });
-        $(".modal").modal('close');
-        $(".previewTime").html('');
-        $("#eventTitleInput").val('');
-        $("#eventDescInput").val('');
-    });
 });
 
 // 關閉視窗清除資料
@@ -460,7 +462,7 @@ $(".modal-close").click(function() {
 });
 
 
-$("#room").on('change',function(){
+$("#room").on('change', function() {
 
     $(".badge").remove();
     clearSelect();
@@ -470,74 +472,83 @@ $("#room").on('change',function(){
     selectRoom = instance.getSelectedValues()[0];
 
     axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000 + '/' + instance.getSelectedValues())
-    .then(function (response) {
+        .then(function(response) {
 
-        rentalRes = response.data.period;
-        rentaOriginal = response.data.original;
+            rentalRes = response.data.period;
+            rentaOriginal = response.data.original;
+            rentalRenter = response.data.renter;
 
-        $("#selectTimeTable").show();
-        
-        for (var i = 0; i < rentalRes.length; i++) {
-            console.log(rentalRes[i]);
-            if ($("#t"+rentalRes[i] + "t")[0].id == "t" + rentalRes[i] + "t") {
-                $("#t"+rentalRes[i] + "t").prop("disabled", true);
+            $("#selectTimeTable").show();
+
+            for (var i = 0; i < rentalRes.length; i++) {
+                if ($("#t" + rentalRes[i] + "t")[0].id == "t" + rentalRes[i] + "t") {
+                    $("#t" + rentalRes[i] + "t").prop("disabled", true);
+                }
             }
-        }
-        
-        let res = response.data.renter;
-        let index = 0;
-        for (let j = 0; j < res.length; j++) {
-            let color = randColor();
-            for (let k = 0; k < res[j].length; k++) {
-                $("#t"+ res[j][k] + "t").parents().eq(1).siblings("td")[0].innerHTML +=  ' <span class="new badge rentUserLabel" style="background-color:' + color + ';" data-badge-caption="' + response.data.user[index] + '"></span> ';
-                index++;
-            }        
-        }
-    });
+
+            if ($.inArray("28800", rentaOriginal) >= 0) {
+                $("#t28800t").prop("disabled", true);
+            }
+
+            if ($.inArray("77400", rentaOriginal) >= 0) {
+                $("#t77400t").prop("disabled", true);
+            }
+
+            let res = response.data.renter;
+            let index = 0;
+            for (let j = 0; j < res.length; j++) {
+                let color = randColor();
+                for (let k = 0; k < res[j].length; k++) {
+                    $("#t" + res[j][k] + "t").parents().eq(1).siblings("td")[0].innerHTML += ' <span class="new badge rentUserLabel" style="background-color:' + color + ';" data-badge-caption="' + response.data.user[index] + '"></span> ';
+                    index++;
+                }
+                $("#t" + res[j][0] + "t").prop("disabled", true);
+            }
+        });
 });
 
-$("#login").click(function () {
-    
+$("#login").click(function() {
+
     if ($("#itouchUsername").val() == "" || $("#itouchUsername").val() == "") {
         return false;
     }
-    
+
     $("#login").attr('disabled', true);
-    
+
     axios.post('/rent/public/login', {
-        username: $("#itouchUsername").val(),
-        password: $("#itouchPassword").val()
-    })
-    .then(function(res) {
-        
-        if (res.data.status != 1) {
-            swal("糟糕惹", "怎麼連愛觸摸帳密都忘記 ヽ(#`Д´)ﾉ", "error", {
-                buttons: "對不起",
+            username: $("#itouchUsername").val(),
+            password: $("#itouchPassword").val()
+        })
+        .then(function(res) {
+
+            if (res.data.status != 1) {
+                swal("糟糕惹", "怎麼連愛觸摸帳密都忘記 ヽ(#`Д´)ﾉ", "error", {
+                    buttons: "對不起",
+                });
+                $("#login").attr('disabled', false);
+                return false;
+            }
+
+            $("#loginModal").modal('close');
+            $("#modal1").modal('open');
+            swal("登入成功", "可以開始預約教室了", "success", {
+                buttons: "知道了",
             });
+            $("#navbar").show();
+            $("#my").attr('data-tooltip', res.data.name);
+            $("#itouchUsername").val('');
+            $("#itouchPassword").val('');
+            sessionStorage.setItem("cyimRentToken", res.data.token);
+            sessionStorage.setItem("cyimRentUsername", res.data.username);
+            sessionStorage.setItem("cyimRentName", res.data.name);
             $("#login").attr('disabled', false);
-            return false;
-        }
-        
-        $("#loginModal").modal('close');
-        $("#modal1").modal('open');
-        swal("登入成功", "可以開始預約教室了", "success", {
-            buttons: "知道了",
+            loadEvents();
         });
-        $("#navbar").show();
-        $("#my").attr('data-tooltip', res.data.name);
-        $("#itouchUsername").val('');
-        $("#itouchPassword").val('');
-        sessionStorage.setItem("cyimRentToken", res.data.token);
-        sessionStorage.setItem("cyimRentUsername", res.data.username);
-        sessionStorage.setItem("cyimRentName", res.data.name);
-        $("#login").attr('disabled', false);
-        loadEvents();
-    });
 });
 
-$("#logout").click(function () {
+$("#logout").click(function() {
     sessionStorage.removeItem("cyimRentToken");
-    if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null ) {
+    if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
         $("#navbar").hide();
         $("#sidebarEvents").html('');
         swal("登出成功", "謝謝使用", "info", {
@@ -546,11 +557,11 @@ $("#logout").click(function () {
     }
 });
 
-$("#doNot").click(function () {
+$("#doNot").click(function() {
     $(".modal").modal("close");
 });
 
-$("#itouchUsername, #itouchPassword").keypress(function(e){
+$("#itouchUsername, #itouchPassword").keypress(function(e) {
     code = (e.keyCode ? e.keyCode : e.which);
 
     if (code == 13) {
@@ -580,8 +591,8 @@ function clearSelect() {
     seconds.length = 0;
 }
 
-function reset () {
-    
+function reset() {
+
     $(".selectTime").prop("disabled", false).prop("checked", false);
     $("#rent").addClass("disabled");
     $("#clearTime").addClass("disabled");
@@ -590,21 +601,33 @@ function reset () {
     selectedTime.length = 0;
     seconds.length = 0;
 
+    if ($.inArray("28800", rentaOriginal) >= 0) {
+        $("#t28800t").prop("disabled", true);
+    }
+
+    if ($.inArray("28800", rentaOriginal) >= 0) {
+        $("#t28800t").prop("disabled", true);
+    }
+
+    for (let j = 0; j < rentalRenter.length; j++) {
+        $("#t" + rentalRenter[j][0] + "t").prop("disabled", true);
+    }
+
     if (rentalRes != null) {
         for (var i = 0; i < rentalRes.length; i++) {
-            if ($("#t"+rentalRes[i] + "t")[0].id == "t" + rentalRes[i] + "t") {
-                $("#t"+rentalRes[i] + "t").prop("disabled", true);
+            if ($("#t" + rentalRes[i] + "t")[0].id == "t" + rentalRes[i] + "t") {
+                $("#t" + rentalRes[i] + "t").prop("disabled", true);
             }
         }
     }
 }
 
 function randColor() {
-    return "#"+((1<<24)*Math.random()|0).toString(16);
+    return "#" + ((1 << 24) * Math.random() | 0).toString(16);
 }
 
-function timePointError () {
-    
+function timePointError() {
+
     swal("糟糕惹", "不能在這個時間點作為開始", "error", {
         buttons: "知道了",
     });
@@ -613,46 +636,45 @@ function timePointError () {
 
 function loadEvents() {
     axios.get('/rent/public/get/user/rental/' + sessionStorage.getItem("cyimRentToken"))
-    .then(function (res) {
+        .then(function(res) {
 
-        if (res.data.status) {
-            
-            let rentalRes = res.data.rent;
+            if (res.data.status) {
 
-            // set username and name of storage
-            if (res.data.login.length != 0) {
-                $("#my").attr('data-tooltip', res.data.login.name);
-                $("#navbar").show();
-                sessionStorage.setItem("username", res.data.login.username);
-                sessionStorage.setItem("name", res.data.login.name);
-            }
-    
-            if (rentalRes.length > 0) {
-    
-                if (!selectedDayBlock.querySelector(".day-mark")) {
-                    selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
+                let rentalRes = res.data.rent;
+
+                // set username and name of storage
+                if (res.data.login.length != 0) {
+                    $("#my").attr('data-tooltip', res.data.login.name);
+                    $("#navbar").show();
+                    sessionStorage.setItem("username", res.data.login.username);
+                    sessionStorage.setItem("name", res.data.login.name);
                 }
-                globalEventObj = {};
-                for (var i = 0; i < rentalRes.length; i++) {
-    
-                    let itemDate = moment.unix(rentalRes[i].rentDate).format("YYYY-MM-DD");
-                    let current = moment(currentDate).format('YYYY-MM-DD');
-                    let timeText = null;
-    
-                    if (itemDate > current) {
-                        moment.duration(moment(itemDate).diff(current)).distance();
-                        timeText = moment.duration(moment(itemDate).diff(current)).distance();
-                        
+
+                if (rentalRes.length > 0) {
+
+                    if (!selectedDayBlock.querySelector(".day-mark")) {
+                        selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
                     }
-                    else {
-                        moment.duration(moment(current).diff(itemDate)).distance();
-                        timeText = moment.duration(moment(current).diff(itemDate)).distance();
+                    globalEventObj = {};
+                    for (var i = 0; i < rentalRes.length; i++) {
+
+                        let itemDate = moment.unix(rentalRes[i].rentDate).format("YYYY-MM-DD");
+                        let current = moment(currentDate).format('YYYY-MM-DD');
+                        let timeText = null;
+
+                        if (itemDate > current) {
+                            moment.duration(moment(itemDate).diff(current)).distance();
+                            timeText = moment.duration(moment(itemDate).diff(current)).distance();
+
+                        } else {
+                            moment.duration(moment(current).diff(itemDate)).distance();
+                            timeText = moment.duration(moment(current).diff(itemDate)).distance();
+                        }
+
+                        addEvent(rentalRes[i].title + " - " + timeText + "在資管" + rentalRes[i].room, rentalRes[i].description);
                     }
-                    
-                    addEvent(rentalRes[i].title + " - " + timeText + "在資管" + rentalRes[i].room, rentalRes[i].description);
+                    showEvents();
                 }
-                showEvents();
             }
-        }
-    });
+        });
 }
