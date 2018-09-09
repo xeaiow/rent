@@ -236,25 +236,23 @@ $(".selectTime").click(function() {
         let breakSelect = true;
 
         if (selectCount == 0) {
-            $.each(rentaOriginal, function (key, val) {
             
-                let self = parseInt(timestamp.substr(1).slice(0, -1)) + 1800;
+            let self = parseInt(timestamp.substr(1).slice(0, -1)) + 1800;
+            
+            if ($.inArray(timestamp.substr(1).slice(0, -1), rentaOriginal) >= 0 && $.inArray(self.toString(), rentaOriginal) >= 0 ) {
 
-                console.log(58);
-
-                if (timestamp.substr(1).slice(0, -1) == val && $.inArray(self.toString(), rentaOriginal) >= 0 ) {
-                    swal("糟糕惹", "不能在這個時間點作為開始", "error", {
-                        buttons: "知道了",
-                    });
-                    reset();
-                    breakSelect = false;
-                    return false;
-                }
-            });
+                swal("糟糕惹", "不能在這個時間點作為開始", "error", {
+                    buttons: "知道了",
+                });
+                
+                reset();
+                breakSelect = false;
+                return false;
+            }
         }
         else {
             for (let i = parseInt(seconds[0])+1800; i < parseInt(timestamp.substr(1).slice(0, -1)); i+=1800) {
-                console.log(seconds[0] + ", " + parseInt(timestamp.substr(1).slice(0, -1)));
+                
                 if ($.inArray(i.toString(), rentaOriginal) >= 0) {
                     swal("糟糕惹", "不能橫跨他人租借時間，下次請早", "error", {
                         buttons: "知道了",
