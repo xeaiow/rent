@@ -369,7 +369,3 @@ h3, h4, h5 {
 .focusPoint:hover {
   cursor: pointer;
 }
-
-.rentUserLabel {
-  margin-left: 25px !important;
-}

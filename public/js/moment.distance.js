@@ -14,9 +14,9 @@ const phrasing = {
   x_minutes           : '%d minute%s',
   about_x_minutes     : 'about %d minute%s',
   about_x_hours       : 'about %d hour%s',
-  x_days              : '%d天後',
-  about_x_months      : 'about %d month%s',
-  x_months            : '%d month%s',
+  x_days              : '%d 天後',
+  about_x_months      : '%d 個月後',
+  x_months            : '%d 個月後',
   about_x_years       : 'about %d year%s',
   over_x_years        : 'over %d year%s',
   almost_x_years      : 'almost %d year%s'

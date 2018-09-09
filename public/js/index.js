@@ -235,11 +235,44 @@ $(".selectTime").click(function() {
         let timestamp = $(this).attr("id");
         let breakSelect = true;
 
+        if (selectCount == 0) {
+            $.each(rentaOriginal, function (key, val) {
+            
+                let self = parseInt(timestamp.substr(1).slice(0, -1)) + 1800;
+
+                console.log(58);
+
+                if (timestamp.substr(1).slice(0, -1) == val && $.inArray(self.toString(), rentaOriginal) >= 0 ) {
+                    swal("糟糕惹", "不能在這個時間點作為開始", "error", {
+                        buttons: "知道了",
+                    });
+                    reset();
+                    breakSelect = false;
+                    return false;
+                }
+            });
+        }
+        else {
+            for (let i = parseInt(seconds[0])+1800; i < parseInt(timestamp.substr(1).slice(0, -1)); i+=1800) {
+                console.log(seconds[0] + ", " + parseInt(timestamp.substr(1).slice(0, -1)));
+                if ($.inArray(i.toString(), rentaOriginal) >= 0) {
+                    swal("糟糕惹", "不能橫跨他人租借時間，下次請早", "error", {
+                        buttons: "知道了",
+                    });
+                    reset();
+                    breakSelect = false;
+                    return false;
+                }
+            }
+        }
+
+        
         $.each(rentalRes, function (key, val) {
 
             let self = parseInt(timestamp.substr(1).slice(0, -1)) + 1800;
+            let next = $("#t" + self + "t").prop("disabled");
 
-            if ( $("#t" + self + "t").prop("disabled") == true && timestamp.substr(1).slice(0, -1) == "28800" ) {
+            if ( next == true && timestamp.substr(1).slice(0, -1) == "28800" ) {
                 swal("糟糕惹", "不能在這個時間點作為開始", "error", {
                     buttons: "知道了",
                 });
@@ -257,16 +290,23 @@ $(".selectTime").click(function() {
             }
 
             $(".selectTime").prop("disabled", true);
-            
         });
 
         if (breakSelect) {
+            
+            for (let i = 28800; i < parseInt(timestamp.substr(1).slice(0, -1)); i+=1800) {
+                if (i != parseInt(timestamp.substr(1).slice(0, -1))) {
+                    $("#t" + i + "t").prop("disabled", true);
+                }
+           
+            }
 
             let timestampSecode = parseInt(timestamp.substr(1).slice(0, -1));
 
             if ( (selectCount == 0 && round == 0 && rentalRes.length != 0 ) || ( selectCount == 0 && round == 0 && timestampSecode >= 77400 ) ) {
 
                 timePointError();
+                
                 return false;
             }
 
@@ -346,11 +386,12 @@ $("#confirmRent").click(function() {
         return false;
     }
     let today = new Date();
+    let now = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-    if ( parseInt(selectedDate.getTime()) >= parseInt(new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()) ) {
+    if ( parseInt(selectedDate.getTime()) >= parseInt(now.getTime()) ) {
 
         let itemDate = moment.unix(selectedDate.getTime() / 1000).format("YYYY-MM-DD");
-        let current = moment(currentDate).format('YYYY-MM-DD');
+        let current = today.toISOString().substring(0, 10);
         let timeText = null;
 
         if (itemDate > current) {
@@ -434,10 +475,12 @@ $("#room").on('change',function(){
     .then(function (response) {
 
         rentalRes = response.data.period;
+        rentaOriginal = response.data.original;
 
         $("#selectTimeTable").show();
         
         for (var i = 0; i < rentalRes.length; i++) {
+            console.log(rentalRes[i]);
             if ($("#t"+rentalRes[i] + "t")[0].id == "t" + rentalRes[i] + "t") {
                 $("#t"+rentalRes[i] + "t").prop("disabled", true);
             }
