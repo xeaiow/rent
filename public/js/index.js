@@ -172,8 +172,6 @@ function showEvents() {
 
             eventsCount++;
         }
-        let emptyFormMessage = document.getElementById("emptyFormTitle");
-
     } else {
         let emptyMessage = document.createElement("div");
         emptyMessage.className = "empty-message";
@@ -203,6 +201,38 @@ gridTable.onclick = function(e) {
     selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), parseInt(e.target.innerHTML));
 
     showEvents();
+
+    axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000)
+        .then(function(res) {
+
+            if (res.data.length == 0) {
+                $("#sidebarEvents").html('還沒有人租借');
+                return false;
+            }
+
+            let period = ['32400', '34200', '36000', '37800', '39600', '41400', '43200', '45000', '46800', '48600', '50400', '52200', '54000', '55800', '57600', '59400', '61200', '63000', '64800', '66600', '68400', '70200', '72000', '73800', '75600', '77400'];
+            let str_period = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30'];
+            $.each(res.data, function (key, val) {
+                let start = val.period.substr(0, 5);
+                let end = val.period.substr(-5);
+                
+                $.each(period, function (key, val) {
+                    if (start == val) {
+                        start = str_period[key];
+                        console.log(start);
+                    }
+                });
+                $.each(period, function (key, val) {
+                    if (end == val) {
+                        end = str_period[key];
+                        console.log(end);
+                    }
+                });
+                
+                addEvent(val.title, " 資管 " + val.room + " 從 " + start + " - " + end);
+            });
+        showEvents();
+    });
 
     if (selectedDate.getDay() == 0 || selectedDate.getDay() == 6) {
         swal("假日不開放", "假日借用請洽系辦公室", "error", {
@@ -340,7 +370,6 @@ $(".selectTime").click(function() {
             }
 
             selectCount++;
-
 
             selectedTime[selectCount - 1] = $(this).siblings('span')[0].textContent;
 
@@ -558,11 +587,9 @@ $("#login").click(function() {
             sessionStorage.setItem("cyimRentToken", res.data.token);
             sessionStorage.setItem("cyimRentUsername", res.data.username);
             sessionStorage.setItem("cyimRentName", res.data.name);
-            sessionStorage.setItem("cyimRentTerms", 1);
             $("#login").attr('disabled', false);
-            loadEvents();
-
             $("#terms").modal('open');
+            loadEvents();
         });
 });
 
@@ -699,4 +726,9 @@ function loadEvents() {
                 }
             }
         });
+}
+
+// 載入點擊那天的租借紀錄
+function loadSelecetdRental (res) {
+    
 }

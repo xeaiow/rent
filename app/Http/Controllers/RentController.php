@@ -37,7 +37,7 @@ class RentController extends Controller
 
     public function getRental (Request $req)
     {
-        $timestamp = ['28800', '30600', '32400', '34200', '36000', '37800', '39600', '41400', '43200', '45000', '46800', '48600', '50400', '52200', '54000', '55800', '57600', '59400', '61200', '63000', '64800', '66600', '68400', '70200', '72000', '73800', '75600', '77400'];
+        $timestamp = ['32400', '34200', '36000', '37800', '39600', '41400', '43200', '45000', '46800', '48600', '50400', '52200', '54000', '55800', '57600', '59400', '61200', '63000', '64800', '66600', '68400', '70200', '72000', '73800', '75600', '77400'];
         $ss = Rental::where('rentDate', $req->date)->where('room', $req->room)->get();
         $result = [];
         $user = [];
@@ -200,5 +200,11 @@ class RentController extends Controller
         $result['status'] = 1;
     
         return json_encode($result);
+    }
+
+    // 取得該日所有租借紀錄
+    public function getAllRental (Request $req)
+    {
+       return Rental::where('rentDate', $req->date)->get(['title', 'room', 'period']);
     }
 }
