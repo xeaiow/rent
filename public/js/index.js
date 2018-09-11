@@ -251,6 +251,7 @@ gridTable.onclick = function(e) {
 
 $("#agree").click(function () {
     $("#terms").modal("close");
+    $("#modal1").modal('open');
 });
 
 // 選擇時段
@@ -584,7 +585,6 @@ $("#login").click(function() {
             }
 
             $("#loginModal").modal('close');
-            $("#modal1").modal('open');
             $("#navbar").show();
             $("#my").attr('data-tooltip', res.data.name);
             $("#itouchUsername").val('');
@@ -609,8 +609,13 @@ $("#logout").click(function() {
     }
 });
 
-$("#doNot").click(function() {
-    $(".modal").modal("close");
+
+$("#doNotAgree").click(function() {
+    $("#terms").modal("close");
+    sessionStorage.removeItem("cyimRentToken");
+    $("#navbar").hide();
+    $("#sidebarEvents").html('');
+    return false;
 });
 
 $("#itouchUsername, #itouchPassword").keypress(function(e) {

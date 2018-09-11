@@ -430,7 +430,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a class="modal-close waves-effect waves-green btn-flat" id="doNot">不要</a>
+                <a class="waves-effect waves-green btn-flat" id="doNotAgree">不要</a>
                 <a class="btn waves-effect waves-light grey darken-4" id="agree">同意並繼續</a>
             </div>
         </div>
