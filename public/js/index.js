@@ -221,13 +221,12 @@ gridTable.onclick = function(e) {
         $("#loginModal").modal('open');
         $("#itouchUsername").focus();
     } else {
-        $("#terms").modal('open');
+        $("#modal1").modal('open');
     }
 }
 
 $("#agree").click(function () {
     $("#terms").modal("close");
-    $("#modal1").modal("open");
 });
 
 // 選擇時段
@@ -288,16 +287,6 @@ $(".selectTime").click(function() {
             let self = parseInt(timestamp.substr(1).slice(0, -1)) + 1800;
             let next = $("#t" + self + "t").prop("disabled");
 
-            // if (next == true && timestamp.substr(1).slice(0, -1) == "28800") {
-            //     swal("糟糕惹", "不能在這個時間點作為開始", "error", {
-            //         buttons: "知道了",
-            //     });
-            //     console.log(67);
-            //     reset();
-            //     breakSelect = false;
-            //     return false;
-            // }
-
             if (timestamp.substr(1).slice(0, -1) < val) {
                 round = ((val - 1800) - (timestamp.substr(1).slice(0, -1))) / 1800;
                 return false;
@@ -310,7 +299,7 @@ $(".selectTime").click(function() {
 
         if (breakSelect) {
 
-            for (let i = 28800; i < parseInt(timestamp.substr(1).slice(0, -1)); i += 1800) {
+            for (let i = 32400; i < parseInt(timestamp.substr(1).slice(0, -1)); i += 1800) {
                 if (i != parseInt(timestamp.substr(1).slice(0, -1))) {
                     $("#t" + i + "t").prop("disabled", true);
                 }
@@ -518,8 +507,8 @@ $("#room").on('change', function() {
                 }
             }
 
-            if ($.inArray("28800", rentaOriginal) >= 0) {
-                $("#t28800t").prop("disabled", true);
+            if ($.inArray("32400", rentaOriginal) >= 0) {
+                $("#t32400t").prop("disabled", true);
             }
 
             if ($.inArray("77400", rentaOriginal) >= 0) {
@@ -562,9 +551,6 @@ $("#login").click(function() {
 
             $("#loginModal").modal('close');
             $("#modal1").modal('open');
-            swal("登入成功", "可以開始預約教室了", "success", {
-                buttons: "知道了",
-            });
             $("#navbar").show();
             $("#my").attr('data-tooltip', res.data.name);
             $("#itouchUsername").val('');
@@ -572,8 +558,11 @@ $("#login").click(function() {
             sessionStorage.setItem("cyimRentToken", res.data.token);
             sessionStorage.setItem("cyimRentUsername", res.data.username);
             sessionStorage.setItem("cyimRentName", res.data.name);
+            sessionStorage.setItem("cyimRentTerms", 1);
             $("#login").attr('disabled', false);
             loadEvents();
+
+            $("#terms").modal('open');
         });
 });
 
@@ -632,8 +621,8 @@ function reset() {
     selectedTime.length = 0;
     seconds.length = 0;
 
-    if ($.inArray("28800", rentaOriginal) >= 0) {
-        $("#t28800t").prop("disabled", true);
+    if ($.inArray("32400", rentaOriginal) >= 0) {
+        $("#t32400t").prop("disabled", true);
     }
 
     if ($.inArray("77400", rentaOriginal) >= 0) {

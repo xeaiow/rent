@@ -113,31 +113,13 @@
                         <table id="selectTimeTable">
                             <tbody>
                             <tr>
-                                <td width="10%" >
-                                    <label>
-                                        <input type="checkbox" class="selectTime" id="t28800t" />
-                                        <span>8:00</span>
-                                    </label>
-                                </td>
-                                <td width="90%"></td> 
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>
-                                        <input type="checkbox" class="selectTime" id="t30600t" />
-                                        <span>8:30</span>
-                                    </label>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            <td>
+                            <td width="10%">
                                 <label>
                                     <input type="checkbox" class="selectTime" id="t32400t" />
                                     <span>9:00</span>
                                 </label>
                             </td>
-                                <td></td> 
+                                <td width="90%"></td> 
                             </tr>
                             <tr>
                             <td>
