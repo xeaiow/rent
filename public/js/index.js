@@ -12,7 +12,6 @@ $(function() {
     if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
         return false;
     }
-
     loadEvents();
 });
 
@@ -180,10 +179,11 @@ function showEvents() {
         let emptyFormMessage = document.getElementById("emptyFormTitle");
 
     }
+    $("#sidebarEvents").prepend('<div class="row" id="recordTitle"><div class="col s12"><h6 class="center-align" id="todayRental">本日租借紀錄</h6></div></div>');
 }
 
 gridTable.onclick = function(e) {
-    
+
     if (!e.target.classList.contains("col") || e.target.classList.contains("empty-day")) {
         return;
     }
@@ -200,18 +200,17 @@ gridTable.onclick = function(e) {
 
     selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), parseInt(e.target.innerHTML));
 
-    showEvents();
-
     axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000)
         .then(function(res) {
 
             if (res.data.length == 0) {
-                $("#sidebarEvents").html('還沒有人租借');
+                $("#sidebarEvents").html('<div class="eventCard"><div class="eventCard-header">還沒有任何人租借</div></div>');
                 return false;
             }
 
             let period = ['32400', '34200', '36000', '37800', '39600', '41400', '43200', '45000', '46800', '48600', '50400', '52200', '54000', '55800', '57600', '59400', '61200', '63000', '64800', '66600', '68400', '70200', '72000', '73800', '75600', '77400'];
             let str_period = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30'];
+
             $.each(res.data, function (key, val) {
                 let start = val.period.substr(0, 5);
                 let end = val.period.substr(-5);
@@ -219,16 +218,11 @@ gridTable.onclick = function(e) {
                 $.each(period, function (key, val) {
                     if (start == val) {
                         start = str_period[key];
-                        console.log(start);
                     }
-                });
-                $.each(period, function (key, val) {
                     if (end == val) {
                         end = str_period[key];
-                        console.log(end);
                     }
                 });
-                
                 addEvent(val.title, " 資管 " + val.room + " 從 " + start + " - " + end);
             });
         showEvents();
@@ -616,6 +610,10 @@ $("#itouchUsername, #itouchPassword").keypress(function(e) {
     }
 });
 
+$("#my").click(function () { 
+    $("#myRental").modal("open");
+});
+
 function timeConvert(secs) {
     var hours = Math.floor(secs / (60 * 60));
 
@@ -684,6 +682,7 @@ function timePointError() {
 }
 
 function loadEvents() {
+
     axios.get('/rent/public/get/user/rental/' + sessionStorage.getItem("cyimRentToken"))
         .then(function(res) {
 
@@ -693,7 +692,7 @@ function loadEvents() {
 
                 // set username and name of storage
                 if (res.data.login.length != 0) {
-                    $("#my").attr('data-tooltip', res.data.login.name);
+                    $("#my").attr('data-tooltip', "租借紀錄");
                     $("#navbar").show();
                     sessionStorage.setItem("username", res.data.login.username);
                     sessionStorage.setItem("name", res.data.login.name);
@@ -719,16 +718,14 @@ function loadEvents() {
                             moment.duration(moment(current).diff(itemDate)).distance();
                             timeText = moment.duration(moment(current).diff(itemDate)).distance();
                         }
-
-                        addEvent(rentalRes[i].title + " - " + timeText + "在資管" + rentalRes[i].room, rentalRes[i].description);
+                        
+                        $("#myRentalRecord").append(
+                            '<li class="collection-item avatar"><img src="https://i.imgur.com/43r37Cx.png" alt="" class="circle"><span class="title my-rental-title">' + rentalRes[i].title + '</span><p>' + timeText + '在資管 ' + rentalRes[i].room + '</p></li>'
+                        );
                     }
+
                     showEvents();
                 }
             }
         });
-}
-
-// 載入點擊那天的租借紀錄
-function loadSelecetdRental (res) {
-    
 }

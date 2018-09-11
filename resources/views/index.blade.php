@@ -23,7 +23,7 @@
             <a href="#!" class="brand-logo">Logo</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
-                <li><a><i id="my" data-tooltip="我" class="material-icons tooltipped">face</i></a></li>
+                <li><a><i id="my" data-tooltip="我"" class="material-icons tooltipped">face</i></a></li>
                 <li><a><i data-tooltip="登出" id="logout" class="material-icons tooltipped">directions_run</i></a></li>
             </ul>
         </div>
@@ -432,6 +432,18 @@
             <div class="modal-footer">
                 <a class="modal-close waves-effect waves-green btn-flat" id="doNot">不要</a>
                 <a class="btn waves-effect waves-light grey darken-4" id="agree">同意並繼續</a>
+            </div>
+        </div>
+
+        <div id="myRental" class="modal bottom-sheet">
+            <div class="modal-content">
+                <h4>我的租借紀錄<a class="modal-close waves-effect waves-green btn-flat">✕</a></h4>
+                <div>
+                    <ul class="collection" id="myRentalRecord"></ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                
             </div>
         </div>
 

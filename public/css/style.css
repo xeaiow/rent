@@ -373,3 +373,9 @@ h3, h4, h5 {
 #term-list li {
   line-height: 30px;
 }
+
+.my-rental-title {
+  font-size: 20px !important;
+  color: #005792;
+  font-weight: 600;
+}

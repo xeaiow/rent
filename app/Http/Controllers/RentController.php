@@ -111,7 +111,7 @@ class RentController extends Controller
         
         if ($userIsExists->count() > 0) {
             $result['login'] = $userIsExists->first(['username', 'name']);
-            $result['rent'] = Rental::where('username', $result['login']['username'])->where('rentDate', '>=', (now()->timestamp)-86399)->get(['title', 'description', 'rentDate', 'room']);
+            $result['rent'] = Rental::where('username', $result['login']['username'])->where('rentDate', '>=', (now()->timestamp)-86399)->orderBy('rentDate', 'asc')->get(['title', 'description', 'rentDate', 'room']);
             $result['status'] = true;
             return $result;
         }
@@ -129,7 +129,9 @@ class RentController extends Controller
     
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_COOKIEJAR, '/tmp/cookie.txt');
+        $cookie_jar = "./cookie.txt";
+
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_jar);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
         curl_setopt($ch, CURLOPT_TIMEOUT, 40);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -154,7 +156,7 @@ class RentController extends Controller
         curl_setopt($ch2, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" );
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 0);
 
-        curl_setopt($ch2, CURLOPT_COOKIEFILE, '/tmp/cookie.txt');
+        curl_setopt($ch2, CURLOPT_COOKIEFILE, $cookie_jar);
         
         $orders = curl_exec($ch2);
         curl_close($ch2);

@@ -34,12 +34,16 @@
                     $('select').formSelect();
                     $('.modal').modal({
                         dismissible: false,
-                        opacity: .7,
+                        opacity: .3,
                         onCloseEnd: function () {
                             $("#selectTimeTable").hide();
                             $("#room")[0].selectedIndex = 0;
                             $(".badge").remove();
                         }
+                    });
+                    $("#myRental").modal({
+                        dismissible: true,
+                        opacity: .7,
                     });
                 });
             </script>
