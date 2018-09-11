@@ -285,6 +285,7 @@ $(".selectTime").click(function() {
                 breakSelect = false;
                 return false;
             }
+            
 
             if ($.inArray(timestamp.substr(1).slice(0, -1), rentaOriginal) == -1 && $.inArray(self.toString(), rentaOriginal) >= 0) {
                 $(".selectTime").prop("disabled", true);
@@ -309,7 +310,6 @@ $(".selectTime").click(function() {
         $.each(rentalRes, function(key, val) {
 
             let self = parseInt(timestamp.substr(1).slice(0, -1)) + 1800;
-            let next = $("#t" + self + "t").prop("disabled");
 
             if (timestamp.substr(1).slice(0, -1) < val) {
                 round = ((val - 1800) - (timestamp.substr(1).slice(0, -1))) / 1800;
@@ -373,13 +373,24 @@ $(".selectTime").click(function() {
             $("#clearTime").removeClass("disabled");
 
             if (selectCount == 2) {
+                // exchange
+                if (seconds[0] > seconds[1]) {
+                    let temp = seconds[1];
+                    seconds[0] = seconds[1];
+                    seconds[1] = temp;
+                }
+
+                if ( (parseInt(seconds[1]) - parseInt(seconds[0])) > 10800 ) {
+                    swal("糟糕惹", "最多只能借用三小時唷", "error", {
+                        buttons: "知道了",
+                    });
+                    reset();
+                    return false;
+                }
+
                 $(".selectTime").not(':checked').prop("disabled", true);
                 $("#rent").removeClass("disabled");
-                if (seconds[0] > seconds[1]) {
-                    $(".previewTime").html(timeConvert(seconds[1]).h + ":" + (timeConvert(seconds[1]).m == 0 ? "00" : "30") + " 到 " + timeConvert(seconds[0]).h + ":" + (timeConvert(seconds[0]).m == 0 ? "00" : "30"));
-                } else {
-                    $(".previewTime").html(timeConvert(seconds[0]).h + ":" + (timeConvert(seconds[0]).m == 0 ? "00" : "30") + " 到 " + timeConvert(seconds[1]).h + ":" + (timeConvert(seconds[1]).m == 0 ? "00" : "30"));
-                }
+                $(".previewTime").html(timeConvert(seconds[0]).h + ":" + (timeConvert(seconds[0]).m == 0 ? "00" : "30") + " 到 " + timeConvert(seconds[1]).h + ":" + (timeConvert(seconds[1]).m == 0 ? "00" : "30"));
                 $(".selectTime").prop("disabled", true);
             }
         }
@@ -517,7 +528,7 @@ $("#room").on('change', function() {
     axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000 + '/' + instance.getSelectedValues())
         .then(function(response) {
 
-            $("#instruction").html('請選擇開始與結束時間');
+            $("#instruction").html('請選擇開始與結束時間 <span style="color:#ad1457;" class="previewTime"></span>');
             rentalRes = response.data.period;
             rentaOriginal = response.data.original;
             rentalRenter = response.data.renter;
