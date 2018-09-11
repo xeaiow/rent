@@ -369,3 +369,7 @@ h3, h4, h5 {
 .focusPoint:hover {
   cursor: pointer;
 }
+
+#term-list li {
+  line-height: 30px;
+}

@@ -21,6 +21,7 @@ class RentController extends Controller
         $period = implode(",", json_decode($req->period));
         Rental::create([
             'title' => $req->title,
+            'phone' => $req->phone,
             'description' => $req->description,
             'name' => $req->name,
             'username' => $req->username,

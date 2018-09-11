@@ -8,7 +8,7 @@ var globalEventObj = {};
 var sidebar = document.getElementById("sidebar");
 
 $(function() {
-
+    
     if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
         return false;
     }
@@ -185,7 +185,7 @@ function showEvents() {
 }
 
 gridTable.onclick = function(e) {
-
+    
     if (!e.target.classList.contains("col") || e.target.classList.contains("empty-day")) {
         return;
     }
@@ -204,6 +204,13 @@ gridTable.onclick = function(e) {
 
     showEvents();
 
+    if (selectedDate.getDay() == 0 || selectedDate.getDay() == 6) {
+        swal("假日不開放", "假日借用請洽系辦公室", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
     document.getElementById("eventDayName").innerHTML = selectedDate.toLocaleString("zh-Hans-TW", {
         month: "long",
         day: "numeric",
@@ -214,9 +221,14 @@ gridTable.onclick = function(e) {
         $("#loginModal").modal('open');
         $("#itouchUsername").focus();
     } else {
-        $("#modal1").modal('open');
+        $("#terms").modal('open');
     }
 }
+
+$("#agree").click(function () {
+    $("#terms").modal("close");
+    $("#modal1").modal("open");
+});
 
 // 選擇時段
 var selectCount = 0;
@@ -397,10 +409,11 @@ $("#rent").click(function() {
 $("#confirmRent").click(function() {
 
     let title = document.getElementById("eventTitleInput").value.trim();
+    let phone = document.getElementById("eventPhoneInput").value.trim();
     let desc = document.getElementById("eventDescInput").value.trim();
 
-    if (!title || !selectRoom || seconds.length < 2 || sessionStorage.getItem("cyimRentToken") == undefined) {
-        swal("糟糕惹", "應該是有些欄位填錯了", "error", {
+    if (!title || !phone || !selectRoom || seconds.length < 2 || sessionStorage.getItem("cyimRentToken") == undefined) {
+        swal("請檢查", "應該是有些欄位填錯或沒填", "error", {
             buttons: "好",
         });
         return false;
@@ -428,7 +441,7 @@ $("#confirmRent").click(function() {
         swal("不給預約", "過去就讓它過吧，難道你是時空旅行者？", "error", {
             buttons: "不是",
         });
-        $("#eventTitleInput").val('');
+        $("#eventTitleInput, #eventPhoneInput, #eventDescInput").val('');
         $("#modal2").modal("close");
         $(".previewTime").html('');
         return false;
@@ -443,6 +456,7 @@ $("#confirmRent").click(function() {
 
     axios.post('/rent/public/set/rental', {
             title: title,
+            phone: phone,
             description: desc,
             room: selectRoom,
             username: sessionStorage.getItem("cyimRentUsername"),
@@ -467,8 +481,7 @@ $("#confirmRent").click(function() {
             });
             $(".modal").modal('close');
             $(".previewTime").html('');
-            $("#eventTitleInput").val('');
-            $("#eventDescInput").val('');
+            $("#eventTitleInput, #eventPhoneInput, #eventDescInput").val('');
         });
 });
 
@@ -492,6 +505,7 @@ $("#room").on('change', function() {
     axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000 + '/' + instance.getSelectedValues())
         .then(function(response) {
 
+            $("#instruction").html('請選擇開始與結束時間');
             rentalRes = response.data.period;
             rentaOriginal = response.data.original;
             rentalRenter = response.data.renter;
