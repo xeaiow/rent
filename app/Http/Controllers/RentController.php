@@ -172,8 +172,8 @@ class RentController extends Controller
     // 登入
     public function login (Request $req)
     {
-        $url        = "http://www.cross.cycu.edu.tw/index.do" ;
-        $ref_url    = "http://www.cross.cycu.edu.tw/newss.do";
+        $url        = "https://itouch.cycu.edu.tw/active_system/login/login2.jsp";
+        $ref_url    = "https://itouch.cycu.edu.tw/active_system/quary/s_basic.jsp";
         $userId     = $req->username;
         $password   = $req->password;
     
@@ -193,17 +193,17 @@ class RentController extends Controller
         curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_POST, TRUE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "id=".$userId."&password=".$password);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "UserNm=".$userId."&UserPasswd=".$password);
         curl_exec ($ch);
 
         curl_close ($ch);
         
         $ch2 = curl_init();
 
-        curl_setopt($ch2, CURLOPT_URL, "http://www.cross.cycu.edu.tw/newss.do");
+        curl_setopt($ch2, CURLOPT_URL, "https://itouch.cycu.edu.tw/active_system/quary/s_basic.jsp");
         curl_setopt($ch2, CURLOPT_HEADER, 0);
         curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch2, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" );
+        curl_setopt($ch2, CURLOPT_USERAGENT,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36" );
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 0);
 
         curl_setopt($ch2, CURLOPT_COOKIEFILE, $cookie_jar);
@@ -211,12 +211,15 @@ class RentController extends Controller
         $orders = curl_exec($ch2);
         curl_close($ch2);
 
-        $output = iconv("Big5", "UTF-8", $orders);
+        preg_match_all("/\<div align=\"center\"\>(.*?)\<\/div\>/is", $orders, $arr);
+        preg_match_all("/\<font color=\"#990000\"\>(.*?)\<\/font\>/is", $arr[0][7], $nameArr);
+        preg_match_all("/\<font color=\"#990000\"\>(.*?)\<\/font\>/is", $arr[0][2], $deptArr);
 
-        preg_match_all("/\<span class=\"name\"\>(.*?)\<\/span\>/is", $output, $arr);
-
+        // 取得系級
+        $dept = mb_substr(strip_tags($deptArr[0][0]), 0, 2, 'utf-8');
+      
         // 判斷是否成功登入 iTouch
-        if (empty($arr[0]) == 1)
+        if ($dept != "資管")
         {
             $result['status'] = 0;
             return json_encode($result);
@@ -235,7 +238,8 @@ class RentController extends Controller
         }
         else
         {
-            $name = mb_substr(preg_replace('/\s+/', '', strip_tags($arr[0][0])), 0, -8, 'utf-8');
+            // 姓名
+            $name = strip_tags($nameArr[0][0]);
 
             Member::create([
                 'username' => $userId,

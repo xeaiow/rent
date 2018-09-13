@@ -598,12 +598,15 @@ $("#room").on('change', function() {
         });
 });
 
+var lockLogin = false;
+
 $("#login").click(function() {
 
     if ($("#itouchUsername").val() == "" || $("#itouchUsername").val() == "") {
         return false;
     }
 
+    lockLogin = true;
     $("#login").attr('disabled', true);
 
     axios.post('/rent/public/login', {
@@ -620,6 +623,7 @@ $("#login").click(function() {
                 return false;
             }
 
+            lockLogin = false;
             $("#loginModal").modal('close');
             $("#navbar").show();
             $("#my").attr('data-tooltip', res.data.name);
@@ -657,7 +661,7 @@ $("#doNotAgree").click(function() {
 $("#itouchUsername, #itouchPassword").keypress(function(e) {
     code = (e.keyCode ? e.keyCode : e.which);
 
-    if (code == 13) {
+    if (code == 13 && !lockLogin) {
         $("#login").click();
     }
 });
