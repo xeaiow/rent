@@ -226,7 +226,8 @@ class RentController extends Controller
         }
 
         $userExists = Member::where('username', $req->username);
-        $token = md5(uniqid(rand()));
+
+        $token = bin2hex(random_bytes(32));
 
         if ( $userExists->count() == 1 )
         {
