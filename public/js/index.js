@@ -500,6 +500,15 @@ $("#confirmRent").click(function() {
                 return false;
             }
 
+            if (res.data.error) {
+                swal("糟糕惹", "似乎有什麼意外，請再試一次", "error", {
+                    buttons: "好",
+                });
+                return false;
+            }
+
+            console.log(res);
+
             swal("預約完成", "請在預約時間點確實使用教室", "success", {
                 buttons: "好",
             });

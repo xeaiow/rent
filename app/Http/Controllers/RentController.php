@@ -18,17 +18,52 @@ class RentController extends Controller
             return $result;
         }
 
-        $period = implode(",", json_decode($req->period));
-        Rental::create([
-            'title' => $req->title,
-            'phone' => $req->phone,
-            'description' => $req->description,
-            'name' => $req->name,
-            'username' => $req->username,
-            'room' => $req->room,
-            'rentDate' => $req->rentDate,
-            'period' => $period
-        ]);
+        // 開始與結束的 timestamp
+        $decode = substr(substr($req->period, 0, -1), 1);
+        $period = explode(",", $decode);
+        $timestamp = ['32400', '34200', '36000', '37800', '39600', '41400', '43200', '45000', '46800', '48600', '50400', '52200', '54000', '55800', '57600', '59400', '61200', '63000', '64800', '66600', '68400', '70200', '72000', '73800', '75600', '77400'];
+
+        // 判斷是否正確的開始與結束
+        if (count($period) < 2)
+        {
+            $result['error'] = true;
+            $result['status'] = true;
+            return $result;
+        }
+        
+        // 交換位置預防 start 大於 end
+        if (intval($period[0]) > intval($period[1]))
+        {
+            $temp  = $period[0];
+            $period[0]   = $period[1];
+            $period[1]   = $temp;
+        }
+
+        $start = $period[0];
+        $end   = $period[1];
+
+        // 開始與結束的間距
+        $margin = $end - $start;
+            
+        // 判斷數值是否合法範圍
+        if (!in_array($start, $timestamp) || !in_array($end, $timestamp) || $margin > 10800 || $margin == 0)
+        {
+            $result['error'] = true;
+        }
+        else {
+            Rental::create([
+                'title' => $req->title,
+                'phone' => $req->phone,
+                'description' => $req->description,
+                'name' => $req->name,
+                'username' => $req->username,
+                'room' => $req->room,
+                'rentDate' => $req->rentDate,
+                'period' => implode(",", json_decode($req->period))
+
+            ]);
+            $result['error'] = false;
+        }
 
         $result['status'] = true;
 
@@ -129,9 +164,9 @@ class RentController extends Controller
     
         $ch = curl_init();
 
-        $cookie_jar = "./cookie.txt";
+        // $cookie_jar = "./cookie.txt";
 
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_jar);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, '/tmp/cookie.txt');
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
         curl_setopt($ch, CURLOPT_TIMEOUT, 40);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -156,7 +191,7 @@ class RentController extends Controller
         curl_setopt($ch2, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" );
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 0);
 
-        curl_setopt($ch2, CURLOPT_COOKIEFILE, $cookie_jar);
+        curl_setopt($ch2, CURLOPT_COOKIEFILE, '/tmp/cookie.txt');
         
         $orders = curl_exec($ch2);
         curl_close($ch2);
