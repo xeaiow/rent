@@ -18,10 +18,25 @@ class RentController extends Controller
             return $result;
         }
 
+        if ( mb_strlen( $req->title, "utf-8") > 15 || mb_strlen( $req->description, "utf-8") > 100 || mb_strlen( $req->phone, "utf-8") > 15 )
+        {
+            $result['error'] = true;
+            $result['status'] = true;
+            return false;
+        }
+
         // 開始與結束的 timestamp
         $decode = substr(substr($req->period, 0, -1), 1);
         $period = explode(",", $decode);
         $timestamp = ['32400', '34200', '36000', '37800', '39600', '41400', '43200', '45000', '46800', '48600', '50400', '52200', '54000', '55800', '57600', '59400', '61200', '63000', '64800', '66600', '68400', '70200', '72000', '73800', '75600', '77400'];
+        $room = ['102', '104', '201', '203', '205'];
+
+        if (!in_array($req->room, $room))
+        {
+            $result['error'] = true;
+            $result['status'] = true;
+            return $result;
+        }
 
         // 判斷是否正確的開始與結束
         if (count($period) < 2)
@@ -52,7 +67,7 @@ class RentController extends Controller
         }
         else {
             Rental::create([
-                'title' => $req->title,
+                'title' => $req->title." - ".$req->name,
                 'phone' => $req->phone,
                 'description' => $req->description,
                 'name' => $req->name,
@@ -164,9 +179,9 @@ class RentController extends Controller
     
         $ch = curl_init();
 
-        // $cookie_jar = "./cookie.txt";
+        $cookie_jar = "./cookie.txt";
 
-        curl_setopt($ch, CURLOPT_COOKIEJAR, '/tmp/cookie.txt');
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_jar);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
         curl_setopt($ch, CURLOPT_TIMEOUT, 40);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -191,7 +206,7 @@ class RentController extends Controller
         curl_setopt($ch2, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" );
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 0);
 
-        curl_setopt($ch2, CURLOPT_COOKIEFILE, '/tmp/cookie.txt');
+        curl_setopt($ch2, CURLOPT_COOKIEFILE, $cookie_jar);
         
         $orders = curl_exec($ch2);
         curl_close($ch2);

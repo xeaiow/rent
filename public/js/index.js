@@ -13,6 +13,7 @@ $(function() {
         return false;
     }
     loadEvents();
+
 });
 
 function createCalendar(date, side) {
@@ -225,6 +226,7 @@ gridTable.onclick = function(e) {
                 });
                 addEvent(val.title, " 資管 " + val.room + " 從 " + start + " - " + end);
             });
+
         showEvents();
     });
 
@@ -442,6 +444,14 @@ $("#confirmRent").click(function() {
         });
         return false;
     }
+
+    if (title.length > 15 || desc.length > 100 || phone.length > 15) {
+        swal("糟糕惹", "精簡扼要就好了", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
     let today = new Date();
     let now = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
@@ -507,11 +517,28 @@ $("#confirmRent").click(function() {
                 return false;
             }
 
-            console.log(res);
+            // add to my rental
+            let itemDate = moment.unix(seconds[0]).format("YYYY-MM-DD");
+            let current = moment(seconds[1]).format('YYYY-MM-DD');
+            let timeText = null;
+
+            if (itemDate > current) {
+                moment.duration(moment(itemDate).diff(current)).distance();
+                timeText = moment.duration(moment(itemDate).diff(current)).distance();
+
+            } else {
+                moment.duration(moment(current).diff(itemDate)).distance();
+                timeText = moment.duration(moment(current).diff(itemDate)).distance();
+            }
+            
+            $("#myRentalRecord").append(
+                '<li class="collection-item avatar"><img src="https://i.imgur.com/43r37Cx.png" alt="" class="circle"><span class="title my-rental-title">' + title + '</span><p>' + timeText + '在資管 ' + selectRoom + '</p></li>'
+            );
 
             swal("預約完成", "請在預約時間點確實使用教室", "success", {
                 buttons: "好",
             });
+
             $(".modal").modal('close');
             $(".previewTime").html('');
             $("#eventTitleInput, #eventPhoneInput, #eventDescInput").val('');
