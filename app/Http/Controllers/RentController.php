@@ -29,7 +29,7 @@ class RentController extends Controller
         $decode = substr(substr($req->period, 0, -1), 1);
         $period = explode(",", $decode);
         $timestamp = ['32400', '34200', '36000', '37800', '39600', '41400', '43200', '45000', '46800', '48600', '50400', '52200', '54000', '55800', '57600', '59400', '61200', '63000', '64800', '66600', '68400', '70200', '72000', '73800', '75600', '77400'];
-        $room = ['102', '104', '201', '203', '205'];
+        $room = ['102', '103', '104', '203', '205'];
 
         if (!in_array($req->room, $room))
         {
@@ -262,6 +262,6 @@ class RentController extends Controller
     // 取得該日所有租借紀錄
     public function getAllRental (Request $req)
     {
-       return Rental::where('rentDate', $req->date)->get(['title', 'room', 'period']);
+       return Rental::where('rentDate', $req->date)->where('course', 0)->get(['title', 'room', 'period']);
     }
 }

@@ -12,6 +12,6 @@ Route::get('/get/user/rental/{token}', 'RentController@getUserRental');
 
 Route::post('/login/status', 'RentController@getLoginStatus');
 
-Route::post('/login', 'RentController@login');
+Route::post ('/login', 'RentController@login');
 
 Route::get('/get/rental/{date}', 'RentController@getAllRental');

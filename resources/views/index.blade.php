@@ -103,8 +103,8 @@
                         <select id="room">
                             <option value="" disabled selected>請選擇</option>
                             <option value="102">資管 102</option>
+                            <option value="103">資管 103</option>
                             <option value="104">資管 104</option>
-                            <option value="201">資管 201</option>
                             <option value="203">資管 203</option>
                             <option value="205">資管 205</option>
                         </select>
