@@ -1,7 +1,5 @@
 @extends('layouts.layout')
  
-@section('title', '選擇')
- 
 @section('content')
     <div class="mobile-header z-depth-1">
         <div class="row">
