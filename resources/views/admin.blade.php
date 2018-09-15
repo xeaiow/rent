@@ -20,10 +20,10 @@
             <h5 id="eventDayName">後臺管理</h5>
         </div>
         <div class="sidebar-events" id="sidebarEvents">
-            <div class="empty-message">
+            <div class="center-align">
                 <ul>
-                    <li>預約列表</li>
-                    <li>新增預約</li>
+                    <li id="reloadList"><a class="waves-effect waves-light btn transparent">預約列表</a></li>
+                    <li id="add-rental"><a class="waves-effect waves-light btn transparent">新增預約</a></li>
                 </ul>
             </div>
         </div>
@@ -60,6 +60,54 @@
             <a class="waves-effect waves-light btn blue darken-3" id="edit-update">更新</a>
             <a class="waves-effect waves-light btn grey" id="edit-close">取消</a>
         </div>
+    </div>
+</div>
+
+<div id="add-rental-modal" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <h4>新增預約</h4>
+        <div>
+            <div class="input-field col s12">
+                <input id="add-name" type="text" class="validate">
+                <label >租借人</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="add-username" type="number" class="validate">
+                <label >學號</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="add-title" type="text" class="validate">
+                <label >原因</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="add-desc" type="text" class="validate">
+                <label >描述</label>
+            </div>
+            <div class="input-field col s6">
+                <input id="add-phone" type="text" class="validate">
+                <label >聯絡電話</label>
+            </div>
+            <div class="col s12">
+                <select id="room">
+                    <option value="" disabled selected>請選擇</option>
+                    <option value="102">資管 102</option>
+                    <option value="103">資管 103</option>
+                    <option value="104">資管 104</option>
+                    <option value="203">資管 203</option>
+                    <option value="205">資管 205</option>
+                </select>
+                <div class="add-container-text">日期</div>
+                <input type="date" id="rentDate" value="2018-09-16" required />
+                <div class="add-container-text">開始</div>
+                <input type="time" id="start" min="9:00" max="21:30" required />
+                <div class="add-container-text">結束</div>
+                <input type="time" id="end" min="9:00 " max="21:30" required />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="waves-effect waves-light btn" id="add">確定</a>
+        <a class="modal-close waves-effect waves-light btn grey lighten-1">取消</a>
     </div>
 </div>
 

@@ -27,3 +27,5 @@ Route::get('/pineapple/get/edit/rental/{id}', 'AdminController@getEditRental');
 Route::post('/pineapple/update/rental', 'AdminController@setEditRental');
 
 Route::get('/pineapple/reject/rental/{id}', 'AdminController@setRejectRental');
+
+Route::post('/pineapple/add/rental', 'AdminController@setRental');

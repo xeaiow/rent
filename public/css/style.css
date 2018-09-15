@@ -379,3 +379,11 @@ h3, h4, h5 {
   color: #005792;
   font-weight: 600;
 }
+
+.add-container-text {
+  margin-top: 30px;
+}
+
+.empty-message ul li:hover {
+  cursor: pointer;
+}
