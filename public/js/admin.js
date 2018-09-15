@@ -14,6 +14,10 @@ function timestampToYearMonDay (timestamp) {
     });
 }
 
+function summary (str) {
+    return ( str.length > 8 ? str.substr(0, 8) + "..." : str );
+}
+
 function loadAllRental () {
     axios.get('/rent/public/pineapple/get/rental')
     .then(function(response) {
@@ -25,8 +29,8 @@ function loadAllRental () {
                 '<tr id="lists-' + val.id + '">' + 
                     '<td>' + val.name + '</td>' + 
                     '<td>' + val.username + '</td>' + 
-                    '<td>' + val.title.substring(0, val.title.length-6) + '</td>' + 
-                    '<td>' + ( val.description == null ? "無" : val.description ) + '</td>' + 
+                    '<td>' + summary(val.title.substring(0, val.title.length-6)) + '</td>' + 
+                    '<td>' + ( val.description == null ? "無" : summary(val.description) ) + '</td>' + 
                     '<td>' + val.phone + '</td>' + 
                     '<td>' + timestampToYearMonDay(val.rentDate) + '</td>' + 
                     '<td>' + periodToClock(val.period) + '</td>' + 
@@ -69,8 +73,8 @@ $("#edit-update").click(function () {
     })
     .then(function(response) {
         let lists = $("#lists-" + focusId).find("td");
-        lists[2].textContent = $("#edit-title").val();
-        lists[3].textContent = $("#edit-desc").val();
+        lists[2].textContent = summary($("#edit-title").val());
+        lists[3].textContent = ( $("#edit-desc").val() == "" ? "無" : summary($("#edit-desc").val()) );
         lists[4].textContent = $("#edit-phone").val();
 
         swal("Good", "更新完成", "success", {
@@ -162,8 +166,8 @@ $("#add").click(function () {
             '<tr id="lists-' + val.id + '">' + 
                 '<td>' + val.name + '</td>' + 
                 '<td>' + val.username + '</td>' + 
-                '<td>' + val.title.substring(0, val.title.length-6) + '</td>' + 
-                '<td>' + ( val.description == null ? "無" : val.description ) + '</td>' + 
+                '<td>' + summary(val.title.substring(0, val.title.length-6)) + '</td>' + 
+                '<td>' + ( val.description == null ? "無" : summary(val.description) ) + '</td>' + 
                 '<td>' + val.phone + '</td>' + 
                 '<td>' + timestampToYearMonDay(val.rentDate) + '</td>' + 
                 '<td>' + periodToClock(val.period) + '</td>' + 
