@@ -453,7 +453,7 @@ $("#confirmRent").click(function() {
     }
 
     let today = new Date();
-    let now = new Date(today.getFullYear(), (today.getMonth()+1), today.getDate());
+    let now = new Date(today.getFullYear(), (today.getMonth()), today.getDate());
 
     if (parseInt(selectedDate.getTime()) >= parseInt(now.getTime())) {
 
