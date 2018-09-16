@@ -201,8 +201,6 @@ $("#login-account").keypress(function(e) {
 
         if (step == 1) {
             
-            console.log(account);
-            
             axios.post('/rent/public/pineapple/login', {
                 account: account[0],
                 password: account[1]
@@ -211,6 +209,7 @@ $("#login-account").keypress(function(e) {
                 if (!res.data.status) {
                     $("#login-press-next").text('Please try again.');
                     $("#login-account").text('');
+                    $("#login-account").style.color = '#38F16A';
                     step = 0;
                     account.length = 0;
                     return false;
@@ -228,5 +227,6 @@ $("#login-account").keypress(function(e) {
 
         $("#login-press-next").text("Enter your password.");
         $("#login-account").text('');
+        $("#login-account").css('color', '#000');
     }
 });
