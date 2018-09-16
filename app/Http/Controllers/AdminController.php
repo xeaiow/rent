@@ -108,7 +108,7 @@ class AdminController extends Controller
     // 登入處理
     public function loginHandle (Request $req)
     {
-        $isExist = Vendor::where('account', $req->account)->where('password', $req->password);
+        $isExist = Vendor::where('account', $req->account)->where('password', hash('sha256', ($req->password)));
         
         if ($isExist->count() == 1)
         {

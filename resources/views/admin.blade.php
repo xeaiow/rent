@@ -7,7 +7,7 @@
 <nav>
     <div class="nav-wrapper blue-grey darken-4">
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="{{ url('/pineapple/logout') }}">管理員</a></li>
+            <li><a href="{{ url('/pineapple/logout') }}">登出</a></li>
         </ul>
     </div>
 </nav>
