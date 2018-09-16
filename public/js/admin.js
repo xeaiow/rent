@@ -183,3 +183,50 @@ $("#add").click(function () {
 $("#reloadList").click(function () {
     loadAllRental();
 });
+
+var account = [];
+var step = 0;
+
+$("#login-account").focus();
+$("#login-press-next").text("Enter your account.")
+
+$("#login-account").keypress(function(e) {
+    code = (e.keyCode ? e.keyCode : e.which);
+
+    if (code == 13) {
+        
+        e.preventDefault();
+
+        account.push($("#login-account").text());
+
+        if (step == 1) {
+            
+            console.log(account);
+            
+            axios.post('/rent/public/pineapple/login', {
+                account: account[0],
+                password: account[1]
+            })
+            .then(function(res) {
+                if (!res.data.status) {
+                    $("#login-press-next").text('Please try again.');
+                    $("#login-account").text('');
+                    step = 0;
+                    account.length = 0;
+                    return false;
+                }
+
+                sessionStorage.setItem("cyimRentAccount", res.data.account);
+                sessionStorage.setItem("cyimRentToken", res.data.token);
+
+               window.location.href = '/rent/public/pineapple';
+                
+            });
+            return false;
+        }
+        step++;
+
+        $("#login-press-next").text("Enter your password.");
+        $("#login-account").text('');
+    }
+});

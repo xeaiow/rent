@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Rental;
+use App\Vendor;
+
+use Session;
 
 class AdminController extends Controller
 {
@@ -94,5 +97,46 @@ class AdminController extends Controller
         }
     
         return $result;
+    }
+
+    // 管理登入頁面
+    public function loginPage ()
+    {
+        return view('login');
+    }
+
+    // 登入處理
+    public function loginHandle (Request $req)
+    {
+        $isExist = Vendor::where('account', $req->account)->where('password', $req->password);
+        
+        if ($isExist->count() == 1)
+        {
+            $token = bin2hex(random_bytes(32));
+
+            $isExist->update(['token' => $token]);
+
+            Session::put('account', $req->account);
+            Session::put('token', $token);
+
+            $result['account'] = $req->session()->get('account');
+            $result['token'] = $req->session()->get('token');    
+            $result['status']  = true;
+
+            return $result;
+        }
+        else
+        {
+            $result['status']  = false;
+
+            return $result;
+        }
+    }
+
+    // 登出
+    public function logout ()
+    {
+        Session::flush();
+        return redirect('/pineapple/login');
     }
 }

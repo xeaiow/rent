@@ -18,14 +18,19 @@ Route::get('/get/rental/{date}', 'RentController@getAllRental');
 
 /* Admin */
 
-Route::get('/pineapple', 'AdminController@index');
+Route::group(['prefix' => '/', 'middleware' => 'notAdmin'], function () {
 
-Route::get('/pineapple/get/rental', 'AdminController@getAllRental');
+    Route::post('/pineapple/login', 'AdminController@loginHandle');
+    Route::get('/pineapple/login', 'AdminController@loginPage');
+});
 
-Route::get('/pineapple/get/edit/rental/{id}', 'AdminController@getEditRental');
+Route::group(['prefix' => '/', 'middleware' => 'admin'], function () {
 
-Route::post('/pineapple/update/rental', 'AdminController@setEditRental');
-
-Route::get('/pineapple/reject/rental/{id}', 'AdminController@setRejectRental');
-
-Route::post('/pineapple/add/rental', 'AdminController@setRental');
+    Route::get('/pineapple', 'AdminController@index');
+    Route::get('/pineapple/get/rental', 'AdminController@getAllRental');
+    Route::get('/pineapple/get/edit/rental/{id}', 'AdminController@getEditRental');
+    Route::post('/pineapple/update/rental', 'AdminController@setEditRental');
+    Route::get('/pineapple/reject/rental/{id}', 'AdminController@setRejectRental');
+    Route::post('/pineapple/add/rental', 'AdminController@setRental');
+    Route::get('/pineapple/logout', 'AdminController@logout');
+});

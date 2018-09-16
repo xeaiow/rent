@@ -7,11 +7,11 @@
 <nav>
     <div class="nav-wrapper blue-grey darken-4">
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a>管理員</a></li>
+            <li><a href="{{ url('/pineapple/logout') }}">管理員</a></li>
         </ul>
     </div>
 </nav>
-<div class="container" id="app">
+<div class="container">
     <div class="sidebar-wrapper z-depth-2 side-nav fixed" id="sidebar">
         <div class="sidebar-title">
             <h5>資管系教室預約系統</h5>
@@ -96,7 +96,7 @@
                     <option value="205">資管 205</option>
                 </select>
                 <div class="add-container-text">日期</div>
-                <input type="date" id="rentDate" value="2018-09-16" required />
+                <input type="date" id="rentDate" required />
                 <div class="add-container-text">開始</div>
                 <input type="time" id="start" min="9:00" max="21:30" required />
                 <div class="add-container-text">結束</div>
