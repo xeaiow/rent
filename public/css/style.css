@@ -366,7 +366,7 @@ h3, h4, h5 {
   color: #333 !important;
 }
 
-.focusPoint:hover {
+.focusPoint:hover, a:hover {
   cursor: pointer;
 }
 
@@ -398,4 +398,12 @@ h3, h4, h5 {
 
 #login-note {
   color: red;
+}
+
+#admin-sidebar {
+    color: #fff;
+    padding-top: 0;
+    font-family: '微軟正黑體';
+    padding-left: 0;
+    padding-right: 0;
 }

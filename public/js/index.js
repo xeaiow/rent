@@ -518,8 +518,8 @@ $("#confirmRent").click(function() {
             }
 
             // add to my rental
-            let itemDate = moment.unix(seconds[0]).format("YYYY-MM-DD");
-            let current = moment(seconds[1]).format('YYYY-MM-DD');
+            let itemDate = moment.unix(selectedDate.getTime() / 1000).format("YYYY-MM-DD");
+            let current = moment(new Date()).format('YYYY-MM-DD');
             let timeText = null;
 
             if (itemDate > current) {

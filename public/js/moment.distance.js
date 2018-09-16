@@ -23,11 +23,11 @@ const phrasing = {
 };
 
 if (typeof moment.updateLocale == 'function') {
-  moment.updateLocale('en', {distance: {phrasing, pluralSuffix}});
+  moment.updateLocale('zh-tw', {distance: {phrasing, pluralSuffix}});
 } else if (typeof moment.locale == 'function') {
-  moment.locale('en', {distance: {phrasing, pluralSuffix}});
+  moment.locale('zh-tw', {distance: {phrasing, pluralSuffix}});
 } else {
-  moment.lang('en', {distance: {phrasing, pluralSuffix}});
+  moment.lang('zh-tw', {distance: {phrasing, pluralSuffix}});
 }
 
 function format({phrase = '', count =  1, pluralSuffix = 's'} = {}) {
