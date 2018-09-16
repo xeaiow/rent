@@ -209,7 +209,7 @@ $("#login-account").keypress(function(e) {
                 if (!res.data.status) {
                     $("#login-press-next").text('Please try again.');
                     $("#login-account").text('');
-                    $("#login-account").style.color = '#38F16A';
+                    $("#login-account").css('color', '#38F16A');
                     step = 0;
                     account.length = 0;
                     return false;
