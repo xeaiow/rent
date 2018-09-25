@@ -199,6 +199,7 @@ gridTable.onclick = function(e) {
     }
     selectedDayBlock = e.target;
 
+
     selectedDayBlock.classList.add("focus");
 
     selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), parseInt(e.target.innerHTML));
@@ -752,7 +753,7 @@ function loadEvents() {
 
                 // set username and name of storage
                 if (res.data.login.length != 0) {
-                    $("#my").attr('data-tooltip', "租借紀錄");
+                    $("#my").attr('data-tooltip', "租借紀錄 (Alt+R)");
                     $("#navbar").show();
                     sessionStorage.setItem("username", res.data.login.username);
                     sessionStorage.setItem("name", res.data.login.name);

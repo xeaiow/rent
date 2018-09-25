@@ -49,6 +49,7 @@
             <script src="{{ asset('js/moment.js') }}"></script>
             <script src="{{ asset('js/moment.distance.js') }}"></script>
             <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
             <script>
                 $(function() {
                     $('.tooltipped').tooltip();
@@ -65,6 +66,15 @@
                     $("#myRental").modal({
                         dismissible: true,
                         opacity: .7,
+                    });
+
+                    hotkeys('alt+r,alt+q,option+r,option+q', function(event,handler) {
+                        switch(handler.key){
+                            case "alt+r":$("#my").click();break;
+                            case "alt+q":$("#logout").click();break;
+                            case "option+r":$("#my").click();break;
+                            case "option+q":$("#logout").click();break;
+                        }
                     });
 
                     console.log('%c ლ(ಠ_ಠლ) \n亂來我告訴老師喔！', 'font-size:30pt; color: red');

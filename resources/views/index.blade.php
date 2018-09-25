@@ -21,8 +21,8 @@
             <a href="#!" class="brand-logo">Logo</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
-                <li><a><i id="my" data-tooltip="我"" class="material-icons tooltipped">face</i></a></li>
-                <li><a><i data-tooltip="登出" id="logout" class="material-icons tooltipped">directions_run</i></a></li>
+                <li><a><i id="my" data-tooltip="我" class="material-icons tooltipped">face</i></a></li>
+                <li><a><i data-tooltip="登出 (Alt+Q)" id="logout" class="material-icons tooltipped">directions_run</i></a></li>
             </ul>
         </div>
     </nav>
@@ -100,7 +100,6 @@
                     <div class="col s12">
                         <select id="room">
                             <option value="" disabled selected>請選擇</option>
-                            <option value="102">資管 102</option>
                             <option value="103">資管 103</option>
                             <option value="104">資管 104</option>
                             <option value="203">資管 203</option>
