@@ -185,6 +185,8 @@ function showEvents() {
 
 gridTable.onclick = function(e) {
 
+    new Audio('/rent/public/audio/click.mp3').play();
+
     if (!e.target.classList.contains("col") || e.target.classList.contains("empty-day")) {
         return;
     }
@@ -622,6 +624,8 @@ $("#login").click(function() {
                 $("#login").attr('disabled', false);
                 return false;
             }
+
+            new Audio('/rent/public/audio/online.mp3').play();
 
             lockLogin = false;
             $("#loginModal").modal('close');
