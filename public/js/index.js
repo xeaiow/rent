@@ -13,7 +13,6 @@ $(function() {
         return false;
     }
     loadEvents();
-
 });
 
 function createCalendar(date, side) {
@@ -256,7 +255,22 @@ gridTable.onclick = function(e) {
 
 $("#agree").click(function () {
     $("#terms").modal("close");
+    $("#course").modal('open');
+});
+
+$("#agree-course").click(function () {
+    $("#course").modal("close");
     $("#modal1").modal('open');
+});
+
+$("#open-course").click(function () {
+    $("#course").modal("open");
+    $("#agree-course").hide();
+    $("#agree-course-alert").show();
+});
+
+$("#agree-course-alert").click(function () {
+    $("#course").modal("close");
 });
 
 // 選擇時段

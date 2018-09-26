@@ -52,6 +52,7 @@
             <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
             <script>
                 $(function() {
+                    
                     $('.tooltipped').tooltip();
                     $('select').formSelect();
                     $('.modal').modal({
@@ -63,10 +64,14 @@
                             $(".badge").remove();
                         }
                     });
+
                     $("#myRental").modal({
                         dismissible: true,
                         opacity: .7,
                     });
+
+                    $('.tabs').tabs();
+                    $('.materialboxed').materialbox();
 
                     hotkeys('alt+r,alt+q,option+r,option+q', function(event,handler) {
                         switch(handler.key){

@@ -21,6 +21,7 @@
             <a href="#!" class="brand-logo">Logo</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
+                <li><a><i id="open-course" data-tooltip="上課時段" class="material-icons tooltipped">announcement</i></a></li>
                 <li><a><i id="my" data-tooltip="我" class="material-icons tooltipped">face</i></a></li>
                 <li><a><i data-tooltip="登出 (Alt+Q)" id="logout" class="material-icons tooltipped">directions_run</i></a></li>
             </ul>
@@ -429,6 +430,36 @@
             <div class="modal-footer">
                 <a class="waves-effect waves-green btn-flat" id="doNotAgree">不要</a>
                 <a class="btn waves-effect waves-light grey darken-4" id="agree">同意並繼續</a>
+            </div>
+        </div>
+
+        <div id="course" class="modal modal-fixed-footer">
+            <div class="modal-content white">
+                <h4>資管系上課時段</h4>
+                <div>
+                    <ul id="term-list">
+                        <li>請參考以下課表自行避開上課時段，以免租借後發現當日為資管系正式課程時段。</li>
+                        <li>自動避開的工程正在開發中，請見諒！</li>
+                    </ul>
+                    <div class="row">
+                        <div class="col s12">
+                            <ul class="tabs">
+                                <li class="tab col s3"><a href="#103">103</a></li>
+                                <li class="tab col s3"><a href="#104">104</a></li>
+                                <li class="tab col s3"><a href="#203">203</a></li>
+                                <li class="tab col s3"><a href="#205">205</a></li>
+                            </ul>
+                        </div>
+                        <div id="103" class="col s12"><img class="materialboxed" src="https://i.imgur.com/WjGWCFW.jpg" alt="資管103"></div>
+                        <div id="104" class="col s12"><img class="materialboxed" src="https://i.imgur.com/JZIg5J3.jpg" alt="資管104"></div>
+                        <div id="203" class="col s12"><img class="materialboxed" src="https://i.imgur.com/9ZaWbTu.jpg" alt="資管203"></div>
+                        <div id="205" class="col s12"><img class="materialboxed" src="https://i.imgur.com/zYYstJN.jpg" alt="資管205"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn waves-effect waves-light grey darken-4" id="agree-course">好，我會注意</a>
+                <a class="btn waves-effect waves-light grey darken-4" id="agree-course-alert" style="display:none;">好，我會注意</a>
             </div>
         </div>
 

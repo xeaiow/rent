@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'smtp.gmail.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'xeaiow@cycu.org.tw'),
+        'name' => env('MAIL_FROM_NAME', '中原資管教室預約機器人'),
     ],
 
     /*
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME'),
+    'username' => "xeaiow@cycu.org.tw",
 
-    'password' => env('MAIL_PASSWORD'),
+    'password' => "a9b9c8d1",
 
     /*
     |--------------------------------------------------------------------------
