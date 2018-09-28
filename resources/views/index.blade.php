@@ -21,7 +21,8 @@
             <a href="#!" class="brand-logo">Logo</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
-                <li><a><i id="open-course" data-tooltip="上課時段" class="material-icons tooltipped">announcement</i></a></li>
+                <li><a class="waves-effect waves-teal btn-flat" id="about">關於</a></li>
+                <li><a><i id="open-course" data-tooltip="上課時段 (Alt+D)" class="material-icons tooltipped">announcement</i></a></li>
                 <li><a><i id="my" data-tooltip="我" class="material-icons tooltipped">face</i></a></li>
                 <li><a><i data-tooltip="登出 (Alt+Q)" id="logout" class="material-icons tooltipped">directions_run</i></a></li>
             </ul>
@@ -39,7 +40,7 @@
         <div class="sidebar-wrapper z-depth-2 side-nav fixed" id="sidebar">
             <div class="sidebar-title">
                 <h5>資管系教室預約系統</h5>
-                <h5 id="eventDayName">SIDEBAR SUB-TITLE</h5>
+                <h5 id="eventDayName"></h5>
             </div>
             <div class="sidebar-events" id="sidebarEvents">
                 <div class="empty-message"></div>
@@ -409,7 +410,7 @@
 
         <div id="terms" class="modal modal-fixed-footer">
             <div class="modal-content">
-                <h4>登記即代表您同意遵守</h4>
+                <h4>登記即代表您同意遵守</h4>
                 <div>
                     <ul id="term-list">
                         <li>1. 請確實登記開始與結束的時間</li>
@@ -435,7 +436,7 @@
 
         <div id="course" class="modal modal-fixed-footer">
             <div class="modal-content white">
-                <h4>資管系上課時段</h4>
+                <h4>資管系上課時段</h4>
                 <div>
                     <ul id="term-list">
                         <li>請參考以下課表自行避開上課時段，以免租借後發現當日為資管系正式課程時段。</li>
@@ -460,6 +461,20 @@
             <div class="modal-footer">
                 <a class="btn waves-effect waves-light grey darken-4" id="agree-course">好，我會注意</a>
                 <a class="btn waves-effect waves-light grey darken-4" id="agree-course-alert" style="display:none;">好，我會注意</a>
+            </div>
+        </div>
+
+        <div id="about-modal" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <h4>About</h4>
+                <div>
+                    If you have any further question, please don't hesitate to contace me.<br />
+                    E-mail: xeaiow@gmail.com<br />
+                    About me: <a target="_blank" href="https://www.cakeresume.com/xeee">https://www.cakeresume.com/xeee</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn waves-effect waves-light grey darken-4" id="okay">Okay</a>
             </div>
         </div>
 

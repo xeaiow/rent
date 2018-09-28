@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Rental;
 use App\Vendor;
-
+use Carbon\Carbon;
 use Session;
 
 class AdminController extends Controller
@@ -19,7 +19,7 @@ class AdminController extends Controller
     // 取得預約中的紀錄
     public function getAllRental ()
     {
-        return Rental::where('rentDate', '>=', time()-86399)->orderBy('rentDate', 'asc')->get();
+        return Rental::where('rentDate', '>=', Carbon::today()->timestamp)->orderBy('rentDate', 'asc')->get();
     }
 
     // 取得編輯預約紀錄資料
@@ -108,7 +108,7 @@ class AdminController extends Controller
     // 登入處理
     public function loginHandle (Request $req)
     {
-        $isExist = Vendor::where('account', $req->account)->where('password', hash('sha256', ($req->password)));
+        $isExist = Vendor::where('account', $req->account)->where('status', 1)->where('password', hash('sha256', ($req->password)));
         
         if ($isExist->count() == 1)
         {

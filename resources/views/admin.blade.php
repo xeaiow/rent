@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="col s7">
-        <h3 class="center-align">預約列表</h3>
+        <h3 class="center-align">本日預約列表</h3>
         <table class="highlight">
             <thead>
                 <tr> 
@@ -29,8 +29,10 @@
                     <th>原因</th>
                     <th>描述</th>
                     <th>聯絡電話</th>
+                    <th>教室</th>
                     <th>租借日期</th>
                     <th>租借期間</th>
+                    <th>建立時間</th>
                     <th>操作</th>
                 </tr>
             </thead>

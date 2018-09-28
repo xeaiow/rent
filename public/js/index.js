@@ -184,7 +184,7 @@ function showEvents() {
 
 gridTable.onclick = function(e) {
 
-    new Audio('/rent/public/audio/click.mp3').play();
+    new Audio('/audio/click.mp3').play();
 
     if (!e.target.classList.contains("col") || e.target.classList.contains("empty-day")) {
         return;
@@ -203,7 +203,7 @@ gridTable.onclick = function(e) {
 
     selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), parseInt(e.target.innerHTML));
 
-    axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000)
+    axios.get('/get/rental/' + selectedDate.getTime() / 1000)
         .then(function(res) {
 
             if (res.data.length == 0) {
@@ -271,6 +271,14 @@ $("#open-course").click(function () {
 
 $("#agree-course-alert").click(function () {
     $("#course").modal("close");
+});
+
+$("#about").click(function () {
+    $("#about-modal").modal("open");
+});
+
+$("#okay").click(function () {
+    $("#about-modal").modal("close");
 });
 
 // 選擇時段
@@ -505,7 +513,7 @@ $("#confirmRent").click(function() {
         selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
     }
 
-    axios.post('/rent/public/set/rental', {
+    axios.post('/set/rental', {
             title: title,
             phone: phone,
             description: desc,
@@ -579,7 +587,7 @@ $("#room").on('change', function() {
     let instance = M.FormSelect.getInstance($(this));
     selectRoom = instance.getSelectedValues()[0];
 
-    axios.get('/rent/public/get/rental/' + selectedDate.getTime() / 1000 + '/' + instance.getSelectedValues())
+    axios.get('/get/rental/' + selectedDate.getTime() / 1000 + '/' + instance.getSelectedValues())
         .then(function(response) {
 
             $("#instruction").html('請選擇開始與結束時間 <span style="color:#ad1457;" class="previewTime"></span>');
@@ -626,7 +634,7 @@ $("#login").click(function() {
     lockLogin = true;
     $("#login").attr('disabled', true);
 
-    axios.post('/rent/public/login', {
+    axios.post('/login', {
             username: $("#itouchUsername").val(),
             password: $("#itouchPassword").val()
         })
@@ -640,7 +648,7 @@ $("#login").click(function() {
                 return false;
             }
 
-            new Audio('/rent/public/audio/online.mp3').play();
+            new Audio('/audio/online.mp3').play();
 
             lockLogin = false;
             $("#loginModal").modal('close');
@@ -758,7 +766,7 @@ function timePointError() {
 
 function loadEvents() {
 
-    axios.get('/rent/public/get/user/rental/' + sessionStorage.getItem("cyimRentToken"))
+    axios.get('/get/user/rental/' + sessionStorage.getItem("cyimRentToken"))
         .then(function(res) {
 
             if (res.data.status) {
