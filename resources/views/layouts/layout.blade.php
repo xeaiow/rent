@@ -25,7 +25,7 @@
     <head>
         <title>中原資管教室預約系統</title>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
         @section('style')
             <link rel="shortcut icon" href="{{{ asset('favicon.png') }}}">
             <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -55,6 +55,7 @@
                     
                     $('.tooltipped').tooltip();
                     $('select').formSelect();
+                    $('.sidenav').sidenav();
                     $('.modal').modal({
                         dismissible: false,
                         opacity: .3,

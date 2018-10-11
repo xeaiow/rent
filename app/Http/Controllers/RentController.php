@@ -179,8 +179,8 @@ class RentController extends Controller
     
         $ch = curl_init();
 
-        // $cookie_jar = "./cookie.txt";
-        $cookie_jar = '/tmp/cookie.txt';
+        $cookie_jar = "./cookie.txt";
+        //$cookie_jar = '/tmp/cookie.txt';
 
         curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_jar);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");

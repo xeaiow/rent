@@ -1,20 +1,6 @@
 @extends('layouts.layout')
  
 @section('content')
-    <div class="mobile-header z-depth-1">
-        <div class="row">
-            <div class="col-2">
-                <a href="#" data-activates="sidebar" class="button-collapse">
-                    <i class="material-icons">menu</i>
-                </a>
-            </div>
-            <div class="col">
-                <h5>資管系教室預約系統</h5>
-                <h6>(┛`д´)┛ 系辦預算不夠，所以沒有 RWD</h6>
-            </div>
-        </div>
-    </div>
-
     
     <nav id="navbar">
         <div class="nav-wrapper">
@@ -29,12 +15,19 @@
         </div>
     </nav>
 
-  <ul class="sidenav" id="mobile-demo">
-    <li><a href="sass.html">Sass</a></li>
-    <li><a href="badges.html">Components</a></li>
-    <li><a href="collapsible.html">Javascript</a></li>
-    <li><a href="mobile.html">Mobile</a></li>
-  </ul>
+    <nav id="mobile-navbar" class="grey darken-3">
+        <div class="nav-wrapper">
+            <a class="title">資管系教室預約系統</a>
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+        <div class="center-align booking">
+            <a class="waves-effect waves-light btn" id="booking">預定</a>
+        </div>
+    </nav>
+
+    <ul class="sidenav" id="mobile-demo">
+        <li><a>施工中...</a></li>
+    </ul>
 
     <div class="main-wrapper">
         <div class="sidebar-wrapper z-depth-2 side-nav fixed" id="sidebar">
@@ -52,7 +45,6 @@
 
         <div class="content-wrapper">
             <div class="container">
-
                 <div class="calendar-wrapper z-depth-2">
 
                     <div class="header-background">

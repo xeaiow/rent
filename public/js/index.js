@@ -217,8 +217,6 @@ function showEvents() {
 
 gridTable.onclick = function(e) {
 
-    new Audio('/audio/click.mp3').play();
-
     if (!e.target.classList.contains("col") || e.target.classList.contains("empty-day")) {
         return;
     }
@@ -283,6 +281,9 @@ gridTable.onclick = function(e) {
 }
 
 $("#booking").on('click', function() {
+    
+    new Audio('/audio/click.mp3').play();
+
     if (sessionStorage.getItem("cyimRentToken") == null) {
         $("#loginModal").modal('open');
         $("#itouchUsername").focus();
