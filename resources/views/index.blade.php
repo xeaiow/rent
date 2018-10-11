@@ -42,6 +42,9 @@
                 <h5>資管系教室預約系統</h5>
                 <h5 id="eventDayName"></h5>
             </div>
+            <div class="center-align booking">
+                <a class="waves-effect waves-light btn" id="booking">預定</a>
+            </div>
             <div class="sidebar-events" id="sidebarEvents">
                 <div class="empty-message"></div>
             </div>
@@ -468,9 +471,9 @@
             <div class="modal-content">
                 <h4>About</h4>
                 <div>
-                    If you have any further question, please don't hesitate to contace me.<br />
+                    如有遇到任何錯誤或疑問，可至系辦或 E-mail 通報，感謝您<br />
                     E-mail: xeaiow@gmail.com<br />
-                    About me: <a target="_blank" href="https://www.cakeresume.com/xeee">https://www.cakeresume.com/xeee</a>
+                    關於我: <a target="_blank" href="https://www.cakeresume.com/xeee">https://www.cakeresume.com/xeee</a>
                 </div>
             </div>
             <div class="modal-footer">

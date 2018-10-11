@@ -8,11 +8,43 @@ var globalEventObj = {};
 var sidebar = document.getElementById("sidebar");
 
 $(function() {
+
+    selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), new Date().getDate());
+
+    axios.get('/get/rental/' + selectedDate.getTime() / 1000)
+        .then(function(res) {
+
+            if (res.data.length == 0) {
+                $("#sidebarEvents").html('<div class="eventCard"><div class="eventCard-header">還沒有任何人租借</div></div>');
+                return false;
+            }
+
+            let period = ['32400', '34200', '36000', '37800', '39600', '41400', '43200', '45000', '46800', '48600', '50400', '52200', '54000', '55800', '57600', '59400', '61200', '63000', '64800', '66600', '68400', '70200', '72000', '73800', '75600', '77400'];
+            let str_period = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30'];
+
+            $.each(res.data, function (key, val) {
+                let start = val.period.substr(0, 5);
+                let end = val.period.substr(-5);
+                
+                $.each(period, function (key, val) {
+                    if (start == val) {
+                        start = str_period[key];
+                    }
+                    if (end == val) {
+                        end = str_period[key];
+                    }
+                });
+                addEvent(val.title, " 資管 " + val.room + " 從 " + start + " - " + end);
+            });
+
+        showEvents();
+    });
     
     if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
         return false;
     }
     loadEvents();
+    
 });
 
 function createCalendar(date, side) {
@@ -136,10 +168,6 @@ function showEvents() {
     let sidebarEvents = document.getElementById("sidebarEvents");
     let objWithDate = globalEventObj[selectedDate.toDateString()];
 
-    if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
-        return false;
-    }
-
     sidebarEvents.innerHTML = "";
 
     if (objWithDate) {
@@ -174,12 +202,17 @@ function showEvents() {
     } else {
         let emptyMessage = document.createElement("div");
         emptyMessage.className = "empty-message";
-        // emptyMessage.innerHTML = "尚無租借紀錄";
         sidebarEvents.appendChild(emptyMessage);
         let emptyFormMessage = document.getElementById("emptyFormTitle");
 
     }
-    $("#sidebarEvents").prepend('<div class="row" id="recordTitle"><div class="col s12"><h6 class="center-align" id="todayRental">本日租借紀錄</h6></div></div>');
+    $("#sidebarEvents").prepend(
+        '<div class="row" id="recordTitle">' + 
+            '<div class="col s12">' + 
+                '<h6 class="center-align" id="todayRental">本日租借紀錄</h6>' + 
+                ''+
+            '</div>' + 
+        '</div>');
 }
 
 gridTable.onclick = function(e) {
@@ -198,11 +231,17 @@ gridTable.onclick = function(e) {
     }
     selectedDayBlock = e.target;
 
-
     selectedDayBlock.classList.add("focus");
 
     selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), parseInt(e.target.innerHTML));
 
+    if (selectedDate.getDay() == 0 || selectedDate.getDay() == 6) {
+        swal("假日不開放", "假日借用請洽系辦公室", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+        
     axios.get('/get/rental/' + selectedDate.getTime() / 1000)
         .then(function(res) {
 
@@ -232,26 +271,25 @@ gridTable.onclick = function(e) {
         showEvents();
     });
 
-    if (selectedDate.getDay() == 0 || selectedDate.getDay() == 6) {
-        swal("假日不開放", "假日借用請洽系辦公室", "error", {
-            buttons: "知道了",
-        });
-        return false;
-    }
-
     document.getElementById("eventDayName").innerHTML = selectedDate.toLocaleString("zh-Hans-TW", {
         month: "long",
         day: "numeric",
         year: "numeric"
     });
 
+    // if (sessionStorage.getItem("cyimRentToken") != null) {
+    //     $("#modal1").modal('open');
+    // }
+}
+
+$("#booking").on('click', function() {
     if (sessionStorage.getItem("cyimRentToken") == null) {
         $("#loginModal").modal('open');
         $("#itouchUsername").focus();
     } else {
         $("#modal1").modal('open');
     }
-}
+});
 
 $("#agree").click(function () {
     $("#terms").modal("close");
@@ -661,7 +699,6 @@ $("#login").click(function() {
             sessionStorage.setItem("cyimRentName", res.data.name);
             $("#login").attr('disabled', false);
             $("#terms").modal('open');
-            loadEvents();
         });
 });
 
@@ -807,8 +844,6 @@ function loadEvents() {
                             '<li class="collection-item avatar"><img src="https://i.imgur.com/43r37Cx.png" alt="" class="circle"><span class="title my-rental-title">' + rentalRes[i].title + '</span><p>' + timeText + '在資管 ' + rentalRes[i].room + '</p></li>'
                         );
                     }
-
-                    showEvents();
                 }
             }
         });
