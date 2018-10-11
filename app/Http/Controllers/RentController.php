@@ -173,14 +173,14 @@ class RentController extends Controller
     public function login (Request $req)
     {
         $url        = "https://itouch.cycu.edu.tw/active_system/login/login2.jsp";
-        $ref_url    = "https://itouch.cycu.edu.tw/active_system/quary/s_basic.jsp";
+        $ref_url    = "https://itouch.cycu.edu.tw/active_project/cycu2100h_06/acpm3/json/ss_loginUser.jsp";
         $userId     = $req->username;
         $password   = $req->password;
     
         $ch = curl_init();
 
-        $cookie_jar = "./cookie.txt";
-        // $cookie_jar = '/tmp/cookie.txt';
+        // $cookie_jar = "./cookie.txt";
+        $cookie_jar = '/tmp/cookie.txt';
 
         curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_jar);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
@@ -201,7 +201,7 @@ class RentController extends Controller
         
         $ch2 = curl_init();
 
-        curl_setopt($ch2, CURLOPT_URL, "https://itouch.cycu.edu.tw/active_system/quary/s_basic.jsp");
+        curl_setopt($ch2, CURLOPT_URL, "https://itouch.cycu.edu.tw/active_project/cycu2100h_06/acpm3/json/ss_loginUser.jsp");
         curl_setopt($ch2, CURLOPT_HEADER, 0);
         curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch2, CURLOPT_USERAGENT,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36" );
@@ -212,37 +212,47 @@ class RentController extends Controller
         $orders = curl_exec($ch2);
         curl_close($ch2);
 
-        preg_match_all("/\<div align=\"center\"\>(.*?)\<\/div\>/is", $orders, $arr);
-        preg_match_all("/\<font color=\"#990000\"\>(.*?)\<\/font\>/is", $arr[0][7], $nameArr);
-        preg_match_all("/\<font color=\"#990000\"\>(.*?)\<\/font\>/is", $arr[0][2], $deptArr);
+        $userInfo = (array) json_decode($orders);
 
-        // 取得系級
-        $dept = mb_substr(strip_tags($deptArr[0][0]), 0, 2, 'utf-8');
-      
-        // 判斷是否成功登入 iTouch
-        if ($dept != "資管")
+        // 判斷是否登入失敗
+        if (count($userInfo) == 0)
         {
-            $result['status'] = 0;
+            $result['status'] = false;
             return json_encode($result);
         }
 
-        $userExists = Member::where('username', $req->username);
+        // 取得姓名跟系級
+        $name   = $userInfo['name'];
+        $dept   = $userInfo['i_DEPT_NAME_C'];
 
+        // preg_match_all("/\<div align=\"center\"\>(.*?)\<\/div\>/is", $orders, $arr);
+        // preg_match_all("/\<font color=\"#990000\"\>(.*?)\<\/font\>/is", $arr[0][7], $nameArr);
+        // preg_match_all("/\<font color=\"#990000\"\>(.*?)\<\/font\>/is", $arr[0][2], $deptArr);
+
+        // // 取得系級
+        // $dept = mb_substr(strip_tags($deptArr[0][0]), 0, 2, 'utf-8');
+      
+        // 判斷是否為不合格成員
+        if (mb_substr($dept, 0, 4) != "資訊管理")
+        {
+            $result['status'] = false;
+            return json_encode($result);
+        }
+
+        // 產生 Token
         $token = bin2hex(random_bytes(32));
 
-        if ( $userExists->count() == 1 )
+        // 判斷該使用者是否已註冊過
+        $userExists = Member::where('username', $userId);
+
+        if ( $userExists->count() > 0 )
         {
             $userExists->update(['token' => $token]);
-            $userInfo = $userExists->first();
-
-            $name = $userInfo['name'];
-            $token = $userInfo['token'];
         }
         else
         {
             // 姓名
-            $name = strip_tags($nameArr[0][0]);
-
+            //$name = strip_tags($nameArr[0][0]);
             Member::create([
                 'username' => $userId,
                 'name' => $name, 
@@ -255,7 +265,7 @@ class RentController extends Controller
         $result['name'] = $name;
         $result['username'] = $userId;
         $result['token'] = $token;
-        $result['status'] = 1;
+        $result['status'] = true;
     
         return json_encode($result);
     }

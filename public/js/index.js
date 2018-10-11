@@ -669,6 +669,7 @@ $("#logout").click(function() {
     sessionStorage.removeItem("cyimRentToken");
     if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
         $("#navbar").hide();
+        $("#myRentalRecord").html('');
         $("#sidebarEvents").html('');
         swal("登出成功", "謝謝使用", "info", {
             buttons: "好哦",
