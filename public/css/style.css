@@ -2,6 +2,7 @@ body {
   font-family: '微軟正黑體';
   font-weigth: 400;
   background-color: #E9EAED;
+  overflow-x: hidden;
 }
 
 .col h5, .col h6 {
@@ -21,7 +22,7 @@ h3, h4, h5 {
 .calendar-header {
   background-color: rgba(18, 15, 25, 0.25);
   height: 100%;
-  padding: 20px;
+  padding: 0px;
   color: #fff;
   /*font-family: "RobotoLight";*/
   font-family: '微軟正黑體';
@@ -365,11 +366,6 @@ h3, h4, h5 {
   display: none;
 }
 
-#navbar, #navbar a {
-  background-color: #E9EAED;
-  color: #333 !important;
-}
-
 .focusPoint:hover, a:hover {
   cursor: pointer;
 }
@@ -412,16 +408,28 @@ h3, h4, h5 {
     padding-right: 0;
 }
 
-.booking {
-  margin-bottom: 10px;
-}
-
-@media only screen and (min-width: 900px) {
-  #mobile-navbar {
-    display: none;
-  }
+.booking-margin {
+  margin-bottom: 20px;
 }
 
 #mobile-navbar .title {
   font-size: 18px;
+}
+
+@media only screen and (min-width: 900px) {
+  .mobile-booking, #mobile-rental {
+    display: none;
+  }
+}
+
+.mobile-booking {
+  margin: 20px 0 -56px 0;
+}
+
+.nav-about {
+  color: #FFF !important;
+}
+
+#mobile-demo li a {
+  color: #000 !important;
 }

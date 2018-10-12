@@ -16,6 +16,9 @@ $(function() {
 
             if (res.data.length == 0) {
                 $("#sidebarEvents").html('<div class="eventCard"><div class="eventCard-header">還沒有任何人租借</div></div>');
+                
+                $("#mobile-rental").html('<li class="collection-header"><h4 class="align center">尚無租借紀錄</h4></li>');
+                
                 return false;
             }
 
@@ -243,8 +246,13 @@ gridTable.onclick = function(e) {
     axios.get('/get/rental/' + selectedDate.getTime() / 1000)
         .then(function(res) {
 
+            $("#mobile-rental").html('');
+
             if (res.data.length == 0) {
                 $("#sidebarEvents").html('<div class="eventCard"><div class="eventCard-header">還沒有任何人租借</div></div>');
+            
+                $("#mobile-rental").html('<li class="collection-header align center"><h4>尚無租借紀錄</h4></li>');
+
                 return false;
             }
 
@@ -264,6 +272,7 @@ gridTable.onclick = function(e) {
                     }
                 });
                 addEvent(val.title, " 資管 " + val.room + " 從 " + start + " - " + end);
+                $("#mobile-rental").append('<li class="collection-item">' + val.title + ' 在資管 ' + val.room + ' 從 ' + start + ' 到 ' + end + '</li>');
             });
 
         showEvents();
@@ -280,7 +289,7 @@ gridTable.onclick = function(e) {
     // }
 }
 
-$("#booking").on('click', function() {
+$(".booking").on('click', function() {
     
     new Audio('/audio/click.mp3').play();
 
@@ -302,7 +311,7 @@ $("#agree-course").click(function () {
     $("#modal1").modal('open');
 });
 
-$("#open-course").click(function () {
+$(".open-course").click(function () {
     $("#course").modal("open");
     $("#agree-course").hide();
     $("#agree-course-alert").show();
@@ -312,7 +321,7 @@ $("#agree-course-alert").click(function () {
     $("#course").modal("close");
 });
 
-$("#about").click(function () {
+$(".nav-about").click(function () {
     $("#about-modal").modal("open");
 });
 
@@ -692,7 +701,7 @@ $("#login").click(function() {
             lockLogin = false;
             $("#loginModal").modal('close');
             $("#navbar").show();
-            $("#my").attr('data-tooltip', res.data.name);
+            $(".my").attr('data-tooltip', res.data.name);
             $("#itouchUsername").val('');
             $("#itouchPassword").val('');
             sessionStorage.setItem("cyimRentToken", res.data.token);
@@ -703,7 +712,7 @@ $("#login").click(function() {
         });
 });
 
-$("#logout").click(function() {
+$(".logout").click(function() {
     sessionStorage.removeItem("cyimRentToken");
     if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
         $("#navbar").hide();
@@ -732,7 +741,7 @@ $("#itouchUsername, #itouchPassword").keypress(function(e) {
     }
 });
 
-$("#my").click(function () { 
+$(".my").click(function () { 
     $("#myRental").modal("open");
 });
 

@@ -87,7 +87,7 @@
                         }
                     });
 
-                    console.log('%c ლ(ಠ_ಠლ) \n亂來我告訴老師喔！', 'font-size:30pt; color: red');
+                    console.log('%c ლ(ಠ_ಠლ) \n亂來我告訴老帥喔！', 'font-size:30pt; color: red');
                 });
             </script>
         @show

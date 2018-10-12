@@ -2,31 +2,29 @@
  
 @section('content')
     
-    <nav id="navbar">
+    <nav id="navbar" class="grey darken-3">
         <div class="nav-wrapper">
-            <a href="#!" class="brand-logo">Logo</a>
+            <a href="#!" class="title">資管系教室預約系統</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
-                <li><a class="waves-effect waves-teal btn-flat" id="about">關於</a></li>
-                <li><a><i id="open-course" data-tooltip="上課時段 (Alt+D)" class="material-icons tooltipped">announcement</i></a></li>
-                <li><a><i id="my" data-tooltip="我" class="material-icons tooltipped">face</i></a></li>
-                <li><a><i data-tooltip="登出 (Alt+Q)" id="logout" class="material-icons tooltipped">directions_run</i></a></li>
+                <li><a class="waves-effect waves-teal btn-flat nav-about">關於</a></li>
+                <li><a><i data-tooltip="上課時段 (Alt+D)" class="material-icons tooltipped open-course">announcement</i></a></li>
+                <li><a><i data-tooltip="我" class="material-icons tooltipped my">face</i></a></li>
+                <li><a><i data-tooltip="登出 (Alt+Q)" class="material-icons tooltipped logout">directions_run</i></a></li>
             </ul>
         </div>
+        
     </nav>
 
-    <nav id="mobile-navbar" class="grey darken-3">
-        <div class="nav-wrapper">
-            <a class="title">資管系教室預約系統</a>
-            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-        </div>
-        <div class="center-align booking">
-            <a class="waves-effect waves-light btn" id="booking">預定</a>
-        </div>
-    </nav>
+    <div class="center-align booking-margin mobile-booking">
+        <a class="waves-effect waves-light btn booking">預定</a>
+    </div>
 
     <ul class="sidenav" id="mobile-demo">
-        <li><a>施工中...</a></li>
+        <li class="my"><a><i data-tooltip="我" class="material-icons tooltipped">face</i>我</a></li>
+        <li class="open-course"><a><i data-tooltip="上課時段 (Alt+D)" class="material-icons tooltipped">announcement</i>上課時段</a></li>
+        <li class="nav-about"><a><i data-tooltip="登出 (Alt+Q)" class="material-icons tooltipped">child_care</i>關於</a></li>
+        <li class="logout"><a><i data-tooltip="登出 (Alt+Q)" class="material-icons tooltipped">directions_run</i>登出</a></li>
     </ul>
 
     <div class="main-wrapper">
@@ -35,8 +33,8 @@
                 <h5>資管系教室預約系統</h5>
                 <h5 id="eventDayName"></h5>
             </div>
-            <div class="center-align booking">
-                <a class="waves-effect waves-light btn" id="booking">預定</a>
+            <div class="center-align booking-margin">
+                <a class="waves-effect waves-light btn booking">預定</a>
             </div>
             <div class="sidebar-events" id="sidebarEvents">
                 <div class="empty-message"></div>
@@ -484,7 +482,9 @@
                 
             </div>
         </div>
-
     </div>
+
+    <ul class="collection with-header" id="mobile-rental"></ul>
+
 </div>
 @endsection
