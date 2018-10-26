@@ -605,7 +605,7 @@ $("#confirmRent").click(function() {
             }
             
             $("#myRentalRecord").append(
-                '<li class="collection-item avatar"><img src="https://i.imgur.com/43r37Cx.png" alt="" class="circle"><span class="title my-rental-title">' + title + '</span><p>' + timeText + '在資管 ' + selectRoom + '</p></li>'
+                '<li class="collection-item avatar" id="rentalRecord_' + res.data.id + '"><img id="rental-' + res.data.id + '" src="https://i.imgur.com/xIER1kc.png" alt="" class="circle rent-cancel"><span class="title my-rental-title">' + title + '</span><p>' + timeText + '在資管 ' + selectRoom + '</p></li>'
             );
 
             swal("預約完成", "請在預約時間點確實使用教室", "success", {
@@ -851,10 +851,50 @@ function loadEvents() {
                         }
                         
                         $("#myRentalRecord").append(
-                            '<li class="collection-item avatar"><img src="https://i.imgur.com/43r37Cx.png" alt="" class="circle"><span class="title my-rental-title">' + rentalRes[i].title + '</span><p>' + timeText + '在資管 ' + rentalRes[i].room + '</p></li>'
+                            '<li class="collection-item avatar" id="rentalRecord_' + rentalRes[i].id + '"><img id="rental-' + rentalRes[i].id + '" src="https://i.imgur.com/xIER1kc.png" class="circle rent-cancel"><span class="title my-rental-title">' + rentalRes[i].title + '</span><p>' + timeText + '在資管 ' + rentalRes[i].room + '</p></li>'
                         );
                     }
                 }
             }
         });
 }
+
+$(document).on("click",".rent-cancel",function(){ 
+
+    swal({
+        title: "要取消預約?",
+        text: "取消後視同於刪除這筆預約紀錄",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        buttons: ["考慮", "給我取消！"],
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+
+            let focus_id = $(this).attr('id').substr(7);
+
+            axios.post('/set/remove/user/rental', {
+                token: sessionStorage.getItem('cyimRentToken'),
+                id: focus_id
+            })
+            .then(function(response) {
+                
+                if (response.data !== 0) {
+                    $("#rentalRecord_" + focus_id).remove();
+                    swal(
+                        '已取消預約',
+                        '你失去了一個空間',
+                        'success'
+                    );
+                    return;
+                }
+                swal(
+                    '取消預約失敗',
+                    '重來試試看',
+                    'error'
+                );
+            });
+        }
+    });   
+});

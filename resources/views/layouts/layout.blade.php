@@ -76,14 +76,14 @@
 
                     hotkeys('alt+r,alt+q,alt+a,alt+d,option+r,option+q,option+a,option+d', function(event,handler) {
                         switch(handler.key){
-                            case "alt+r":$("#my").click();break;
-                            case "alt+q":$("#logout").click();break;
-                            case "alt+a":$("#about").click();break;
-                            case "alt+d":$("#open-course").click();break;
-                            case "option+r":$("#my").click();break;
-                            case "option+q":$("#logout").click();break;
-                            case "option+a":$("#about").click();break;
-                            case "option+d":$("#open-course").click();break;
+                            case "alt+r":$(".my").click();break;
+                            case "alt+q":$(".logout").click();break;
+                            case "alt+a":$(".nav-about").click();break;
+                            case "alt+d":$(".open-course").click();break;
+                            case "option+r":$(".my").click();break;
+                            case "option+q":$(".logout").click();break;
+                            case "option+a":$(".nav-about").click();break;
+                            case "option+d":$(".open-course").click();break;
                         }
                     });
 

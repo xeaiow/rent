@@ -66,7 +66,7 @@ class RentController extends Controller
             $result['error'] = true;
         }
         else {
-            Rental::create([
+            $id = Rental::create([
                 'title' => $req->title." - ".$req->name,
                 'phone' => $req->phone,
                 'description' => $req->description,
@@ -76,7 +76,8 @@ class RentController extends Controller
                 'rentDate' => $req->rentDate,
                 'period' => implode(",", json_decode($req->period))
 
-            ]);
+            ])->id;
+            $result['id'] = $id;
             $result['error'] = false;
         }
 
@@ -161,7 +162,7 @@ class RentController extends Controller
         
         if ($userIsExists->count() > 0) {
             $result['login'] = $userIsExists->first(['username', 'name']);
-            $result['rent'] = Rental::where('username', $result['login']['username'])->where('rentDate', '>=', (now()->timestamp)-86399)->orderBy('rentDate', 'asc')->get(['title', 'description', 'rentDate', 'room']);
+            $result['rent'] = Rental::where('username', $result['login']['username'])->where('rentDate', '>=', (now()->timestamp)-86399)->orderBy('rentDate', 'asc')->get(['id', 'title', 'description', 'rentDate', 'room']);
             $result['status'] = true;
             return $result;
         }
@@ -274,5 +275,18 @@ class RentController extends Controller
     public function getAllRental (Request $req)
     {
        return Rental::where('rentDate', $req->date)->where('course', 0)->get(['title', 'room', 'period']);
+    }
+
+    // 取消預約
+    public function setRemoveUserRental (Request $req) {
+        
+        $existMember = Member::where('token', $req->token);
+
+        if ($existMember->count() == 1)
+        {
+            $userInfo = $existMember->first();
+
+            return Rental::where('username', $userInfo['username'])->where('id', $req->id)->delete();
+        }
     }
 }

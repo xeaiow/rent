@@ -10,6 +10,8 @@ Route::get('/get/rental/{date}/{room}', 'RentController@getRental');
 
 Route::get('/get/user/rental/{token}', 'RentController@getUserRental');
 
+Route::post('/set/remove/user/rental', 'RentController@setRemoveUserRental');
+
 Route::post('/login/status', 'RentController@getLoginStatus');
 
 Route::post('/login', 'RentController@login');

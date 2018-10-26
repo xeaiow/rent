@@ -8,8 +8,8 @@
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
                 <li><a class="waves-effect waves-teal btn-flat nav-about">關於</a></li>
-                <li><a><i data-tooltip="上課時段 (Alt+D)" class="material-icons tooltipped open-course">announcement</i></a></li>
-                <li><a><i data-tooltip="我" class="material-icons tooltipped my">face</i></a></li>
+                <li><a><i data-tooltip="上課時段(Alt+D)" class="material-icons tooltipped open-course">announcement</i></a></li>
+                <li><a><i data-tooltip="我(Alt+R)" class="material-icons tooltipped my">face</i></a></li>
                 <li><a><i data-tooltip="登出 (Alt+Q)" class="material-icons tooltipped logout">directions_run</i></a></li>
             </ul>
         </div>
@@ -21,7 +21,7 @@
     </div>
 
     <ul class="sidenav" id="mobile-demo">
-        <li class="my"><a><i data-tooltip="我" class="material-icons tooltipped">face</i>我</a></li>
+        <li class="my"><a><i data-tooltip="我 (Alt+R)" class="material-icons tooltipped">face</i>我</a></li>
         <li class="open-course"><a><i data-tooltip="上課時段 (Alt+D)" class="material-icons tooltipped">announcement</i>上課時段</a></li>
         <li class="nav-about"><a><i data-tooltip="登出 (Alt+Q)" class="material-icons tooltipped">child_care</i>關於</a></li>
         <li class="logout"><a><i data-tooltip="登出 (Alt+Q)" class="material-icons tooltipped">directions_run</i>登出</a></li>
@@ -461,27 +461,35 @@
             <div class="modal-content">
                 <h4>About</h4>
                 <div>
+                    <div>Update at 2018/10/12</div>
+                    <ul>
+                        <li>1. 手機版體驗更加</li>
+                        <li>2. 現在教師及職員也能預約了</li>
+                        <li>3. 無須登入也能預覽預約狀況</li>
+                        <li>4. 修復一些了蠕蟲</li>
+                    </ul>
                     如有遇到任何錯誤或疑問，可至系辦或 E-mail 通報，感謝您<br />
                     E-mail: xeaiow@gmail.com<br />
                     關於我: <a target="_blank" href="https://www.cakeresume.com/xeee">https://www.cakeresume.com/xeee</a>
                 </div>
             </div>
             <div class="modal-footer">
-                <a class="btn waves-effect waves-light grey darken-4" id="okay">Okay</a>
+                <a class="btn waves-effect waves-light grey darken-4" id="okay">好</a>
             </div>
         </div>
 
         <div id="myRental" class="modal bottom-sheet">
             <div class="modal-content">
-                <h4>我的租借紀錄<a class="modal-close waves-effect waves-green btn-flat">✕</a></h4>
+                <h4>我的預約<a class="modal-close waves-effect waves-green btn-flat">✕</a></h4>
                 <div>
-                    <ul class="collection" id="myRentalRecord"></ul>
+                    <ul class="collection with-header" id="myRentalRecord"></ul>
                 </div>
             </div>
             <div class="modal-footer">
                 
             </div>
         </div>
+        
     </div>
 
     <ul class="collection with-header" id="mobile-rental"></ul>

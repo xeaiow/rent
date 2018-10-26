@@ -366,7 +366,7 @@ h3, h4, h5 {
   display: none;
 }
 
-.focusPoint:hover, a:hover {
+.focusPoint:hover, a:hover, .badge, .rent-cancel {
   cursor: pointer;
 }
 
