@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use ArrayObject;
 use App\Rental;
 use App\Member;
+use Carbon\Carbon;
 
 class RentController extends Controller
 {
@@ -286,7 +287,7 @@ class RentController extends Controller
         {
             $userInfo = $existMember->first();
 
-            return Rental::where('username', $userInfo['username'])->where('id', $req->id)->delete();
+            return Rental::where('username', $userInfo['username'])->where('id', $req->id)->where('rentDate', '>=', Carbon::today()->timestamp)->delete();
         }
     }
 }
