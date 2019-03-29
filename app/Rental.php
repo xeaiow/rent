@@ -8,5 +8,5 @@ class Rental extends Model
 {
     protected $table = 'rental';
 
-    protected $fillable = ['title', 'phone', 'description', 'name', 'username', 'room', 'rentDate', 'period', 'course'];
+    protected $fillable = ['title', 'phone', 'description', 'name', 'username', 'room', 'rentDate', 'period', 'start', 'end', 'course'];
 }

@@ -4,9 +4,9 @@
         <title>中原資管教室預約系統後台</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-        @section('style')
-            <link rel="shortcut icon" href="{{{ asset('favicon.png') }}}" />
-            <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+        <?php $__env->startSection('style'); ?>
+            <link rel="shortcut icon" href="<?php echo e(asset('favicon.png')); ?>" />
+            <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>" />
             <style>
                 body {
                     background-color: #000;
@@ -15,7 +15,7 @@
                     color: #38F16A;
                 }
             </style>
-        @show
+        <?php echo $__env->yieldSection(); ?>
     </head>
     <body>
 
@@ -40,7 +40,7 @@ _| |_.___/ /.___/ //\__/ /
             <div contenteditable="true" id="login-account"></div>
         </div>
 
-        @section('script')
+        <?php $__env->startSection('script'); ?>
         
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
             <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -92,6 +92,6 @@ _| |_.___/ /.___/ //\__/ /
                     }
                 });
             </script>
-        @show
+        <?php echo $__env->yieldSection(); ?>
 
     </body>

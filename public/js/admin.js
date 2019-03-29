@@ -1,5 +1,6 @@
 $(function() {
     loadAllRental();
+    loadRecipient();
 });
 
 var focusId = null;
@@ -30,19 +31,32 @@ function loadAllRental () {
                     '<td>' + val.name + '</td>' + 
                     '<td>' + val.username + '</td>' + 
                     '<td title="' + val.title + '">' + summary(val.title.substring(0, val.title.length-6)) + '</td>' + 
-                    '<td>' + ( val.description == null ? "無" : summary(val.description) ) + '</td>' + 
+                    '<td class="hidden">' + ( val.description == null ? "無" : summary(val.description) ) + '</td>' + 
                     '<td>' + val.phone + '</td>' +
                     '<td>' + val.room + '</td>' + 
                     '<td>' + timestampToYearMonDay(val.rentDate) + '</td>' + 
                     '<td>' + periodToClock(val.period) + '</td>' + 
-                    '<td>' + val.created_at + '</td>' +
-                    '<td>'+
-                        '<button class="btn waves-effect blue darken-3" type="button" onclick="edit(' + val.id + ')" id="edit-' + val.id + '">編輯<i class="material-icons right">edit</i></button> ' + 
-                        '<button class="btn waves-effect pink darken-1" type="button" onclick="reject(' + val.id + ')">駁回<i class="material-icons right">clear</i></button>' + 
+                    '<td  class="hidden">' + val.created_at + '</td>' +
+                    '<td  class="hidden">'+
+                    '<button class="ts icon button secondary" onclick="edit(' + val.id + ')" id="edit-' + val.id + '">'+
+                        '<i class="edit icon"></i>'+
+                    '</button>'+ 
+                    '<button class="ts icon button secondary" onclick="reject(' + val.id + ')">'+
+                        '<i class="ban icon"></i>'+
+                    '</button>'+ 
                     '</td>' + 
                 '</tr>'  
             );
         });
+        $('#myTable').DataTable();
+    });
+
+    axios.get('/pineapple/get/statistics')
+    .then(function(response) {
+        console.log(response);
+        $("#total").text(response.data.total);
+        $("#book").text(response.data.book);
+        $("#members").text(response.data.members);
     });
 }
 
@@ -53,6 +67,17 @@ function periodToClock (period) {
 // 載入租借紀錄編輯資料
 function edit (id) {
 
+    ts('#optionModal').modal({
+        approve: '.positive, .approve, .ok',
+        deny: '.negative, .deny, .cancel',
+        onDeny: function() {
+            
+        },
+        onApprove: function() {
+            editUpdate();
+        }
+    }).modal("show");
+
     $("#edit-container").show();
 
     axios.get('/pineapple/get/edit/rental/' + id)
@@ -61,29 +86,71 @@ function edit (id) {
         $("#edit-title").val(res.title);
         $("#edit-desc").val(res.description);
         $("#edit-phone").val(res.phone);
+
+        let start_source = new Date(null);
+        let end_source = new Date(null);
+
+        start_source.setSeconds(parseInt(res.period.substr(0, 5)));
+
+        end_source.setSeconds(parseInt(res.period.substr(6, 11)));
+
+        let start = start_source.toISOString().substr(11, 8);
+        let end = end_source.toISOString().substr(11, 8);
+
+        $("#edit-start").val(res.period.substr(0, 5));
+        $("#edit-end").val(res.period.substr(6, 11));
+        $("#edit-start").val(start);
+        $("#edit-end").val(end);
+        $("#edit-name").text(res.name + "的租借紀錄");
     });
     focusId = id;
 }
 
 // 更新租借紀錄資料
-$("#edit-update").click(function () {
+function editUpdate () {
+
+    var start = $("#edit-start").val().split(':');
+    var end = $("#edit-end").val().split(':');
+
+    let start_t = 0;
+    let end_t = 0;
+    
+    start_t += start[0] * 3600;
+    start_t += start[1] * 60;
+    
+    end_t += end[0] * 3600;
+    end_t += end[1] * 60;
+    
     axios.post('/pineapple/update/rental', {
         id: focusId,
         title: $("#edit-title").val(),
         description: $("#edit-desc").val(),
-        phone: $("#edit-phone").val()
+        phone: $("#edit-phone").val(),
+        start: start_t,
+        end: end_t
     })
     .then(function(response) {
+
+        if (!response.data.status) {
+            ts('.snackbar').snackbar({
+                content: '更新失敗',
+                actionEmphasis: 'positive'
+            });
+            return false;
+        }
+
         let lists = $("#lists-" + focusId).find("td");
+        lists[0].innerHTML = '<mark>' + lists[0].textContent + '</mark>';
         lists[2].textContent = summary($("#edit-title").val());
         lists[3].textContent = ( $("#edit-desc").val() == "" ? "無" : summary($("#edit-desc").val()) );
         lists[4].textContent = $("#edit-phone").val();
 
-        swal("Good", "更新完成", "success", {
-            buttons: "知道了",
+        ts('.snackbar').snackbar({
+            content: '更新完成',
+            actionEmphasis: 'positive'
         });
     });
-});
+}
 
 // 駁回
 function reject (id) {
@@ -118,14 +185,14 @@ $("#add-rental").click(function () {
     $("#add-rental-modal").modal("open");
 });
 
-$("#room").on('change', function () {
+// $("#room").on('change', function () {
 
-    $("select").formSelect();
-    let instance = M.FormSelect.getInstance($(this));
-    selectRoom = instance.getSelectedValues()[0];
-});
+//     $("select").formSelect();
+//     let instance = M.FormSelect.getInstance($(this));
+//     selectRoom = instance.getSelectedValues()[0];
+// });
 
-$("#add").click(function () {
+function add () {
     
     let time_start = $("#start").val().split(':');
     let start = (+time_start[0]) * 60 * 60 + ( + time_start[1]*60);
@@ -144,12 +211,40 @@ $("#add").click(function () {
         phone: $("#add-phone").val(),
         rentDate: rentDate,
         period: period,
-        room: selectRoom
+        room: $("#room").val()
     })
     .then(function(response) {
 
         if (!response.data.status) {
-            swal("Failed", "新增失敗，請檢查錯誤", "error", {
+
+            let errorText = "請查看錯誤";
+
+            switch (response.data.error) {
+                case 1:
+                    errorText = "所選的教室不被允許";
+                    break;
+                case 2:
+                    errorText = "開始或結束的時間不合法";
+                    break;
+                case 3:
+
+                    $("#selectorConflict").html("<mark>" + periodToClock(period) + "</mark> 選取的時段已被預約");
+                    $.each(response.data.result, function (i, v) {
+                        $("#conflict").append(
+                            '<tr><td>' + parseInt(i+1) + '</td><td>' + v.name + '</td><td>' + v.username + '</td><td>' + v.phone + '</td><td>' + timestampToYearMonDay(v.rentDate) + '</td><td><mark>' + periodToClock(v.period) + '</mark></td><td>' + v.title + '</td></tr>'
+                        );
+                    });
+
+                    ts('#conflictModal').modal("show");
+
+                    
+                    return false;
+                    break;
+                default:
+                    break;
+            }
+
+            swal("Failed", errorText, "error", {
                 buttons: "知道了",
             });
             return false;
@@ -160,7 +255,6 @@ $("#add").click(function () {
         });
 
         $("#add-username, #add-name, #add-title, #add-desc, #add-phone, #rentDate, #start, #end").val('');
-        $("#add-rental-modal").modal('close');
 
         let val = response.data.result;
 
@@ -174,62 +268,126 @@ $("#add").click(function () {
                 '<td>' + timestampToYearMonDay(val.rentDate) + '</td>' + 
                 '<td>' + periodToClock(val.period) + '</td>' + 
                 '<td>'+
-                    '<button class="btn waves-effect blue darken-3" type="button" onclick="edit(' + val.id + ')" id="edit-' + val.id + '">編輯<i class="material-icons right">edit</i></button> ' + 
+                    '<button class="ts icon button" onclick="edit(' + val.id + ')" id="edit-' + val.id + '">'+
+                        '<i class="heart icon"></i>'+
+                    '</button>'+ 
                     '<button class="btn waves-effect pink darken-1" type="button" onclick="reject(' + val.id + ')">駁回<i class="material-icons right">clear</i></button>' + 
                 '</td>' + 
             '</tr>'  
         );
     });
-});
+}
 
 $("#reloadList").click(function () {
     $("#rental").html('');
     loadAllRental();
 });
 
-var account = [];
-var step = 0;
 
-$("#login-account").focus();
-$("#login-press-next").text("Enter your account.")
-
-$("#login-account").keypress(function(e) {
-    code = (e.keyCode ? e.keyCode : e.which);
-
-    if (code == 13) {
-        
-        e.preventDefault();
-
-        account.push($("#login-account").text());
-
-        if (step == 1) {
+$("#addBook").click(function () {
+    
+    ts('#addBookModal').modal({
+        approve: '.positive, .approve, .ok',
+        deny: '.negative, .deny, .cancel',
+        onDeny: function() {
             
-            axios.post('/pineapple/login', {
-                account: account[0],
-                password: account[1]
-            })
-            .then(function(res) {
-                if (!res.data.status) {
-                    $("#login-press-next").text('Please try again.');
-                    $("#login-account").text('');
-                    $("#login-account").css('color', '#38F16A');
-                    step = 0;
-                    account.length = 0;
-                    return false;
-                }
-
-                sessionStorage.setItem("cyimRentAccount", res.data.account);
-                sessionStorage.setItem("cyimRentToken", res.data.token);
-
-               window.location.href = '/pineapple';
-                
-            });
-            return false;
+        },
+        onApprove: function() {
+            add();
         }
-        step++;
+    }).modal("show");
+});
 
-        $("#login-press-next").text("Enter your password.");
-        $("#login-account").text('');
-        $("#login-account").css('color', '#000');
+function printData()
+{
+   var divToPrint=document.getElementById("myTable");
+   $(".hidden").hide();
+   newWin= window.open("");
+   newWin.document.write(divToPrint.outerHTML);
+   newWin.print();
+   newWin.close();
+   $(".hidden").show();
+}
+
+$("#print").on('click',function(){
+    printData();
+})
+
+$("#backup").click(function () {
+    ts('#settingModal').modal({
+        approve: '.positive, .approve, .ok',
+        deny: '.negative, .deny, .cancel',
+        onDeny: function() {
+            
+        },
+        onApprove: function() {
+            addRecipient();
+        },
+    }).modal("show");
+});
+
+function addRecipient () {
+
+    let name = $("#recipient-name").val();
+    let email = $("#recipient-email").val();
+
+    if (name == '' || email == '') {
+        return swal("失敗", "E-mail 或稱呼沒有輸入", "error", {
+            buttons: "知道了",
+        }); 
     }
+
+    axios.post('/pineapple/add/recipient', {
+        name: name,
+        email: email
+    })
+    .then(function(res) {
+
+       if (res.data > 0) {
+
+            swal("成功", "此信箱今天開始會收到資料庫備份", "success", {
+                buttons: "知道了",
+            });
+
+            $("#recipientLists").append(
+                '<div class="item">'+
+                    '<img class="ts avatar image" src="https://tocas-ui.com/assets/img/5e5e3a6.png">'+
+                    '<div class="content">'+
+                        '<a class="header">' + name + '</a>'+
+                        '<div class="description"><b>' + email + '</b></div>'+
+                    '</div>'+
+            '</div>'
+            );
+       }
+    });
+}
+
+function loadRecipient () {
+    
+    axios.get('/pineapple/get/recipient')
+    .then(function(response) {
+
+        let res = response.data;
+
+        $.each(res, function (i, val) {
+            $("#recipientLists").append(
+                '<div class="item">'+
+                    '<img class="ts avatar image" src="https://tocas-ui.com/assets/img/5e5e3a6.png">'+
+                    '<div class="content">'+
+                        '<a class="header">' + val.name + '</a>'+
+                        '<div class="description"><b>' + val.email + '</b></div>'+
+                    '</div>'+
+            '</div>'
+            );
+        });
+    });
+}
+
+$("#backupTest").click(function () {
+    axios.get('/sendmail')
+    .then(function(res) {
+    });
+    swal("成功", "請至信箱查看備份", "success", {
+        buttons: "知道了",
+    });
 });

@@ -15,7 +15,7 @@ $(function() {
         .then(function(res) {
 
             if (res.data.length == 0) {
-                $("#sidebarEvents").html('<div class="eventCard"><div class="eventCard-header">還沒有任何人租借</div></div>');
+                $("#sidebarEvents").html('<div class="eventCard"><div class="eventCard-header">立即成為本日第一位預約的人</div></div>');
                 
                 $("#mobile-rental").html('<li class="collection-header"><h4 class="align center">尚無租借紀錄</h4></li>');
                 
@@ -249,7 +249,7 @@ gridTable.onclick = function(e) {
             $("#mobile-rental").html('');
 
             if (res.data.length == 0) {
-                $("#sidebarEvents").html('<div class="eventCard"><div class="eventCard-header">還沒有任何人租借</div></div>');
+                $("#sidebarEvents").html('<div class="eventCard"><div class="eventCard-header">立即成為本日第一位預約的人</div></div>');
             
                 $("#mobile-rental").html('<li class="collection-header align center"><h4>尚無租借紀錄</h4></li>');
 
@@ -512,14 +512,14 @@ $("#confirmRent").click(function() {
     let desc = document.getElementById("eventDescInput").value.trim();
 
     if (!title || !phone || !selectRoom || seconds.length < 2 || sessionStorage.getItem("cyimRentToken") == undefined) {
-        swal("請檢查", "應該是有些欄位填錯或沒填", "error", {
+        swal("抓到了", "有些欄位填錯或沒填", "error", {
             buttons: "好",
         });
         return false;
     }
 
     if (title.length > 15 || desc.length > 100 || phone.length > 15) {
-        swal("糟糕惹", "精簡扼要就好了", "error", {
+        swal("在幹嘛", "寫作文阿？描述一下就好了", "error", {
             buttons: "知道了",
         });
         return false;
@@ -542,8 +542,8 @@ $("#confirmRent").click(function() {
             moment.duration(moment(current).diff(itemDate)).distance();
             timeText = moment.duration(moment(current).diff(itemDate)).distance();
         }
-
-        addEvent(title + " - " + timeText + "在資管" + selectRoom, desc);
+        // addEvent(title + " - " + timeText + "在資管" + selectRoom, desc);
+        
     } else {
         swal("不給預約", "過去就讓它過吧，難道你是時空旅行者？", "error", {
             buttons: "不是",
@@ -552,13 +552,6 @@ $("#confirmRent").click(function() {
         $("#modal2").modal("close");
         $(".previewTime").html('');
         return false;
-    }
-
-    // 增加紀錄
-    showEvents();
-
-    if (!selectedDayBlock.querySelector(".day-mark")) {
-        selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
     }
 
     axios.post('/set/rental', {
@@ -583,11 +576,41 @@ $("#confirmRent").click(function() {
                 return false;
             }
 
+            if (res.data.exists) {
+
+                switch (res.data.code) {
+                    case 1:
+                        swal("母湯哦", "所選的時間與其他已預約教室衝突", "error", {
+                            buttons: "好，我來看看",
+                        });
+                        break;
+                    case 2:
+                        swal("母湯哦", "同間教室當日只能借一個時段", "error", {
+                            buttons: "好，多交點朋友",
+                        });
+                    case 3:
+                        swal("母湯哦", "該時段已被他人預約", "error", {
+                            buttons: "好，橋好再來",
+                        });
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+
             if (res.data.error) {
                 swal("糟糕惹", "似乎有什麼意外，請再試一次", "error", {
                     buttons: "好",
                 });
                 return false;
+            }
+
+            // 增加紀錄
+            showEvents();
+
+            if (!selectedDayBlock.querySelector(".day-mark")) {
+                selectedDayBlock.appendChild(document.createElement("div")).className = "day-mark";
             }
 
             // add to my rental
@@ -606,6 +629,12 @@ $("#confirmRent").click(function() {
             
             $("#myRentalRecord").append(
                 '<li class="collection-item avatar" id="rentalRecord_' + res.data.id + '"><img id="rental-' + res.data.id + '" src="https://i.imgur.com/xIER1kc.png" alt="" class="circle rent-cancel"><span class="title my-rental-title">' + title + '</span><p>' + timeText + '在資管 ' + selectRoom + '</p></li>'
+            );
+
+            $(".empty-message").remove();
+
+            $(".sidebar-events").append(
+                '<div class="eventCard"><div class="eventCard-header">' + title + '</div><div class="eventCard-description">' + timeText + '在資管 ' + selectRoom + '</div><div class="eventCard-mark-wrapper"><div class="eventCard-mark"></div></div></div>'
             );
 
             swal("預約完成", "請在預約時間點確實使用教室", "success", {
@@ -638,7 +667,7 @@ $("#room").on('change', function() {
     axios.get('/get/rental/' + selectedDate.getTime() / 1000 + '/' + instance.getSelectedValues())
         .then(function(response) {
 
-            $("#instruction").html('請選擇開始與結束時間 <span style="color:#ad1457;" class="previewTime"></span>');
+            $("#instruction").html('選擇開始與結束時間 <span style="color:#ad1457;" class="previewTime"></span>');
             rentalRes = response.data.period;
             rentaOriginal = response.data.original;
             rentalRenter = response.data.renter;
@@ -897,4 +926,32 @@ $(document).on("click",".rent-cancel",function(){
             });
         }
     });   
+});
+
+$(".country").click(function () {
+    let country = $(this).attr('alt')
+    switch (country) {
+        case "cn":
+            text = "给我双击666";
+            $(".translate")[0].innerText = "资管系教室预约系统";
+            $(".translate")[1].innerText = "预约";
+            $(".translate")[1].innerText = "选择借用教室";
+            break;
+        case "us":
+            text = "Error service.";
+            break;
+        case "jp":
+            text = "やばい！";
+            break;
+        case "kr":
+            text = "큰일났어";
+            break;
+            default:
+            break;
+    }
+    return swal(
+        text,
+        '',
+        'info'
+    );
 });

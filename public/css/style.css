@@ -1,7 +1,7 @@
 body {
   font-family: '微軟正黑體';
   font-weigth: 400;
-  background-color: #E9EAED;
+  background-color: #e9eaed;
   overflow-x: hidden;
 }
 
@@ -36,14 +36,14 @@ h3, h4, h5 {
 }
 
 .header-background {
-  background-image: url("https://i.imgur.com/kvqKza6.png");
+  background-image: url("https://i.imgur.com/4eU936I.png");
   height: 200px;
   background-position: center right;
   background-size: cover;
 }
 
 .calendar-content {
-  background-color: #fff;
+  background-color: #EAEAEA;
   padding: 20px;
   padding-left: 15%;
   padding-right: 15%;
@@ -118,15 +118,14 @@ h3, h4, h5 {
 }
 
 .focus {
-  background-image: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
+  background-image: linear-gradient(60deg, #96deda 0%, #50c9c3 100%);
 }
 
 .sidebar-wrapper {
   color: #fff;
-  background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);
+  background-color: #222831 !important;
   padding-top: 0;
   padding-bottom: 20px;
-  /*font-family: "RobotoLight";*/
   font-family: '微軟正黑體';
   font-weigth: 300;
   padding-left: 0;
@@ -153,7 +152,7 @@ h3, h4, h5 {
 }
 
 .eventCard {
-  background-color: #fff;
+  background-color: #E9EAED;
   color: black;
   padding: 12px 24px 12px 24px;
   border-bottom: 1px solid #E5E5E5;
@@ -174,7 +173,7 @@ h3, h4, h5 {
   top: 0;
   height: 100%;
   width: 60px;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 25%, rgba(255, 255, 255, 1) 100%);
+  background-color: #E9EAED;
 }
 
 .eventCard-mark {
@@ -201,7 +200,8 @@ h3, h4, h5 {
   padding-top: 50px;
   padding-bottom: 50px;
   margin-left: 300px;
-  background-color: #E9EAED;
+  background-color: #e9eaed;
+  background-image: url("data:image/svg+xml,%3Csvg width='42' height='44' viewBox='0 0 42 44' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Page-1' fill='none' fill-rule='evenodd'%3E%3Cg id='brick-wall' fill='%23cccccc' fill-opacity='0.4'%3E%3Cpath d='M0 0h42v44H0V0zm1 1h40v20H1V1zM0 23h20v20H0V23zm22 0h20v20H22V23z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 #table-body .col:hover {
@@ -416,6 +416,10 @@ h3, h4, h5 {
   font-size: 18px;
 }
 
+.title {
+  color: #333;
+}
+
 @media only screen and (min-width: 900px) {
   .mobile-booking, #mobile-rental {
     display: none;
@@ -427,9 +431,41 @@ h3, h4, h5 {
 }
 
 .nav-about {
-  color: #FFF !important;
+  color: #333 !important;
 }
 
 #mobile-demo li a {
   color: #000 !important;
+}
+
+i {
+  color: #333;
+}
+
+#left-menu{
+  font-size: 20px;
+  color: '#FFF';
+}
+
+#left-menu-list {
+  font-size: 18px;
+}
+
+.light-icon {
+  color: #FFF;
+}
+
+.warning {
+  color: #FF0000;
+  font-size: 20px;
+}
+
+.sorting:hover, .sorting_desc:hover, .sorting_asc:hover  {
+  background-color: #00a98f !important;
+}
+
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 30%;
 }

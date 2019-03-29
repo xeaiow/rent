@@ -7,6 +7,7 @@ use ArrayObject;
 use App\Rental;
 use App\Member;
 use Carbon\Carbon;
+use DB;
 
 class RentController extends Controller
 {
@@ -19,7 +20,7 @@ class RentController extends Controller
             return $result;
         }
 
-        if ( mb_strlen( $req->title, "utf-8") > 15 || mb_strlen( $req->description, "utf-8") > 100 || mb_strlen( $req->phone, "utf-8") > 15 )
+        if ( mb_strlen( $req->title, "utf-8") > 15 || mb_strlen( $req->description, "utf-8") > 100 || mb_strlen( $req->phone, "utf-8") > 15)
         {
             $result['error'] = true;
             $result['status'] = true;
@@ -58,6 +59,53 @@ class RentController extends Controller
         $start = $period[0];
         $end   = $period[1];
 
+        // 判斷該時段是否已有他人預約
+        $exists = DB::select("SELECT id FROM rental WHERE ((start >= '$start' AND start < '$end') OR (start <= '$start' AND end >= '$end') OR (end > '$start' AND end <= '$end')) AND rentDate = '$req->rentDate' AND room = $req->room");
+        
+        $existsRental = COUNT($exists);
+
+        if ($existsRental > 0)
+        {
+            $result['error'] = true;
+            $result['status'] = true;
+            $result['exists'] = true;
+            $result['code'] = 3;
+            return $result;
+        }
+
+
+        // 判斷是否重複預約同個時段
+        $rentalRecord = Rental::where('username', $req->username)->where('rentDate', $req->rentDate)->where('room', $req->room)->count();
+
+        if ($rentalRecord > 0) {
+            $result['error'] = true;
+            $result['status'] = true;
+            $result['exists'] = true;
+            $result['code'] = 2;
+            return $result;
+        }
+
+        $periods = [];
+        
+        $ss = Rental::where('username', $req->username)->where('rentDate', $req->rentDate)->get();
+    
+        foreach ($ss as $val) {
+            $periodRecord = explode(",", $val['period']);
+            $periods['start'] = $periodRecord[0];
+            $periods['end'] = $periodRecord[1];
+
+            if ( ( $period[0] >= $periodRecord[0] && $period[0] < $periodRecord[1] ) || ( $period[1] >= $periodRecord[0] && $period[1] < $periodRecord[1] ) ) {
+                $result['error'] = true;
+                $result['status'] = true;
+                $result['exists'] = true;
+                $result['code'] = 1;
+                $result['aa'] = $periods;
+                $result['bb'] = $period;
+                return $result;
+            }
+        }
+        
+
         // 開始與結束的間距
         $margin = $end - $start;
             
@@ -75,7 +123,9 @@ class RentController extends Controller
                 'username' => $req->username,
                 'room' => $req->room,
                 'rentDate' => $req->rentDate,
-                'period' => implode(",", json_decode($req->period))
+                'period' => implode(",", json_decode($req->period)),
+                'start' => $start,
+                'end' => $end
 
             ])->id;
             $result['id'] = $id;

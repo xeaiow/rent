@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'xeaiow@cycu.org.tw'),
-        'name' => env('MAIL_FROM_NAME', '中原資管教室預約機器人'),
+        'address' => env('MAIL_FROM_ADDRESS', 'cyim5400@gmail.com'),
+        'name' => env('MAIL_FROM_NAME', '教室預約系統機器人'),
     ],
 
     /*
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => "xeaiow@cycu.org.tw",
+    'username' => "cyim5400@gmail.com",
 
-    'password' => "a9b9c8d1",
+    'password' => "im54005400",
 
     /*
     |--------------------------------------------------------------------------

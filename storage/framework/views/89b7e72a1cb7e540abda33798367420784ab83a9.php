@@ -1,6 +1,5 @@
-@extends('layouts.layout')
  
-@section('content')
+<?php $__env->startSection('content'); ?>
 
     <nav id="navbar" class="transparent">
         <div class="nav-wrapper">
@@ -497,4 +496,5 @@
 
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

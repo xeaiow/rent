@@ -1,8 +1,7 @@
-@extends('layouts.adminLayout')
  
-@section('title', '後臺')
+<?php $__env->startSection('title', '後臺'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <!-- 左側邊欄 -->
 <div class="ts left vertical fluid inverted visible menu sidebar">
@@ -327,4 +326,5 @@
     <a class="action"></a>
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.adminLayout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

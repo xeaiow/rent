@@ -26,9 +26,9 @@
         <title>中原資管教室預約系統</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-        @section('style')
-            <link rel="shortcut icon" href="{{{ asset('favicon.png') }}}" />
-            <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+        <?php $__env->startSection('style'); ?>
+            <link rel="shortcut icon" href="<?php echo e(asset('favicon.png')); ?>" />
+            <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>" />
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
             <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap-grid.css' />
             <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css' />
@@ -42,21 +42,21 @@
                     overflow-x: hidden;
                 }
             </style>
-        @show
+        <?php echo $__env->yieldSection(); ?>
     </head>
     <body>
 
         <section>
-            @yield('content')
+            <?php echo $__env->yieldContent('content'); ?>
         </section>
  
-        @section('script')
+        <?php $__env->startSection('script'); ?>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
             <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
-            <script src="{{ asset('js/index.js') }}"></script>
-            <script src="{{ asset('js/moment.js') }}"></script>
-            <script src="{{ asset('js/moment.distance.js') }}"></script>
+            <script src="<?php echo e(asset('js/index.js')); ?>"></script>
+            <script src="<?php echo e(asset('js/moment.js')); ?>"></script>
+            <script src="<?php echo e(asset('js/moment.distance.js')); ?>"></script>
             <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
             <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
             <script>
@@ -99,6 +99,6 @@
                     console.log('%c ლ(ಠ_ಠლ) \n亂來我告訴老帥喔！', 'font-size:30pt; color: red');
                 });
             </script>
-        @show
+        <?php echo $__env->yieldSection(); ?>
     </body>
 </html>
