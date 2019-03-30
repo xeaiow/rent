@@ -1,6 +1,19 @@
 $(function() {
     loadAllRental();
     loadRecipient();
+    $.datepicker.regional['zh-TW'] = {
+        dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+        dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"],
+        monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        monthNamesShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        prevText: "上月",
+        nextText: "次月",
+        weekHeader: "週"
+     };
+     //將預設語系設定為中文
+    $.datepicker.setDefaults($.datepicker.regional["zh-TW"]);
+    $('#batch-date').multiDatesPicker({ dateFormat: 'yy-mm-dd' });
+    
 });
 
 var focusId = null;
@@ -202,6 +215,49 @@ function add () {
     let date = new Date($("#rentDate").val());
     let selectDate = new Date (date.getFullYear(), date.getMonth(), date.getDate());
     let rentDate = moment.unix(selectDate) / 1000000;
+
+    if ($("#add-name").val() == "") {
+        swal("Failed", "租借人未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
+    if ($("#add-username").val() == "") {
+        swal("Failed", "學號未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
+    if ($("#add-title").val() == "") {
+        swal("Failed", "原因未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
+    if ($("#add-phone").val() == "") {
+        swal("Failed", "聯絡電話未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
+    if ($("#start").val() == "" || $("#end").val() == "") {
+        swal("Failed", "開始或結束時間未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
+    if ($("#rentDate").val() == "") {
+        swal("Failed", "預約日期未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+    
     
     axios.post('/pineapple/add/rental', {
         username: $("#add-username").val(),
@@ -209,6 +265,8 @@ function add () {
         title: $("#add-title").val(),
         description: $("#add-desc").val(),
         phone: $("#add-phone").val(),
+        start: start,
+        end: end,
         rentDate: rentDate,
         period: period,
         room: $("#room").val()
@@ -228,6 +286,7 @@ function add () {
                     break;
                 case 3:
 
+                    $("#conflict").html('');
                     $("#selectorConflict").html("<mark>" + periodToClock(period) + "</mark> 選取的時段已被預約");
                     $.each(response.data.result, function (i, v) {
                         $("#conflict").append(
@@ -278,6 +337,137 @@ function add () {
     });
 }
 
+function addBatch (rentDate) {
+    
+    let time_start = $("#multip-start").val().split(':');
+    let start = (+time_start[0]) * 60 * 60 + ( + time_start[1]*60);
+    let time_end = $("#multip-end").val().split(':');
+    let end = (+time_end[0]) * 60 * 60 + ( + time_end[1]*60);
+    let period = start + "," + end;
+
+    if ($("#multip-add-name").val() == "") {
+        swal("Failed", "租借人未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
+    if ($("#multip-add-username").val() == "") {
+        swal("Failed", "學號未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
+    if ($("#multip-add-title").val() == "") {
+        swal("Failed", "原因未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
+    if ($("#multip-add-phone").val() == "") {
+        swal("Failed", "聯絡電話未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
+    if ($("#multip-start").val() == "" || $("#multip-end").val() == "") {
+        swal("Failed", "開始或結束時間未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+
+    if ($("#multip-rentDate").val() == "") {
+        swal("Failed", "預約日期未填寫", "error", {
+            buttons: "知道了",
+        });
+        return false;
+    }
+    
+    
+    axios.post('/pineapple/add/mulRental', {
+        username: $("#multip-add-username").val(),
+        name: $("#multip-add-name").val(),
+        title: $("#multip-add-title").val(),
+        description: $("#multip-add-desc").val(),
+        phone: $("#multip-add-phone").val(),
+        start: start,
+        end: end,
+        rentDate: rentDate,
+        period: period,
+        room: $("#multip-room").val()
+    })
+    .then(function(response) {
+
+ 
+        let errorText = "請查看錯誤";
+
+        if (response.data.error) {
+            
+            switch (response.data.error) {
+                case 1:
+                    errorText = "所選的教室不被允許";
+                    break;
+                case 2:
+                    errorText = "開始或結束的時間不合法";
+                    break;
+                case 3:
+                    $("#conflict").html('');
+                    $("#selectorConflict").html("<mark>" + periodToClock(period) + "</mark> 選取的時段已被預約");
+                    $.each(response.data.result, function (i, v) {
+                        $("#conflict").append(
+                            '<tr><td>' + parseInt(i+1) + '</td><td>' + v.name + '</td><td>' + v.username + '</td><td>' + v.phone + '</td><td>' + timestampToYearMonDay(v.rentDate) + '</td><td><mark>' + periodToClock(v.period) + '</mark></td><td>' + v.title + '</td></tr>'
+                        );
+                    });
+    
+                    ts('#conflictModal').modal("show");
+    
+                    
+                    return false;
+                    break;
+                default:
+                    break;
+            }
+    
+            swal("Failed", errorText, "error", {
+                buttons: "知道了",
+            });
+            return false;
+        }
+
+        swal("Good", "批次新增完成", "success", {
+            buttons: "知道了",
+        });
+ 
+
+        $("#multip-add-username, #multip-add-name, #multip-add-title, #multip-add-desc, #multip-add-phone, #multip-start, #multip-end").val('');
+        $("#batch-date").val('');
+        
+        $.each(response.data.result, function (i, val) {
+            $("#rental").append(  
+                '<tr id="lists-' + val.id + '">' + 
+                    '<td>' + val.name + '</td>' + 
+                    '<td>' + val.username + '</td>' + 
+                    '<td>' + summary(val.title.substring(0, val.title.length-6)) + '</td>' + 
+                    '<td>' + ( val.description == null ? "無" : summary(val.description) ) + '</td>' + 
+                    '<td>' + val.phone + '</td>' + 
+                    '<td>' + timestampToYearMonDay(val.rentDate) + '</td>' + 
+                    '<td>' + periodToClock(val.period) + '</td>' + 
+                    '<td>'+
+                        '<button class="ts icon button" onclick="edit(' + val.id + ')" id="edit-' + val.id + '">'+
+                            '<i class="heart icon"></i>'+
+                        '</button>'+ 
+                        '<button class="btn waves-effect pink darken-1" type="button" onclick="reject(' + val.id + ')">駁回<i class="material-icons right">clear</i></button>' + 
+                    '</td>' + 
+                '</tr>'  
+            );
+        });
+    });
+}
+
 $("#reloadList").click(function () {
     $("#rental").html('');
     loadAllRental();
@@ -285,7 +475,7 @@ $("#reloadList").click(function () {
 
 
 $("#addBook").click(function () {
-    
+    document.getElementById('rentDate').value = moment().format('YYYY-MM-DD');
     ts('#addBookModal').modal({
         approve: '.positive, .approve, .ok',
         deny: '.negative, .deny, .cancel',
@@ -297,6 +487,36 @@ $("#addBook").click(function () {
         }
     }).modal("show");
 });
+
+$("#addBookBatch").click(function () {
+    ts('#addBookBatchModal').modal({
+        approve: '.positive, .approve, .ok',
+        deny: '.negative, .deny, .cancel',
+        onDeny: function() {
+            
+        },
+        onApprove: async function() {
+
+            let rentDates = [];
+            let res = await $("#batch-date").multiDatesPicker("getDates");
+        
+            rentDates = await addBookBatchGetValue(res);
+
+            addBatch(rentDates);
+        }
+    }).modal("show");
+});
+
+function addBookBatchGetValue (res) {
+    let rentDates = [];
+    $.each(res, function (i, v) {
+        let date = new Date(v);
+        let selectDate = new Date (date.getFullYear(), date.getMonth(), date.getDate());
+        rentDates[i] = moment.unix(selectDate) / 1000000;
+    });
+
+    return rentDates;
+}
 
 function printData()
 {

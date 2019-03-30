@@ -37,6 +37,7 @@ Route::group(['prefix' => '/', 'middleware' => 'admin'], function () {
     Route::post('/pineapple/update/rental', 'AdminController@setEditRental');
     Route::get('/pineapple/reject/rental/{id}', 'AdminController@setRejectRental');
     Route::post('/pineapple/add/rental', 'AdminController@setRental');
+    Route::post('/pineapple/add/mulRental', 'AdminController@setMulRental');
     Route::get('/pineapple/logout', 'AdminController@logout');
     Route::post('/pineapple/add/recipient', 'AdminController@setRecipient');
     Route::get('/pineapple/get/recipient', 'AdminController@getRecipient');

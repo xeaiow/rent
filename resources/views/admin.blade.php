@@ -9,10 +9,10 @@
     
     <!-- 個人資料項目 -->
     <div class="center aligned item">
-        <img class="ts tiny circular image" src="https://i.imgur.com/WvCj83G.png">
+        <img class="ts tiny circular image" src="https://i.imgur.com/jpy2fq6.jpg">
         <br />
         <br />
-        <div>管理員</div>
+        <div>奇哥</div>
     </div>
     <!-- / 個人資料項目 -->
 
@@ -111,8 +111,9 @@
 
             <!-- 左側雜項欄位 -->
             <div class="sixteen wide column">
-                <button class="ts labeled icon button" id="addBook"><i class="plus icon"></i>新增預約</button>
-                <button class="ts labeled icon button" id="print"><i class="print icon"></i>列印</button>
+                <button class="ts labeled info icon button" id="addBook"><i class="plus inverted icon"></i>一般預約</button>
+                <button class="ts labeled info icon button" id="addBookBatch"><i class="calendar inverted icon"></i>批次預約</button>
+                <button class="ts labeled info icon button" id="print"><i class="print inverted icon"></i>列印</button>
                 <br />
                 <div class="ts top attached info segment">
                     <div class="ts large header">預約中列表</div>
@@ -245,21 +246,21 @@
                 <div class="fields">
                     <div class="basic field">
                         <label>租借人</label>
-                        <input type="text" id="add-name">
+                        <input type="text" id="add-name" required>
                     </div>
                     <div class="basic field">
                         <label>學號</label>
-                        <input type="text" id="add-username" placeholder="只能是數字">
+                        <input type="text" id="add-username" placeholder="只能是數字" required>
                     </div>
                 </div>
                 <div class="fields">
                     <div class="basic field">
                         <label>原因</label>
-                        <input type="text" id="add-title">
+                        <input type="text" id="add-title" required>
                     </div>
                     <div class="basic field">
                         <label>聯絡電話</label>
-                        <input type="text" id="add-phone">
+                        <input type="text" id="add-phone" required>
                     </div>
                 </div>
                 <div class="fields">
@@ -272,7 +273,8 @@
                 <div class="fields">
                     <div class="basic field">
                         <label>日期</label>
-                        <input type="date" id="rentDate">
+                        <input type="date" id="rentDate" value="2013-01-08" required>
+                        <small>* 預設為今日</small>
                     </div>
                     <div class="basic field">
                         <label>開始</label>
@@ -282,6 +284,76 @@
                     <div class="basic field">
                         <label>結束</label>
                         <input type="time" id="end" required>
+                        <small>* 分鐘只能設置 00 或 30</small>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+            <button class="ts deny button">
+                取消
+            </button>
+            <button class="ts positive button">
+                預約
+            </button>
+        </div>
+    </dialog>
+</div>
+
+<div class="ts modals dimmer">
+    <dialog id="addBookBatchModal" class="ts modal closable">
+        <div class="content">
+            <form class="ts relaxed form">
+                <div class="field">
+                    <label>預約教室</label>
+                    <select id="multip-room">
+                        <option value="102">102</option>
+                        <option value="103">103</option>
+                        <option value="104">104</option>
+                        <option value="203">203</option>
+                        <option value="205">205</option>
+                    </select>
+                </div>
+                <div class="fields">
+                    <div class="basic field">
+                        <label>租借人</label>
+                        <input type="text" id="multip-add-name" required>
+                    </div>
+                    <div class="basic field">
+                        <label>學號</label>
+                        <input type="text" id="multip-add-username" placeholder="只能是數字" required>
+                    </div>
+                </div>
+                <div class="fields">
+                    <div class="basic field">
+                        <label>原因</label>
+                        <input type="text" id="multip-add-title" required>
+                    </div>
+                    <div class="basic field">
+                        <label>聯絡電話</label>
+                        <input type="text" id="multip-add-phone" required>
+                    </div>
+                </div>
+                <div class="fields">
+                    <div class="basic field">
+                        <label>描述</label>
+                        <input type="text" id="multip-add-desc">
+                    </div>
+                </div>
+                <br />
+                <div class="fields">
+                    <div class="field">
+                        <label>日期</label>
+                        <input id="batch-date">
+                    </div>
+                    <div class="basic field">
+                        <label>開始</label>
+                        <input type="time" id="multip-start" required>
+                        <small>* 分鐘只能設置 00 或 30</small>
+                    </div>
+                    <div class="basic field">
+                        <label>結束</label>
+                        <input type="time" id="multip-end" required>
                         <small>* 分鐘只能設置 00 或 30</small>
                     </div>
                 </div>

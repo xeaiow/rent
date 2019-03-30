@@ -134,6 +134,107 @@ class AdminController extends Controller
         return $result;
     }
 
+    // 批次預約
+    public function setMulRental (Request $req)
+    {
+
+        // 開始與結束的 timestamp
+        $period = explode(",", $req->period);
+        $timestamp = ['28800', '30600', '32400', '34200', '36000', '37800', '39600', '41400', '43200', '45000', '46800', '48600', '50400', '52200', '54000', '55800', '57600', '59400', '61200', '63000', '64800', '66600', '68400', '70200', '72000', '73800', '75600', '77400'];
+        $room = ['102', '103', '104', '203', '205'];
+
+        if (!in_array($req->room, $room))
+        {
+            $result['error'] = 1;
+            $result['status'] = true;
+            return $result;
+        }
+
+        // 判斷是否正確的開始與結束
+        if (count($period) < 2)
+        {
+            $result['error'] = 2;
+            $result['status'] = true;
+            return $result;
+        }
+
+        // 交換位置預防 start 大於 end
+        if ($period[0] > $period[1])
+        {
+            $temp        = $period[0];
+            $period[0]   = $period[1];
+            $period[1]   = $temp;
+        }
+
+        $start = $period[0];
+        $end   = $period[1];
+
+        $rentDates = join(',', $req->rentDate);
+        // 判斷該時段是否已有他人預約
+        $exists = DB::select("SELECT title, name, username, phone, rentDate FROM rental WHERE ((start >= '$start' AND start < '$end') OR (start <= '$start' AND end >= '$end') OR (end > '$start' AND end <= '$end')) AND rentDate IN ($rentDates) AND room = '$req->room'");
+        
+        $existsRental = COUNT($exists);
+
+        if ($existsRental > 0)
+        {
+            $result['error'] = 3;
+            $result['status'] = true;
+            $result['exists'] = true;
+            $result['result'] = $exists;
+            return $result;
+        }
+
+
+        $periods = [];
+        
+
+        // 開始與結束的間距
+        $margin = $end - $start;
+            
+        // 判斷數值是否合法範圍
+        if (!in_array($start, $timestamp) || !in_array($end, $timestamp))
+        {
+            $result['error'] = 2;
+            $result['start'] = $start;
+            $result['end'] = $end;
+            $result['a'] = in_array($start, $timestamp);
+            $result['b'] = in_array($end, $timestamp);
+        }
+        else {
+
+            $title = $req->title;
+            $phone = $req->phone;
+            $desc = $req->description;
+            $name = $req->name;
+            $username = $req->username;
+            $room = $req->room;
+
+            $info = array();
+            foreach ($req->rentDate as $value) {
+                $info[] = Rental::create([
+                    'title' => $title." - ".$name,
+                    'phone' => $phone,
+                    'description' => $desc,
+                    'name' => $name,
+                    'username' => $username,
+                    'room' => $room,
+                    'rentDate' => $value,
+                    'period' => $req->period,
+                    'start' => $start,
+                    'end' => $end
+    
+                ]);
+                
+            }
+            
+            $result['result'] = $info;
+            $result['error'] = false;
+            $result['status'] = true;
+        }
+
+        return $result;
+    }
+
     // 管理登入頁面
     public function loginPage ()
     {
