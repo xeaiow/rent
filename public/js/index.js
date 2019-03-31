@@ -7,7 +7,36 @@ var globalEventObj = {};
 
 var sidebar = document.getElementById("sidebar");
 
+let ws = new WebSocket('ws://localhost:3000')
+
+ws.onopen = () => {
+    console.log('open connection')
+}
+
+ws.onclose = () => {
+    console.log('close connection')
+}
+
+//接收 Server 發送的訊息
+ws.onmessage = event => {
+    console.log(event);
+    M.toast({html: event.data})
+}
+
+
 $(function() {
+
+    window.setInterval(function () {
+        sessionStorage.removeItem("cyimRentToken");
+        if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
+            $("#navbar").hide();
+            $("#myRentalRecord").html('');
+            $("#sidebarEvents").html('');
+            swal("閒置自動登出", "謝謝使用", "info", {
+                buttons: "謝謝系統",
+            });
+        }
+    }, 600);
 
     selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), new Date().getDate());
 
@@ -725,6 +754,7 @@ $("#login").click(function() {
                 return false;
             }
 
+
             new Audio('/audio/online.mp3').play();
 
             lockLogin = false;
@@ -736,6 +766,7 @@ $("#login").click(function() {
             sessionStorage.setItem("cyimRentToken", res.data.token);
             sessionStorage.setItem("cyimRentUsername", res.data.username);
             sessionStorage.setItem("cyimRentName", res.data.name);
+            ws.send(res.data.name + '上線啦！');
             $("#login").attr('disabled', false);
             $("#terms").modal('open');
         });

@@ -91,6 +91,12 @@
                     </div>
                 </div>
             </div>
+
+            <div class="ts snackbar">
+    <div class="content"></div>
+    <a class="action"></a>
+</div>
+
         </div>
 
         <!-- confirm modal -->
