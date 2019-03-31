@@ -14,13 +14,12 @@ ws.onopen = () => {
 }
 
 ws.onclose = () => {
-    console.log('close connection')
+    
 }
 
-//接收 Server 發送的訊息
+// 接收 Server 發送的訊息
 ws.onmessage = event => {
-    console.log(event);
-    M.toast({html: event.data})
+    M.toast({html: event.data});
 }
 
 
@@ -775,6 +774,8 @@ $("#login").click(function() {
             setTimeout(function () {
                 sessionStorage.removeItem("cyimRentToken");
                 if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
+                    ws.send(sessionStorage.getItem("cyimRentName") + "被踢下線了");
+                    ws.close();
                     $("#navbar").hide();
                     $("#myRentalRecord").html('');
                     $("#sidebarEvents").html('');
@@ -802,6 +803,8 @@ $("#login").click(function() {
 $(".logout").click(function() {
     sessionStorage.removeItem("cyimRentToken");
     if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
+        ws.send(sessionStorage.getItem("cyimRentName") + "下線了");
+        ws.close();
         $("#navbar").hide();
         $("#myRentalRecord").html('');
         $("#sidebarEvents").html('');
@@ -815,6 +818,8 @@ $(".logout").click(function() {
 $("#doNotAgree").click(function() {
     $("#terms").modal("close");
     sessionStorage.removeItem("cyimRentToken");
+    ws.send(sessionStorage.getItem("cyimRentName") + "下線了");
+    ws.close();
     $("#navbar").hide();
     $("#sidebarEvents").html('');
     return false;

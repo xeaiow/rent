@@ -493,16 +493,15 @@
             <div class="modal-content">
                 <h4>About</h4>
                 <div>
-                    <div>Update at 2018/10/12</div>
+                    <div>Updated at 2019/4/1</div>
                     <ul>
-                        <li>1. 手機版體驗更加</li>
-                        <li>2. 現在教師及職員也能預約了</li>
-                        <li>3. 無須登入也能預覽預約狀況</li>
-                        <li>4. 修復一些了蠕蟲</li>
+                        <li>1. 預約衝突 bug</li>
+                        <li>2. 使用者上線通知</li>
+                        <li>3. 尬廣功能</li>
                     </ul>
                     如有遇到任何錯誤或疑問，可至系辦或 E-mail 通報，感謝您<br />
                     E-mail: xeaiow@gmail.com<br />
-                    關於我: <a target="_blank" href="https://www.cakeresume.com/xeee">https://www.cakeresume.com/xeee</a>
+                    關於我: <a target="_blank" href="http://xxx.nctu.me">http://xxx.nctu.me</a>
                 </div>
             </div>
             <div class="modal-footer">
