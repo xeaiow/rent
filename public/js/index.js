@@ -26,18 +26,6 @@ ws.onmessage = event => {
 
 $(function() {
 
-    window.setInterval(function () {
-        sessionStorage.removeItem("cyimRentToken");
-        if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
-            $("#navbar").hide();
-            $("#myRentalRecord").html('');
-            $("#sidebarEvents").html('');
-            swal("閒置自動登出", "謝謝使用", "info", {
-                buttons: "謝謝系統",
-            });
-        }
-    }, 600);
-
     selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), new Date().getDate());
 
     axios.get('/get/rental/' + selectedDate.getTime() / 1000)
@@ -356,6 +344,32 @@ $(".nav-about").click(function () {
 
 $("#okay").click(function () {
     $("#about-modal").modal("close");
+});
+
+$(".open-broadcast").click(function () {
+    $("#broadcast").modal("open");
+});
+
+$("#exit-broadcast").click(function () {
+    $("#broadcast").modal("close");
+});
+
+
+$('#broadcast-content').keydown(function (event) {
+    var keypressed = event.keyCode || event.which;
+    if (keypressed == 13 && sessionStorage.getItem('cyimRentToken') != undefined) {
+        ws.send(sessionStorage.getItem('name') + "：" + $("#broadcast-content").val());
+        $("#broadcast-content").val('');
+    }
+});
+
+$("#send-broadcast").click(function () {
+
+    if (sessionStorage.getItem('cyimRentToken') == undefined) {
+        return false;
+    }
+    ws.send(sessionStorage.getItem('name') + "：" + $("#broadcast-content").val());
+    $("#broadcast-content").val('');
 });
 
 // 選擇時段
@@ -756,6 +770,19 @@ $("#login").click(function() {
 
 
             new Audio('/audio/online.mp3').play();
+
+            // 10 分鐘自動登出
+            setTimeout(function () {
+                sessionStorage.removeItem("cyimRentToken");
+                if (sessionStorage.getItem("cyimRentToken") == undefined || sessionStorage.getItem("cyimRentToken") == null) {
+                    $("#navbar").hide();
+                    $("#myRentalRecord").html('');
+                    $("#sidebarEvents").html('');
+                    swal("閒置自動登出", "謝謝使用", "info", {
+                        buttons: "謝謝系統",
+                    });
+                }
+            }, 600000);
 
             lockLogin = false;
             $("#loginModal").modal('close');

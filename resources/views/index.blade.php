@@ -8,6 +8,7 @@
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
                 <li><a class="waves-effect waves-teal btn-flat nav-about">關於</a></li>
+                <li><a><i data-tooltip="尬廣(春季限定)" class="material-icons tooltipped open-broadcast">hearing</i></a></li>
                 <li><a><i data-tooltip="上課時段(Alt+D)" class="material-icons tooltipped open-course">announcement</i></a></li>
                 <li><a><i data-tooltip="我(Alt+R)" class="material-icons tooltipped my">face</i></a></li>
                 <li><a><i data-tooltip="登出 (Alt+Q)" class="material-icons tooltipped logout">directions_run</i></a></li>
@@ -22,6 +23,7 @@
 
     <ul class="sidenav" id="mobile-demo">
         <li class="my"><a><i data-tooltip="我 (Alt+R)" class="material-icons tooltipped">face</i>我</a></li>
+        <li class="open-broadcast"><a><i data-tooltip="我 (Alt+R)" class="material-icons tooltipped">hearing</i>尬廣</a></li>
         <li class="open-course"><a><i data-tooltip="上課時段 (Alt+D)" class="material-icons tooltipped">announcement</i>上課時段</a></li>
         <li class="nav-about"><a><i data-tooltip="登出 (Alt+Q)" class="material-icons tooltipped">child_care</i>關於</a></li>
         <li class="logout"><a><i data-tooltip="登出 (Alt+Q)" class="material-icons tooltipped">directions_run</i>登出</a></li>
@@ -92,10 +94,11 @@
                 </div>
             </div>
 
+            <!-- 上線通知 -->
             <div class="ts snackbar">
-    <div class="content"></div>
-    <a class="action"></a>
-</div>
+                <div class="content"></div>
+                <a class="action"></a>
+            </div>
 
         </div>
 
@@ -461,6 +464,29 @@
             <div class="modal-footer">
                 <a class="btn waves-effect waves-light grey darken-4" id="agree-course">好，我會注意</a>
                 <a class="btn waves-effect waves-light grey darken-4" id="agree-course-alert" style="display:none;">好，我會注意</a>
+            </div>
+        </div>
+
+        <div id="broadcast" class="modal modal-fixed-footer">
+            <div class="modal-content white">
+                <h4 class="center-align">免費尬廣</h4>
+                <div class="row">
+                    <div class="col s12">
+                      
+                            <div class="input-field col s10">
+                                <i class="material-icons prefix">textsms</i>
+                                <input type="text" id="broadcast-content" class="autocomplete">
+                                <label for="autocomplete-input">打點東西來瞧瞧</label>
+                            </div>
+                            <div class="input-field col s2">
+                                <a class="btn-floating btn-small waves-effect waves-light teal lighten-1" id="send-broadcast"><i class="material-icons">send</i></a>
+                            </div>
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn waves-effect waves-light grey darken-4" id="exit-broadcast">離開</a>
             </div>
         </div>
 
