@@ -171,7 +171,7 @@ class AdminController extends Controller
 
         $rentDates = join(',', $req->rentDate);
         // 判斷該時段是否已有他人預約
-        $exists = DB::select("SELECT title, name, username, phone, rentDate FROM rental WHERE ((start >= '$start' AND start < '$end') OR (start <= '$start' AND end >= '$end') OR (end > '$start' AND end <= '$end')) AND rentDate IN ($rentDates) AND room = '$req->room'");
+        $exists = DB::select("SELECT title, name, username, phone, rentDate, period FROM rental WHERE ((start >= '$start' AND start < '$end') OR (start <= '$start' AND end >= '$end') OR (end > '$start' AND end <= '$end')) AND rentDate IN ($rentDates) AND room = '$req->room'");
         
         $existsRental = COUNT($exists);
 

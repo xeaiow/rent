@@ -406,7 +406,7 @@ function addBatch (rentDate) {
         let errorText = "請查看錯誤";
 
         if (response.data.error) {
-            
+            console.log(response.data);
             switch (response.data.error) {
                 case 1:
                     errorText = "所選的教室不被允許";
@@ -416,8 +416,9 @@ function addBatch (rentDate) {
                     break;
                 case 3:
                     $("#conflict").html('');
-                    $("#selectorConflict").html("<mark>" + periodToClock(period) + "</mark> 選取的時段已被預約");
+                    $("#selectorConflict").html("<mark>" + $("#multip-start").val() + " ~ " + $("#multip-end").val() + "</mark> 選取的時段已被預約");
                     $.each(response.data.result, function (i, v) {
+                        
                         $("#conflict").append(
                             '<tr><td>' + parseInt(i+1) + '</td><td>' + v.name + '</td><td>' + v.username + '</td><td>' + v.phone + '</td><td>' + timestampToYearMonDay(v.rentDate) + '</td><td><mark>' + periodToClock(v.period) + '</mark></td><td>' + v.title + '</td></tr>'
                         );

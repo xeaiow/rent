@@ -357,7 +357,7 @@ $("#exit-broadcast").click(function () {
 $('#broadcast-content').keydown(function (event) {
     var keypressed = event.keyCode || event.which;
     if (keypressed == 13 && sessionStorage.getItem('cyimRentToken') != undefined) {
-        ws.send(sessionStorage.getItem('name') + "：" + $("#broadcast-content").val());
+        ws.send(sessionStorage.getItem('cyimRentName') + "：" + $("#broadcast-content").val());
         $("#broadcast-content").val('');
     }
 });
